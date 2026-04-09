@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Как работает ИИ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0f0e0d;
+  --ink-2: #3a3836;
+  --ink-3: #767370;
+  --ink-4: #b0ada9;
+  --paper: #f7f5f2;
+  --paper-2: #edeae6;
+  --paper-3: #e2dfd9;
+  --accent: #5c3bfe;
+  --accent-2: #8b6fff;
+  --accent-pale: #ede9ff;
+  --teal: #0ea37a;
+  --teal-pale: #dcf5ec;
+  --amber: #d97706;
+  --amber-pale: #fef3c7;
+  --coral: #e04f2a;
+  --coral-pale: #fde8e1;
+  --blue: #1d6fb8;
+  --blue-pale: #dbeafe;
+  --r: 10px;
+  --r-lg: 16px;
+  --font: 'Onest', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── ШАПКА ─── */
+.site-header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(247,245,242,.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--paper-3);
+  padding: 0 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+}
+.logo {
+  font-size: 15px; font-weight: 600; color: var(--ink);
+  display: flex; align-items: center; gap: 8px;
+}
+.logo-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent); display: inline-block;
+  animation: pulse-dot 2.4s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%,100%{ transform: scale(1); opacity:1; }
+  50%{ transform: scale(1.5); opacity:.6; }
+}
+.site-nav { display: flex; gap: 4px; }
+.site-nav a {
+  font-size: 13px; color: var(--ink-3); text-decoration: none;
+  padding: 6px 12px; border-radius: 6px; transition: all .15s;
+}
+.site-nav a:hover { background: var(--paper-2); color: var(--ink); }
+
+/* ─── HERO ─── */
+.hero {
+  padding: 80px 32px 64px;
+  max-width: 860px; margin: 0 auto; text-align: center;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 500; letter-spacing: .1em;
+  color: var(--accent); text-transform: uppercase;
+  background: var(--accent-pale); border: 1px solid #d4caff;
+  padding: 5px 12px; border-radius: 20px; margin-bottom: 24px;
+}
+.hero h1 {
+  font-size: clamp(36px,6vw,64px); font-weight: 600; line-height: 1.1;
+  color: var(--ink); margin-bottom: 20px; letter-spacing: -.02em;
+}
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero-desc {
+  font-size: 17px; color: var(--ink-3); line-height: 1.65;
+  max-width: 520px; margin: 0 auto 36px;
+}
+.hero-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 11px 22px; border-radius: var(--r); font-size: 14px;
+  font-weight: 500; font-family: var(--font); cursor: pointer;
+  transition: all .2s; text-decoration: none; border: none;
+}
+.btn-primary {
+  background: var(--accent); color: #fff;
+}
+.btn-primary:hover { background: #4a2de0; transform: translateY(-1px); }
+.btn-outline {
+  background: transparent; color: var(--ink-2);
+  border: 1px solid var(--paper-3);
+}
+.btn-outline:hover { background: var(--paper-2); }
+
+/* ─── PIPELINE ─── */
+.section { padding: 72px 32px; max-width: 960px; margin: 0 auto; }
+.section-label {
+  font-size: 11px; font-weight: 500; letter-spacing: .1em;
+  color: var(--ink-4); text-transform: uppercase; margin-bottom: 10px;
+}
+.section-title {
+  font-size: 28px; font-weight: 600; color: var(--ink);
+  margin-bottom: 8px; letter-spacing: -.01em;
+}
+.section-sub {
+  font-size: 15px; color: var(--ink-3); line-height: 1.6;
+  margin-bottom: 40px; max-width: 580px;
+}
+
+.pipeline-steps {
+  display: flex; gap: 0; align-items: stretch;
+  overflow-x: auto; padding-bottom: 4px;
+  margin-bottom: 32px;
+}
+.pipe-card {
+  flex: 1; min-width: 130px;
+  background: var(--paper); border: 1px solid var(--paper-3);
+  border-radius: 0; padding: 20px 16px;
+  cursor: pointer; transition: all .2s; position: relative;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.pipe-card:first-child { border-radius: var(--r) 0 0 var(--r); }
+.pipe-card:last-child { border-radius: 0 var(--r) var(--r) 0; }
+.pipe-card + .pipe-card { border-left: none; }
+.pipe-card:hover, .pipe-card.active {
+  background: var(--accent-pale); border-color: var(--accent-2); z-index:1;
+}
+.pipe-card.active .pipe-num { color: var(--accent); }
+.pipe-card.active .pipe-name { color: var(--accent); }
+.pipe-num {
+  font-family: var(--mono); font-size: 10px; color: var(--ink-4); font-weight: 500;
+}
+.pipe-name { font-size: 13px; font-weight: 500; color: var(--ink); }
+.pipe-icon { font-size: 20px; margin-bottom: 2px; }
+
+.step-detail {
+  display: none; animation: fadeSlide .3s ease;
+  border: 1px solid var(--paper-3); border-radius: var(--r-lg);
+  background: var(--paper); overflow: hidden;
+}
+.step-detail.visible { display: grid; grid-template-columns: 1fr 1fr; }
+@media(max-width:640px){ .step-detail.visible { grid-template-columns:1fr; } }
+
+@keyframes fadeSlide {
+  from { opacity:0; transform: translateY(8px); }
+  to { opacity:1; transform: translateY(0); }
+}
+.detail-main { padding: 32px; border-right: 1px solid var(--paper-3); }
+.detail-main h3 { font-size: 20px; font-weight: 600; margin-bottom: 10px; letter-spacing:-.01em; }
+.detail-main p { font-size: 14px; color: var(--ink-3); line-height: 1.65; margin-bottom: 16px; }
+.detail-viz { padding: 32px; background: var(--paper-2); display: flex; flex-direction:column; justify-content:center; }
+
+.token-viz { display: flex; flex-direction:column; gap:12px; }
+.token-row { display:flex; gap:6px; flex-wrap:wrap; }
+.tok-chip {
+  padding: 5px 12px; border-radius: 20px; font-size: 13px; font-weight: 500;
+  border: 1px solid transparent; cursor: default;
+  font-family: var(--mono);
+}
+.tok-chip.a { background: var(--accent-pale); color: var(--accent); border-color: #c9beff; }
+.tok-chip.b { background: var(--teal-pale); color: var(--teal); border-color: #a7e8cf; }
+.tok-id-row { display:flex; gap:6px; flex-wrap:wrap; }
+.tok-id { font-size:10px; font-family:var(--mono); color:var(--ink-4); padding:2px 8px; background:var(--paper); border-radius:4px; border:1px solid var(--paper-3); }
+
+.att-demo { display:flex; flex-direction:column; gap:6px; }
+.att-word {
+  display:flex; align-items:center; gap:10px;
+  font-size:13px; cursor:pointer; padding: 6px 10px;
+  border-radius: 6px; transition:background .15s;
+}
+.att-word:hover { background: var(--paper-3); }
+.att-word.selected { background: var(--accent-pale); }
+.att-word .aw-label { font-weight:500; min-width:80px; font-family:var(--mono); color:var(--ink); }
+.att-bar-wrap { flex:1; height:8px; background:var(--paper-3); border-radius:4px; overflow:hidden; }
+.att-bar { height:100%; border-radius:4px; background: var(--accent); transition: width .4s ease; }
+.att-pct { font-size:11px; color:var(--ink-3); min-width:30px; text-align:right; font-family:var(--mono); }
+
+.layer-list { display:flex; flex-direction:column; gap:4px; }
+.layer-row {
+  display:flex; align-items:center; gap:10px; padding:8px 10px;
+  border-radius:6px; cursor:pointer; transition:background .15s;
+}
+.layer-row:hover { background: var(--paper-3); }
+.layer-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.layer-text { flex:1; }
+.layer-name2 { font-size:12px; font-weight:500; color:var(--ink); }
+.layer-hint { font-size:11px; color:var(--ink-3); }
+.layer-pct-bar { width:60px; height:4px; background:var(--paper-3); border-radius:2px; overflow:hidden; }
+.layer-pct-fill { height:100%; border-radius:2px; }
+
+.gen-demo { display:flex; flex-direction:column; gap:12px; }
+.gen-output {
+  font-size:14px; color:var(--ink); line-height:1.7;
+  min-height:60px; font-family:var(--mono);
+}
+.gen-cursor { display:inline-block; width:2px; height:14px; background:var(--accent); vertical-align:middle; margin-left:2px; animation:blink 1s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.gen-probs { display:flex; flex-direction:column; gap:4px; }
+.gen-row { display:flex; align-items:center; gap:8px; }
+.gen-word { font-size:11px; font-family:var(--mono); color:var(--ink-2); min-width:90px; }
+.gen-bar-wrap { flex:1; height:16px; background:var(--paper-3); border-radius:3px; overflow:hidden; }
+.gen-bar { height:100%; border-radius:3px; transition: width .5s ease; }
+.gen-pct { font-size:10px; color:var(--ink-3); min-width:28px; text-align:right; font-family:var(--mono); }
+.gen-next-btn {
+  align-self:flex-start; padding:7px 14px; font-size:12px;
+  border-radius:6px; border:1px solid var(--paper-3);
+  background:var(--paper); cursor:pointer; font-family:var(--font);
+  color:var(--ink); transition:all .15s;
+}
+.gen-next-btn:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+/* stat chips */
+.detail-stats { display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; }
+.stat-chip {
+  padding:4px 10px; background:var(--paper-2); border-radius:6px;
+  font-size:11px; color:var(--ink-3); border:1px solid var(--paper-3);
+}
+.stat-chip strong { color:var(--ink); font-weight:600; }
+
+/* ─── РАЗДЕЛИТЕЛЬ ─── */
+.divider { border: none; border-top: 1px solid var(--paper-3); margin: 0 32px; }
+
+/* ─── ТИПЫ МОДЕЛЕЙ ─── */
+.model-tabs { display:flex; gap:0; border-bottom:1px solid var(--paper-3); margin-bottom:32px; overflow-x:auto; }
+.mtab {
+  padding:11px 20px; font-size:13px; font-weight:500; cursor:pointer;
+  color:var(--ink-3); border-bottom:2px solid transparent;
+  background:none; border-top:none; border-left:none; border-right:none;
+  font-family:var(--font); white-space:nowrap; transition:all .2s;
+}
+.mtab.active { color:var(--accent); border-bottom-color:var(--accent); }
+.mtab:hover { color:var(--ink); }
+
+.mpanel { display:none; animation:fadeSlide .25s ease; }
+.mpanel.active { display:block; }
+
+.model-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px; margin-bottom:24px; }
+.mcard {
+  border:1px solid var(--paper-3); border-radius:var(--r-lg);
+  padding:20px; background:var(--paper);
+  transition:all .2s; cursor:default;
+}
+.mcard:hover { border-color: var(--paper-3); background:var(--paper-2); }
+.mcard.featured { border-color:#c9beff; background:var(--accent-pale); }
+.mcard-badge {
+  display:inline-block; font-size:10px; font-weight:600; letter-spacing:.06em;
+  padding:3px 9px; border-radius:20px; margin-bottom:12px; text-transform:uppercase;
+}
+.mcard h4 { font-size:15px; font-weight:600; color:var(--ink); margin-bottom:6px; }
+.mcard p { font-size:13px; color:var(--ink-3); line-height:1.55; margin-bottom:12px; }
+.mcard-ex { font-size:11px; color:var(--ink-4); }
+.mcard-ex span { color:var(--ink-3); }
+
+.compare-2col { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px; }
+@media(max-width:600px){ .compare-2col { grid-template-columns:1fr; } }
+.comp-col { border:1px solid var(--paper-3); border-radius:var(--r-lg); overflow:hidden; }
+.comp-col.accent-border { border-color: #c9beff; }
+.comp-head {
+  padding:12px 16px; border-bottom:1px solid var(--paper-3);
+  font-size:13px; font-weight:600; color:var(--ink);
+  display:flex; align-items:center; gap:8px;
+}
+.comp-head-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.comp-body { padding:4px 0; }
+.comp-row {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:9px 16px; border-bottom:1px solid var(--paper-3);
+}
+.comp-row:last-child { border-bottom:none; }
+.comp-mark {
+  width:16px; height:16px; border-radius:50%; flex-shrink:0; margin-top:1px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:9px; font-weight:700;
+}
+.mark-yes { background:#dcf5ec; color:#085041; }
+.mark-no { background:#fee2e2; color:#991b1b; }
+.mark-mid { background:#fef3c7; color:#92400e; }
+.comp-text { font-size:12px; color:var(--ink-3); line-height:1.4; }
+
+.chat-mock { border:1px solid var(--paper-3); border-radius:var(--r-lg); overflow:hidden; margin-bottom:12px; }
+.chat-mock-head {
+  padding:10px 14px; background:var(--paper-2); border-bottom:1px solid var(--paper-3);
+  display:flex; align-items:center; gap:8px; font-size:12px; color:var(--ink-3);
+}
+.chat-mock-dot { width:8px; height:8px; border-radius:50%; }
+.chat-mock-body { padding:16px; display:flex; flex-direction:column; gap:10px; background:var(--paper); }
+.cmsg {
+  max-width:80%; padding:9px 13px; border-radius:10px;
+  font-size:13px; line-height:1.5;
+}
+.cmsg.u { align-self:flex-end; background:var(--accent-pale); color:#26215C; border-bottom-right-radius:3px; }
+.cmsg.ai { align-self:flex-start; background:var(--paper-2); color:var(--ink); border:1px solid var(--paper-3); border-bottom-left-radius:3px; }
+.cmsg .alabel { font-size:10px; color:var(--ink-4); margin-bottom:3px; }
+
+.tl { display:flex; flex-direction:column; gap:0; }
+.tl-item { display:flex; gap:16px; padding-bottom:24px; }
+.tl-left { display:flex; flex-direction:column; align-items:center; width:28px; flex-shrink:0; }
+.tl-dot2 { width:12px; height:12px; border-radius:50%; flex-shrink:0; margin-top:3px; }
+.tl-line2 { width:1px; flex:1; background:var(--paper-3); margin-top:6px; }
+.tl-item:last-child .tl-line2 { display:none; }
+.tl-body { flex:1; padding-top:0; }
+.tl-phase { font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; padding:2px 8px; border-radius:10px; display:inline-block; margin-bottom:6px; }
+.tl-title2 { font-size:14px; font-weight:600; color:var(--ink); margin-bottom:4px; }
+.tl-desc2 { font-size:13px; color:var(--ink-3); line-height:1.55; }
+
+.use-rows { display:flex; flex-direction:column; gap:8px; }
+.use-row {
+  border:1px solid var(--paper-3); border-radius:var(--r); padding:14px 16px;
+  background:var(--paper); display:grid; grid-template-columns:1fr 1fr 2fr; gap:12px; align-items:start;
+}
+@media(max-width:600px){ .use-row { grid-template-columns:1fr; } }
+.use-case { font-size:12px; font-weight:500; color:var(--ink-3); }
+.use-model { font-size:13px; font-weight:600; color:var(--ink); }
+.use-why { font-size:12px; color:var(--ink-3); line-height:1.45; }
+
+/* ─── FOOTER ─── */
+.site-footer {
+  border-top:1px solid var(--paper-3); padding:32px;
+  display:flex; align-items:center; justify-content:space-between;
+  max-width:960px; margin:0 auto;
+}
+.footer-note { font-size:12px; color:var(--ink-4); }
+.footer-badge {
+  font-size:11px; background:var(--accent-pale); color:var(--accent);
+  padding:4px 10px; border-radius:20px; border:1px solid #d4caff;
+}
+
+/* scroll reveal */
+.reveal { opacity:0; transform:translateY(16px); transition: opacity .5s ease, transform .5s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo">
+    <span class="logo-dot"></span>
+    Как работает ИИ
+  </div>
+  <nav class="site-nav">
+    <a href="#pipeline">Процесс</a>
+    <a href="#models">Типы моделей</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero reveal">
+  <div class="hero-eyebrow">
+    <span class="logo-dot" style="width:6px;height:6px"></span>
+    интерактивный гид
+  </div>
+  <h1>Нейросеть:<br><em>от запроса до ответа</em></h1>
+  <p class="hero-desc">Как ИИ понимает ваши слова, что происходит внутри — и почему одни модели умеют следовать инструкциям, а другие нет.</p>
+  <div class="hero-ctas">
+    <a href="#pipeline" class="btn btn-primary">Смотреть процесс</a>
+    <a href="#models" class="btn btn-outline">Типы моделей</a>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PIPELINE -->
+<section class="section reveal" id="pipeline">
+  <div class="section-label">Шаг за шагом</div>
+  <h2 class="section-title">Что происходит с вашим запросом</h2>
+  <p class="section-sub">Нажмите на любой шаг, чтобы увидеть детали и живые примеры.</p>
+
+  <div class="pipeline-steps" id="pipelineSteps">
+    <div class="pipe-card active" onclick="showStep(0)">
+      <div class="pipe-num">01</div>
+      <div class="pipe-icon">✍</div>
+      <div class="pipe-name">Запрос</div>
+    </div>
+    <div class="pipe-card" onclick="showStep(1)">
+      <div class="pipe-num">02</div>
+      <div class="pipe-icon">✂</div>
+      <div class="pipe-name">Токенизация</div>
+    </div>
+    <div class="pipe-card" onclick="showStep(2)">
+      <div class="pipe-num">03</div>
+      <div class="pipe-icon">◎</div>
+      <div class="pipe-name">Внимание</div>
+    </div>
+    <div class="pipe-card" onclick="showStep(3)">
+      <div class="pipe-num">04</div>
+      <div class="pipe-icon">⚙</div>
+      <div class="pipe-name">Слои</div>
+    </div>
+    <div class="pipe-card" onclick="showStep(4)">
+      <div class="pipe-num">05</div>
+      <div class="pipe-icon">◆</div>
+      <div class="pipe-name">Ответ</div>
+    </div>
+  </div>
+
+  <!-- Step 0 -->
+  <div class="step-detail visible" id="step0">
+    <div class="detail-main">
+      <h3>Вы пишете запрос</h3>
+      <p>ИИ получает обычный текст — набор символов. На этом этапе никакого «понимания» ещё нет: просто поток байтов, который нужно преобразовать во что-то, с чем может работать нейросеть.</p>
+      <div class="detail-stats">
+        <div class="stat-chip">Ввод: <strong>текст</strong></div>
+        <div class="stat-chip">Формат: <strong>Unicode</strong></div>
+        <div class="stat-chip">Скорость: <strong>&lt; 1 мс</strong></div>
+      </div>
+    </div>
+    <div class="detail-viz">
+      <div style="background:var(--paper);border:1px solid var(--paper-3);border-radius:var(--r);padding:14px 16px;font-family:var(--mono);font-size:14px;color:var(--ink);margin-bottom:10px">
+        Как работает ИИ?<span style="color:var(--accent);animation:blink 1s step-end infinite">|</span>
+      </div>
+      <div style="font-size:12px;color:var(--ink-4)">16 символов · 3 слова · ~5 токенов</div>
+    </div>
+  </div>
+
+  <!-- Step 1 -->
+  <div class="step-detail" id="step1">
+    <div class="detail-main">
+      <h3>Токенизация</h3>
+      <p>Текст разбивается на токены — кусочки слов. Каждый токен получает числовой ID. Нейросеть работает исключительно с числами, не с буквами. Словарь GPT-4 — около 100 тысяч токенов.</p>
+      <div class="detail-stats">
+        <div class="stat-chip">Словарь: <strong>~100к</strong></div>
+        <div class="stat-chip">1 слово = <strong>1–3 токена</strong></div>
+        <div class="stat-chip">Макс: <strong>128к токенов</strong></div>
+      </div>
+    </div>
+    <div class="detail-viz">
+      <div class="token-viz">
+        <div class="token-row">
+          <span class="tok-chip a">Как</span>
+          <span class="tok-chip a">работ</span>
+          <span class="tok-chip a">ает</span>
+          <span class="tok-chip b">ИИ</span>
+          <span class="tok-chip b">?</span>
+        </div>
+        <div class="tok-id-row">
+          <span class="tok-id">3083</span>
+          <span class="tok-id">7741</span>
+          <span class="tok-id">2291</span>
+          <span class="tok-id">1049</span>
+          <span class="tok-id">30</span>
+        </div>
+        <div style="font-size:11px;color:var(--ink-4);margin-top:4px">«работ» + «ает» — два токена вместо одного слова</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step-detail" id="step2">
+    <div class="detail-main">
+      <h3>Механизм внимания</h3>
+      <p>Каждый токен «смотрит» на все остальные и оценивает их важность. Нажмите на слово — увидите веса внимания. Именно так модель понимает, что «он» в конце предложения относится к конкретному слову в начале.</p>
+      <div class="detail-stats">
+        <div class="stat-chip">Формула: <strong>Q·K·V</strong></div>
+        <div class="stat-chip">Голов: <strong>96 (GPT-4)</strong></div>
+        <div class="stat-chip">Связей: <strong>N²</strong></div>
+      </div>
+    </div>
+    <div class="detail-viz">
+      <div class="att-demo" id="attDemo">
+        <div class="att-word selected" onclick="selectAtt(0,this)" data-weights="100,45,85,20,10">
+          <span class="aw-label">Как</span>
+          <div class="att-bar-wrap"><div class="att-bar" style="width:100%"></div></div>
+          <span class="att-pct">100%</span>
+        </div>
+        <div class="att-word" onclick="selectAtt(1,this)" data-weights="45,100,70,30,15">
+          <span class="aw-label">работает</span>
+          <div class="att-bar-wrap"><div class="att-bar" style="width:45%"></div></div>
+          <span class="att-pct">45%</span>
+        </div>
+        <div class="att-word" onclick="selectAtt(2,this)" data-weights="85,70,100,40,20">
+          <span class="aw-label">ИИ</span>
+          <div class="att-bar-wrap"><div class="att-bar" style="width:85%"></div></div>
+          <span class="att-pct">85%</span>
+        </div>
+        <div class="att-word" onclick="selectAtt(3,this)" data-weights="20,30,40,100,5">
+          <span class="aw-label">?</span>
+          <div class="att-bar-wrap"><div class="att-bar" style="width:20%"></div></div>
+          <span class="att-pct">20%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="step-detail" id="step3">
+    <div class="detail-main">
+      <h3>Слои трансформера</h3>
+      <p>Данные проходят через десятки слоёв. Каждый добавляет новый уровень понимания — от морфологии до сложных рассуждений. Нажмите на слой, чтобы раскрыть детали.</p>
+      <div class="detail-stats">
+        <div class="stat-chip">GPT-4: <strong>~96 слоёв</strong></div>
+        <div class="stat-chip">Параметры: <strong>~1 трлн</strong></div>
+        <div class="stat-chip">Обучение: <strong>~90 дней</strong></div>
+      </div>
+    </div>
+    <div class="detail-viz">
+      <div class="layer-list" id="layerList">
+        <div class="layer-row" onclick="toggleLayer(this,'Разбивает текст на части слов, понимает форму и падеж.')">
+          <div class="layer-dot" style="background:var(--teal)"></div>
+          <div class="layer-text"><div class="layer-name2">Морфология</div><div class="layer-hint">слои 1–4</div></div>
+          <div class="layer-pct-bar"><div class="layer-pct-fill" style="width:20%;background:var(--teal)"></div></div>
+        </div>
+        <div class="layer-row" onclick="toggleLayer(this,'Строит дерево предложения: субъект, предикат, объект.')">
+          <div class="layer-dot" style="background:var(--accent)"></div>
+          <div class="layer-text"><div class="layer-name2">Синтаксис</div><div class="layer-hint">слои 5–16</div></div>
+          <div class="layer-pct-bar"><div class="layer-pct-fill" style="width:45%;background:var(--accent)"></div></div>
+        </div>
+        <div class="layer-row" onclick="toggleLayer(this,'Понимает значение слов в контексте. «Банк» у реки — это не банк с деньгами.')">
+          <div class="layer-dot" style="background:var(--blue)"></div>
+          <div class="layer-text"><div class="layer-name2">Семантика</div><div class="layer-hint">слои 17–48</div></div>
+          <div class="layer-pct-bar"><div class="layer-pct-fill" style="width:70%;background:var(--blue)"></div></div>
+        </div>
+        <div class="layer-row" onclick="toggleLayer(this,'Факты о мире: даты, имена, науки — всё из обучающих данных.')">
+          <div class="layer-dot" style="background:var(--amber)"></div>
+          <div class="layer-text"><div class="layer-name2">Знания</div><div class="layer-hint">слои 49–80</div></div>
+          <div class="layer-pct-bar"><div class="layer-pct-fill" style="width:88%;background:var(--amber)"></div></div>
+        </div>
+        <div class="layer-row" onclick="toggleLayer(this,'Строит логику ответа, связывает факты, учитывает весь контекст.')">
+          <div class="layer-dot" style="background:var(--coral)"></div>
+          <div class="layer-text"><div class="layer-name2">Рассуждение</div><div class="layer-hint">слои 81–96</div></div>
+          <div class="layer-pct-bar"><div class="layer-pct-fill" style="width:100%;background:var(--coral)"></div></div>
+        </div>
+      </div>
+      <div id="layerTooltip" style="font-size:12px;color:var(--ink-3);margin-top:10px;min-height:18px;transition:opacity .2s"></div>
+    </div>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="step-detail" id="step4">
+    <div class="detail-main">
+      <h3>Генерация ответа</h3>
+      <p>Модель выбирает следующий токен по вероятностям — и добавляет его в контекст. Затем снова. И снова. Ответ рождается по одному слову. Нажмите кнопку и смотрите.</p>
+      <div class="detail-stats">
+        <div class="stat-chip">Скорость: <strong>~30 токенов/сек</strong></div>
+        <div class="stat-chip">Температура: <strong>0–2</strong></div>
+        <div class="stat-chip">Алгоритм: <strong>top-p / top-k</strong></div>
+      </div>
+    </div>
+    <div class="detail-viz">
+      <div class="gen-demo">
+        <div class="gen-output" id="genOutput">ИИ — это <span class="gen-cursor"></span></div>
+        <div style="font-size:11px;color:var(--ink-4);margin-bottom:6px">Следующий токен (вероятности):</div>
+        <div class="gen-probs" id="genProbs"></div>
+        <button class="gen-next-btn" onclick="genNext()">Следующее слово →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- МОДЕЛИ -->
+<section class="section reveal" id="models">
+  <div class="section-label">Классификация</div>
+  <h2 class="section-title">Типы языковых моделей</h2>
+  <p class="section-sub">Одна архитектура трансформера — но разные способы обучения и совершенно разное поведение.</p>
+
+  <div class="model-tabs">
+    <button class="mtab active" onclick="switchMTab(0)">Обзор типов</button>
+    <button class="mtab" onclick="switchMTab(1)">Base vs Instruct</button>
+    <button class="mtab" onclick="switchMTab(2)">Как обучают</button>
+    <button class="mtab" onclick="switchMTab(3)">Что выбрать</button>
+  </div>
+
+  <!-- Панель 0 -->
+  <div class="mpanel active" id="mp0">
+    <div class="model-cards">
+      <div class="mcard">
+        <div class="mcard-badge" style="background:#f0ede8;color:#767370">Base / Pretrained</div>
+        <h4>Базовая модель</h4>
+        <p>Обучена предсказывать следующий токен на триллионах слов. Не умеет следовать инструкциям — просто продолжает текст.</p>
+        <div class="mcard-ex">Пример: <span>GPT-3, Llama-3 base</span></div>
+      </div>
+      <div class="mcard featured">
+        <div class="mcard-badge" style="background:#d4caff;color:#3c3489">Instruct / Chat ★</div>
+        <h4>Инструкт-модель</h4>
+        <p>Дообучена на диалогах. Понимает «сделай то», «объясни это». Именно с ней вы работаете в ChatGPT, Claude, Gemini.</p>
+        <div class="mcard-ex">Пример: <span>Claude 3.5, GPT-4o</span></div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-badge" style="background:#fef3c7;color:#92400e">Reasoning</div>
+        <h4>Модель рассуждений</h4>
+        <p>Перед ответом «думает вслух» — строит цепочку рассуждений. Медленнее, но точнее в сложных задачах.</p>
+        <div class="mcard-ex">Пример: <span>o3, Claude 3.7 Sonnet</span></div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-badge" style="background:#dcf5ec;color:#085041">Multimodal</div>
+        <h4>Мультимодальная</h4>
+        <p>Понимает текст, изображения, аудио. Видит содержимое фото, читает схемы, чертежи, таблицы.</p>
+        <div class="mcard-ex">Пример: <span>GPT-4o, Gemini 1.5, Claude 3</span></div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-badge" style="background:#fde8e1;color:#712b13">Embedding</div>
+        <h4>Эмбеддинг-модель</h4>
+        <p>Не генерирует текст — превращает его в вектор. Для поиска, сравнения, кластеризации документов.</p>
+        <div class="mcard-ex">Пример: <span>text-embedding-3, E5</span></div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-badge" style="background:#dbeafe;color:#1e3a8a">Domain-specific</div>
+        <h4>Специализированные</h4>
+        <p>Дообучены на узкой области: медицина, право, код, строительство. Точнее в нише, слабее в общем.</p>
+        <div class="mcard-ex">Пример: <span>CodeLlama, Med-PaLM</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Панель 1 -->
+  <div class="mpanel" id="mp1">
+    <div style="background:var(--paper-2);border:1px solid var(--paper-3);border-radius:var(--r);padding:12px 16px;font-size:13px;color:var(--ink-3);margin-bottom:20px;line-height:1.5">
+      <strong style="color:var(--ink)">Главный вопрос:</strong> почему нельзя взять базовую модель и использовать как ассистента?
+    </div>
+    <div class="compare-2col">
+      <div class="comp-col">
+        <div class="comp-head"><div class="comp-head-dot" style="background:#888780"></div>Base — базовая</div>
+        <div class="comp-body">
+          <div class="comp-row"><div class="comp-mark mark-yes">+</div><div class="comp-text">Знает огромный объём информации о мире</div></div>
+          <div class="comp-row"><div class="comp-mark mark-yes">+</div><div class="comp-text">Отлично продолжает текст в заданном стиле</div></div>
+          <div class="comp-row"><div class="comp-mark mark-no">—</div><div class="comp-text">Не понимает инструкции: «переведи», «суммируй»</div></div>
+          <div class="comp-row"><div class="comp-mark mark-no">—</div><div class="comp-text">Может продолжить вопрос вопросом вместо ответа</div></div>
+          <div class="comp-row"><div class="comp-mark mark-no">—</div><div class="comp-text">Нет роли ассистента, нет безопасности</div></div>
+          <div class="comp-row"><div class="comp-mark mark-mid">~</div><div class="comp-text">Нужны сложные few-shot промпты</div></div>
+        </div>
+      </div>
+      <div class="comp-col accent-border">
+        <div class="comp-head"><div class="comp-head-dot" style="background:var(--accent)"></div>Instruct — инструкт</div>
+        <div class="comp-body">
+          <div class="comp-row"><div class="comp-mark mark-yes">+</div><div class="comp-text">Следует инструкциям на естественном языке</div></div>
+          <div class="comp-row"><div class="comp-mark mark-yes">+</div><div class="comp-text">Понимает роль: «ты помощник, отвечай кратко»</div></div>
+          <div class="comp-row"><div class="comp-mark mark-yes">+</div><div class="comp-text">Встроена безопасность и отказ от вредного</div></div>
+          <div class="comp-row"><div class="comp-mark mark-yes">+</div><div class="comp-text">Диалог: помнит контекст всего разговора</div></div>
+          <div class="comp-row"><div class="comp-mark mark-mid">~</div><div class="comp-text">Иногда «угодничает» — соглашается с ошибкой</div></div>
+          <div class="comp-row"><div class="comp-mark mark-mid">~</div><div class="comp-text">Чуть хуже в чистой генерации без инструкций</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="chat-mock">
+      <div class="chat-mock-head"><div class="chat-mock-dot" style="background:#888780"></div>Base — ответ на «Что такое нейросеть?»</div>
+      <div class="chat-mock-body">
+        <div class="cmsg u">Что такое нейросеть?</div>
+        <div class="cmsg ai"><div class="alabel">Продолжает текст как статья:</div>Что такое нейросеть? Нейросеть — это вычислительная модель. Что такое глубокое обучение? Глубокое обучение — это...</div>
+      </div>
+    </div>
+    <div class="chat-mock">
+      <div class="chat-mock-head"><div class="chat-mock-dot" style="background:var(--accent)"></div>Instruct — тот же запрос</div>
+      <div class="chat-mock-body">
+        <div class="cmsg u">Что такое нейросеть?</div>
+        <div class="cmsg ai"><div class="alabel">Отвечает как ассистент:</div>Нейросеть — программа, которая учится на примерах, как мозг. Состоит из слоёв «нейронов». Чем больше данных — тем точнее.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Панель 2 -->
+  <div class="mpanel" id="mp2">
+    <div style="background:var(--paper-2);border:1px solid var(--paper-3);border-radius:var(--r);padding:12px 16px;font-size:13px;color:var(--ink-3);margin-bottom:24px">
+      Все топовые модели проходят <strong style="color:var(--ink)">три фазы обучения</strong>. Каждая добавляет слой поведения поверх предыдущего.
+    </div>
+    <div class="tl">
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot2" style="background:#888780"></div><div class="tl-line2"></div></div>
+        <div class="tl-body">
+          <div class="tl-phase" style="background:#f0ede8;color:#5f5e5a">Фаза 1</div>
+          <div class="tl-title2">Претрейнинг (Pre-training)</div>
+          <div class="tl-desc2">Модель читает триллионы токенов: Википедия, книги, код, сайты. Учится одному — предсказывать следующий токен. Месяцы на тысячах GPU. Результат: базовая модель, которая «знает мир».</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot2" style="background:var(--accent)"></div><div class="tl-line2"></div></div>
+        <div class="tl-body">
+          <div class="tl-phase" style="background:var(--accent-pale);color:#3c3489">Фаза 2</div>
+          <div class="tl-title2">Supervised Fine-Tuning (SFT)</div>
+          <div class="tl-desc2">Люди пишут тысячи пар «вопрос → идеальный ответ». Модель дообучается на них. Начинает понимать формат диалога и инструкций. Результат: модель умеет следовать командам.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot2" style="background:var(--teal)"></div><div class="tl-line2"></div></div>
+        <div class="tl-body">
+          <div class="tl-phase" style="background:var(--teal-pale);color:#085041">Фаза 3</div>
+          <div class="tl-title2">RLHF — обучение с обратной связью людей</div>
+          <div class="tl-desc2">Люди ранжируют ответы модели. Обучается «модель-судья» (reward model). Основная модель оптимизируется под её оценки. Результат: полезная, безопасная, приятная в общении модель.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot2" style="background:var(--amber)"></div><div class="tl-line2"></div></div>
+        <div class="tl-body">
+          <div class="tl-phase" style="background:var(--amber-pale);color:#92400e">Бонус</div>
+          <div class="tl-title2">Chain-of-Thought / Reasoning</div>
+          <div class="tl-desc2">Для моделей типа o3 или Claude 3.7: дополнительное обучение «думать вслух» перед ответом. Генерирует скрытую цепочку рассуждений, затем формулирует итог. Значительно улучшает математику, логику, код.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Панель 3 -->
+  <div class="mpanel" id="mp3">
+    <div style="background:var(--accent-pale);border:1px solid #c9beff;border-radius:var(--r);padding:12px 16px;font-size:13px;color:#3c3489;margin-bottom:20px">
+      Правило: <strong>нужен ассистент → Instruct. Сложная логика → Reasoning. Поиск по документам → Embedding + RAG.</strong>
+    </div>
+    <div class="use-rows">
+      <div style="display:grid;grid-template-columns:1fr 1fr 2fr;gap:12px;padding:8px 16px;font-size:11px;font-weight:600;color:var(--ink-4);letter-spacing:.06em;text-transform:uppercase">
+        <div>Задача</div><div>Тип модели</div><div>Почему</div>
+      </div>
+      <div class="use-row">
+        <div class="use-case">Проектирование и BIM</div>
+        <div class="use-model" style="color:var(--accent)">Instruct + Multimodal</div>
+        <div class="use-why">Читать чертежи, нормативы, помогать с КП. Claude или GPT-4o с vision.</div>
+      </div>
+      <div class="use-row">
+        <div class="use-case">Сложные расчёты и логика</div>
+        <div class="use-model" style="color:var(--amber)">Reasoning</div>
+        <div class="use-why">Проверка сметы, анализ противоречий в документации. o3, Claude 3.7 Sonnet.</div>
+      </div>
+      <div class="use-row">
+        <div class="use-case">Поиск по ГОСТам / СП</div>
+        <div class="use-model" style="color:var(--coral)">Embedding + RAG</div>
+        <div class="use-why">Семантический поиск по нормативам. Как твой NotebookLM стек.</div>
+      </div>
+      <div class="use-row">
+        <div class="use-case">Генерация рендеров</div>
+        <div class="use-model" style="color:var(--teal)">Диффузионные</div>
+        <div class="use-why">Stable Diffusion, FLUX — отдельный класс. Не языковые модели.</div>
+      </div>
+      <div class="use-row">
+        <div class="use-case">Локально / без облака</div>
+        <div class="use-model" style="color:var(--blue)">Локальный Instruct</div>
+        <div class="use-why">Qwen3, Llama-3 через Ollama. Конфиденциальность, работа без сети.</div>
+      </div>
+      <div class="use-row">
+        <div class="use-case">Автодополнение кода</div>
+        <div class="use-model" style="color:var(--ink-2)">Code-специализированные</div>
+        <div class="use-why">CodeLlama, Codestral, Qwen-Coder. Лучше в конкретных языках.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer style="border-top:1px solid var(--paper-3);padding:32px;margin-top:16px">
+  <div style="max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+    <div style="font-size:12px;color:var(--ink-4)">Интерактивный гид по языковым моделям</div>
+    <div style="font-size:11px;background:var(--accent-pale);color:var(--accent);padding:4px 12px;border-radius:20px;border:1px solid #d4caff">Сделано с Claude</div>
+  </div>
+</footer>
+
+<script>
+// Pipeline
+function showStep(n) {
+  document.querySelectorAll('.pipe-card').forEach((c,i) => c.classList.toggle('active', i===n));
+  document.querySelectorAll('.step-detail').forEach((d,i) => {
+    d.classList.remove('visible');
+    if(i===n){ d.classList.add('visible'); }
+  });
+  if(n===4) initGen();
+}
+
+// Attention
+function selectAtt(idx, el) {
+  const weights = el.dataset.weights.split(',').map(Number);
+  document.querySelectorAll('.att-word').forEach((w,i) => {
+    w.classList.toggle('selected', i===idx);
+    w.querySelector('.att-bar').style.width = weights[i] + '%';
+    w.querySelector('.att-pct').textContent = weights[i] + '%';
+  });
+}
+
+// Layers
+function toggleLayer(el, text) {
+  document.getElementById('layerTooltip').textContent = text;
+  document.querySelectorAll('.layer-row').forEach(r => r.style.background='');
+  el.style.background = 'var(--paper-3)';
+}
+
+// Generation
+const GEN_SEQ = [
+  {probs:[{w:'программа',p:38},{w:'система',p:29},{w:'алгоритм',p:18},{w:'модель',p:11},{w:'сеть',p:4}], chosen:'программа'},
+  {probs:[{w:'которая',p:52},{w:',',p:24},{w:'способная',p:14},{w:'обученная',p:7},{w:'—',p:3}], chosen:'которая'},
+  {probs:[{w:'учится',p:44},{w:'анализирует',p:31},{w:'распознаёт',p:14},{w:'предсказывает',p:8},{w:'понимает',p:3}], chosen:'учится'},
+  {probs:[{w:'на',p:61},{w:'по',p:21},{w:'из',p:10},{w:'с',p:6},{w:'от',p:2}], chosen:'на'},
+  {probs:[{w:'данных',p:55},{w:'примерах',p:27},{w:'текстах',p:11},{w:'паттернах',p:5},{w:'образцах',p:2}], chosen:'данных'},
+];
+const PROB_COLORS = ['#5c3bfe','#8b6fff','#b4a3ff','#d9d1ff','#ede9ff'];
+let genStep = 0;
+let genText = 'ИИ — это ';
+let genInited = false;
+
+function initGen() {
+  if(genInited) return;
+  genInited = true;
+  renderProbs(GEN_SEQ[0].probs);
+}
+function renderProbs(probs) {
+  const el = document.getElementById('genProbs');
+  el.innerHTML = '';
+  probs.forEach((p,i) => {
+    const row = document.createElement('div');
+    row.className = 'gen-row';
+    row.innerHTML = `<div class="gen-word">${p.w}</div><div class="gen-bar-wrap"><div class="gen-bar" style="width:${p.p}%;background:${PROB_COLORS[i]}"></div></div><div class="gen-pct">${p.p}%</div>`;
+    el.appendChild(row);
+  });
+}
+function genNext() {
+  if(genStep >= GEN_SEQ.length) {
+    genStep = 0; genText = 'ИИ — это ';
+    document.getElementById('genOutput').innerHTML = genText + '<span class="gen-cursor"></span>';
+    renderProbs(GEN_SEQ[0].probs);
+    document.querySelector('.gen-next-btn').textContent = 'Следующее слово →';
+    return;
+  }
+  genText += GEN_SEQ[genStep].chosen + ' ';
+  genStep++;
+  document.getElementById('genOutput').innerHTML = genText + '<span class="gen-cursor"></span>';
+  if(genStep < GEN_SEQ.length) {
+    renderProbs(GEN_SEQ[genStep].probs);
+    document.querySelector('.gen-next-btn').textContent = 'Следующее слово →';
+  } else {
+    document.getElementById('genProbs').innerHTML = '<div style="font-size:12px;color:var(--ink-4)">Ответ сформирован. Нажмите ещё раз, чтобы сбросить.</div>';
+    document.querySelector('.gen-next-btn').textContent = 'Сначала ↺';
+  }
+}
+
+// Model tabs
+function switchMTab(n) {
+  document.querySelectorAll('.mtab').forEach((t,i) => t.classList.toggle('active', i===n));
+  document.querySelectorAll('.mpanel').forEach((p,i) => p.classList.toggle('active', i===n));
+}
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
