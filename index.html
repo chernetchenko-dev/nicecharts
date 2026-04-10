@@ -1,978 +1,971 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ИИ: Как работает и кого заменит</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-  <style>
-    :root {
-      --bg: #ffffff;
-      --bg-alt: #f9fafb;
-      --card: #ffffff;
-      --card-hover: #f3f4f6;
-      --text: #111827;
-      --text-secondary: #6b7280;
-      --accent: #4f46e5;
-      --accent-glow: rgba(79, 70, 229, 0.08);
-      --accent-light: #e0e7ff;
-      --danger: #dc2626;
-      --danger-bg: #fef2f2;
-      --warn: #d97706;
-      --warn-bg: #fffbeb;
-      --success: #059669;
-      --success-bg: #ecfdf5;
-      --border: #e5e7eb;
-      --radius: 12px;
-      --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      --font-mono: "SF Mono", "Fira Code", Consolas, monospace;
-      --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
-      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg); color: var(--text); font-family: var(--font);
-      line-height: 1.6; padding: 0 1rem 4rem; -webkit-font-smoothing: antialiased;
-    }
-    .container { max-width: 1200px; margin: 0 auto; }
-    
-    header {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border); padding: 0.75rem 0;
-    }
-    .nav-wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
-    .logo { font-weight: 800; font-size: 1.1rem; color: var(--accent); letter-spacing: 0.5px; }
-    nav { display: flex; gap: 0.25rem; flex-wrap: wrap; }
-    nav a {
-      color: var(--text-secondary); text-decoration: none; padding: 0.4rem 0.8rem;
-      border-radius: 6px; font-size: 0.85rem; font-weight: 500; transition: all 0.2s;
-    }
-    nav a:hover, nav a.active { color: var(--text); background: var(--bg-alt); }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ИИ для чайников — от чайников</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #faf7f2;
+  --cream2: #f0ebe1;
+  --cream3: #e4ddd0;
+  --ink: #1a1612;
+  --ink2: #4a4540;
+  --ink3: #8a837a;
+  --punch: #e8400c;
+  --punch-pale: #fdeee8;
+  --teal: #0a7c6a;
+  --teal-pale: #dff5f0;
+  --amber: #c97a00;
+  --amber-pale: #fef6e0;
+  --blue: #1a5faa;
+  --blue-pale: #e0edff;
+  --border: #d8d0c4;
+  --r: 10px;
+  --r-lg: 16px;
+  --font: 'Golos Text', sans-serif;
+  --font-title: 'Unbounded', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--ink);font-family:var(--font);line-height:1.65;-webkit-font-smoothing:antialiased}
+.container{max-width:1100px;margin:0 auto;padding:0 1.5rem}
 
-    .hero { padding: 4rem 0 2rem; text-align: center; }
-    .hero h1 { font-size: clamp(1.8rem, 4.5vw, 2.6rem); margin-bottom: 0.6rem; line-height: 1.15; letter-spacing: -0.5px; }
-    .hero p { color: var(--text-secondary); max-width: 700px; margin: 0 auto 1.5rem; font-size: 1.05rem; }
-    .tags { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem; }
-    .tag { background: var(--bg-alt); border: 1px solid var(--border); padding: 0.3rem 0.75rem; border-radius: 99px; font-size: 0.8rem; color: var(--text-secondary); font-weight: 500; }
+/* ─── ШАПКА ─── */
+header{position:sticky;top:0;z-index:100;background:rgba(250,247,242,.95);backdrop-filter:blur(10px);border-bottom:2px solid var(--ink);padding:0.7rem 0}
+.nav-wrap{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+.logo{font-family:var(--font-title);font-weight:900;font-size:.9rem;color:var(--ink);letter-spacing:-.02em;line-height:1.1}
+.logo span{color:var(--punch)}
+nav{display:flex;gap:0.2rem;flex-wrap:wrap}
+nav a{color:var(--ink2);text-decoration:none;padding:.35rem .7rem;border-radius:6px;font-size:.82rem;font-weight:500;transition:all .15s;border:1.5px solid transparent}
+nav a:hover,nav a.active{background:var(--ink);color:var(--cream);border-color:var(--ink)}
 
-    .toc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 2rem; text-align: left; }
-    .toc-card {
-      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 1.2rem; text-decoration: none; color: inherit; transition: all 0.2s;
-      display: flex; flex-direction: column; gap: 0.5rem; box-shadow: var(--shadow);
-    }
-    .toc-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow-md); }
-    .toc-icon { font-size: 1.5rem; margin-bottom: 0.2rem; }
-    .toc-title { font-weight: 700; color: var(--text); font-size: 1rem; }
-    .toc-desc { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; }
+/* ─── HERO ─── */
+.hero{padding:5rem 0 3.5rem;border-bottom:2px solid var(--ink)}
+.hero-tag{display:inline-block;background:var(--punch);color:#fff;font-family:var(--font-title);font-size:.65rem;font-weight:700;letter-spacing:.1em;padding:.3rem .8rem;border-radius:4px;margin-bottom:1.4rem}
+.hero h1{font-family:var(--font-title);font-size:clamp(2rem,6vw,4rem);font-weight:900;line-height:1.05;letter-spacing:-.03em;margin-bottom:1.2rem}
+.hero h1 .line-accent{color:var(--punch);display:block}
+.hero-desc{font-size:1.05rem;color:var(--ink2);max-width:600px;margin-bottom:2rem;line-height:1.7}
+.hero-btns{display:flex;gap:.7rem;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.4rem;border-radius:var(--r);font-size:.9rem;font-weight:600;font-family:var(--font);cursor:pointer;transition:all .15s;text-decoration:none;border:2px solid var(--ink)}
+.btn-solid{background:var(--ink);color:var(--cream)}
+.btn-solid:hover{background:var(--punch);border-color:var(--punch)}
+.btn-ghost{background:transparent;color:var(--ink)}
+.btn-ghost:hover{background:var(--cream2)}
+.hero-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.8rem;margin-top:3rem}
+.hero-card{background:var(--cream);border:2px solid var(--ink);border-radius:var(--r-lg);padding:1.1rem;text-decoration:none;color:inherit;transition:all .15s;display:flex;flex-direction:column;gap:.4rem}
+.hero-card:hover{background:var(--ink);color:var(--cream);transform:translateY(-2px)}
+.hero-card:hover .hc-desc{color:rgba(255,255,255,.7)}
+.hc-num{font-family:var(--font-title);font-size:.65rem;color:var(--punch);font-weight:700;letter-spacing:.08em}
+.hero-card:hover .hc-num{color:#ff8060}
+.hc-title{font-weight:600;font-size:.95rem}
+.hc-desc{font-size:.82rem;color:var(--ink3);line-height:1.4}
 
-    section { margin-bottom: 4rem; scroll-margin-top: 80px; }
-    h2 { font-size: 1.6rem; margin-bottom: 1.2rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); position: relative; letter-spacing: -0.3px; }
-    h2::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 48px; height: 3px; background: var(--accent); border-radius: 3px; }
-    h3 { font-size: 1.2rem; margin: 1.5rem 0 0.75rem; color: var(--accent); }
-    .section-sub { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem; }
+/* ─── СЕКЦИИ ─── */
+section{padding:4rem 0;border-bottom:1.5px solid var(--border);scroll-margin-top:70px}
+section:last-child{border-bottom:none}
+.sec-eyebrow{font-family:var(--font-title);font-size:.6rem;font-weight:700;letter-spacing:.12em;color:var(--punch);text-transform:uppercase;margin-bottom:.6rem}
+h2{font-family:var(--font-title);font-size:clamp(1.4rem,3vw,2rem);font-weight:900;letter-spacing:-.02em;margin-bottom:.6rem;line-height:1.1}
+.sec-sub{color:var(--ink3);margin-bottom:2rem;font-size:.95rem;max-width:600px}
+h3{font-family:var(--font-title);font-size:1rem;font-weight:700;margin:2rem 0 .8rem;color:var(--ink)}
 
-    .steps-nav { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.2rem; }
-    .step-btn {
-      background: var(--card); border: 1px solid var(--border); color: var(--text-secondary);
-      padding: 0.5rem 0.9rem; border-radius: 8px; cursor: pointer; transition: all 0.2s; font-weight: 500; font-size: 0.9rem;
-    }
-    .step-btn:hover { border-color: var(--accent); color: var(--text); }
-    .step-btn.active { background: var(--accent-glow); border-color: var(--accent); color: var(--text); }
-    .step-content { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.4rem; display: none; }
-    .step-content.active { display: block; animation: fade 0.25s ease; }
-    .step-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 0.8rem; margin-top: 1rem; padding-top: 0.9rem; border-top: 1px dashed var(--border); font-size: 0.82rem; color: var(--text-secondary); }
-    .step-meta span { display: flex; flex-direction: column; }
-    .step-meta strong { color: var(--text); font-size: 0.9rem; }
-    .token-vis { background: var(--bg-alt); padding: 0.9rem; border-radius: 8px; font-family: var(--font-mono); margin: 0.8rem 0; display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; font-size: 0.85rem; }
-    .token { background: var(--card); padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid var(--border); }
-    .arrow { color: var(--accent); margin: 0 0.15rem; }
-    .attention-bar { height: 5px; background: var(--border); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
-    .attention-fill { height: 100%; background: var(--accent); border-radius: 3px; }
+/* ─── ШАГИ "КАК РАБОТАЕТ ИИ" ─── */
+.steps-nav{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.2rem}
+.step-btn{background:var(--cream);border:1.5px solid var(--border);color:var(--ink2);padding:.45rem .9rem;border-radius:8px;cursor:pointer;transition:all .15s;font-weight:600;font-size:.82rem;font-family:var(--font)}
+.step-btn:hover{border-color:var(--ink);color:var(--ink)}
+.step-btn.active{background:var(--ink);border-color:var(--ink);color:var(--cream)}
+.step-content{background:var(--cream);border:2px solid var(--ink);border-radius:var(--r-lg);padding:1.6rem;display:none}
+.step-content.active{display:block;animation:fadeUp .25s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.step-content h3{margin-top:0;font-size:1.2rem}
+.step-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.6rem;margin-top:1rem;padding-top:.9rem;border-top:1.5px dashed var(--border);font-size:.8rem;color:var(--ink3)}
+.step-meta span{display:flex;flex-direction:column}
+.step-meta strong{color:var(--ink);font-size:.88rem}
+.token-vis{background:var(--cream2);border:1.5px solid var(--border);padding:.9rem;border-radius:8px;font-family:var(--font-mono);margin:.8rem 0;display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;font-size:.82rem}
+.token{background:var(--cream);padding:.25rem .5rem;border-radius:4px;border:1.5px solid var(--border)}
+.arrow{color:var(--punch);margin:0 .1rem}
 
-    .model-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-    .model-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem; cursor: pointer; transition: all 0.2s; position: relative; }
-    .model-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-    .model-card.active { border-color: var(--accent); background: var(--accent-glow); }
-    .model-icon { font-size: 1.4rem; margin-bottom: 0.4rem; }
-    .model-title { font-weight: 700; margin-bottom: 0.2rem; font-size: 0.95rem; }
-    .model-desc { font-size: 0.86rem; color: var(--text-secondary); margin-bottom: 0.35rem; line-height: 1.4; }
-    .model-example { font-size: 0.75rem; font-family: var(--font-mono); color: var(--accent); opacity: 0.9; }
-    .model-detail { margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px solid var(--border); font-size: 0.82rem; color: var(--text); display: none; line-height: 1.45; }
-    .model-card.active .model-detail { display: block; animation: fade 0.25s ease; }
+/* ─── ИНТЕРАКТИВ ─── */
+@keyframes tok-pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes blink-cur{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes bar-grow{from{width:0}to{width:var(--target-w)}}
+.tok-chip{background:var(--cream);border:1.5px solid var(--border);padding:.28rem .6rem;border-radius:5px;font-family:var(--font-mono);font-size:.8rem;cursor:pointer;transition:all .15s;animation:tok-pop .3s ease both}
+.tok-chip:hover{border-color:var(--punch);color:var(--punch)}
+.tok-chip.sel{background:var(--punch-pale);border-color:var(--punch);color:var(--punch)}
+.tok-id-chip{font-family:var(--font-mono);font-size:.7rem;color:var(--ink3);background:var(--cream2);border:1.5px solid var(--border);padding:.12rem .5rem;border-radius:4px;animation:tok-pop .3s ease both}
+.att-word-btn{padding:.32rem .7rem;border-radius:6px;border:1.5px solid var(--border);background:var(--cream);cursor:pointer;font-size:.85rem;transition:all .15s;font-family:var(--font-mono)}
+.att-word-btn.active{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.att-word-btn:hover:not(.active){border-color:var(--ink)}
+.att-bar-row{margin-bottom:.5rem}
+.att-bar-label{display:flex;justify-content:space-between;margin-bottom:.15rem;font-size:.82rem}
+.att-bar-track{height:7px;background:var(--cream3);border-radius:4px;overflow:hidden;border:1px solid var(--border)}
+.att-bar-fill{height:100%;background:var(--punch);border-radius:4px;width:0;transition:width .5s ease}
+.layer-row{display:flex;align-items:center;gap:.8rem;padding:.6rem .9rem;border-radius:8px;border:1.5px solid var(--border);background:var(--cream);cursor:pointer;transition:all .2s;animation:fadeUp .3s ease both}
+.layer-row:hover{border-color:var(--ink);background:var(--cream2)}
+.layer-row.active{border-color:var(--ink);background:var(--ink);color:var(--cream)}
+.layer-row.active .layer-sub,.layer-row.active .layer-pct{color:rgba(255,255,255,.6)}
+.layer-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.layer-name{font-size:.88rem;font-weight:600;flex:1}
+.layer-sub{font-size:.75rem;color:var(--ink3)}
+.layer-track{width:90px;height:5px;background:var(--cream3);border-radius:3px;overflow:hidden;flex-shrink:0;border:1px solid var(--border)}
+.layer-fill{height:100%;border-radius:3px;transition:width .6s ease}
+.layer-pct{font-family:var(--font-mono);font-size:.72rem;color:var(--ink3);min-width:28px;text-align:right}
+.gen-prob-row{display:flex;align-items:center;gap:.6rem}
+.gen-prob-word{font-family:var(--font-mono);font-size:.78rem;color:var(--ink);min-width:100px}
+.gen-prob-track{flex:1;height:18px;background:var(--cream2);border-radius:4px;overflow:hidden;border:1.5px solid var(--border)}
+.gen-prob-fill{height:100%;border-radius:3px;transition:width .5s ease}
+.gen-prob-pct{font-family:var(--font-mono);font-size:.75rem;color:var(--ink3);min-width:30px;text-align:right}
 
-    .compare-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
-    .compare-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem; }
-    .compare-title { font-weight: 700; margin-bottom: 0.5rem; color: var(--accent); font-size: 0.95rem; }
-    .compare-list { list-style: none; padding: 0; margin: 0; font-size: 0.88rem; }
-    .compare-list li { margin-bottom: 0.35rem; padding-left: 1.2rem; position: relative; }
-    .compare-list li::before { content: ''; position: absolute; left: 0; top: 0.55rem; width: 5px; height: 5px; border-radius: 50%; }
-    .plus::before { background: var(--success); }
-    .minus::before { background: var(--danger); }
-    .tilde::before { background: var(--warn); }
+/* ─── КАРТОЧКИ МОДЕЛЕЙ ─── */
+.model-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:.9rem;margin-bottom:1.5rem}
+.model-card{background:var(--cream);border:2px solid var(--border);border-radius:var(--r-lg);padding:1.1rem;cursor:pointer;transition:all .2s}
+.model-card:hover{border-color:var(--ink);transform:translateY(-2px)}
+.model-card.active{border-color:var(--punch);background:var(--punch-pale)}
+.model-icon{font-size:1.4rem;margin-bottom:.4rem}
+.model-title{font-weight:700;margin-bottom:.2rem;font-size:.95rem;font-family:var(--font-title)}
+.model-desc{font-size:.84rem;color:var(--ink2);margin-bottom:.35rem;line-height:1.4}
+.model-example{font-size:.72rem;font-family:var(--font-mono);color:var(--teal)}
+.model-detail{margin-top:.6rem;padding-top:.6rem;border-top:1.5px dashed var(--border);font-size:.82rem;color:var(--ink);display:none;line-height:1.45}
+.model-card.active .model-detail{display:block;animation:fadeUp .25s ease}
 
-    .timeline { position: relative; padding-left: 1.8rem; margin: 1.5rem 0; }
-    .timeline::before { content: ''; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; background: var(--border); }
-    .phase { position: relative; margin-bottom: 1.4rem; }
-    .phase::before { content: ''; position: absolute; left: -1.8rem; top: 6px; width: 13px; height: 13px; background: var(--accent); border-radius: 50%; border: 3px solid var(--bg); }
-    .phase h4 { margin-bottom: 0.25rem; font-size: 0.95rem; }
-    .phase p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.45; }
+/* ─── COMPARE ─── */
+.compare-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin:1.5rem 0}
+.compare-box{background:var(--cream);border:2px solid var(--border);border-radius:var(--r-lg);padding:1.2rem}
+.compare-title{font-weight:700;margin-bottom:.5rem;color:var(--ink);font-size:.95rem;font-family:var(--font-title)}
+.compare-list{list-style:none;padding:0;margin:0;font-size:.86rem}
+.compare-list li{margin-bottom:.35rem;padding-left:1.2rem;position:relative;color:var(--ink2)}
+.compare-list li::before{content:'';position:absolute;left:0;top:.55rem;width:5px;height:5px;border-radius:50%}
+.plus::before{background:var(--teal)}
+.minus::before{background:var(--punch)}
+.tilde::before{background:var(--amber)}
 
-    .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 2rem; background: var(--card); box-shadow: var(--shadow); }
-    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; min-width: 1050px; }
-    th, td { padding: 0.75rem 0.9rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
-    th { background: var(--bg-alt); position: sticky; top: 0; font-weight: 600; color: var(--text); z-index: 10; }
-    tr:hover { background: var(--card-hover); }
-    .role { font-weight: 600; min-width: 190px; }
-    .pct { font-weight: 700; color: var(--accent); white-space: nowrap; }
-    .badge { display: inline-block; padding: 0.15rem 0.45rem; border-radius: 4px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
-    .badge.high { background: var(--danger-bg); color: var(--danger); }
-    .badge.med { background: var(--warn-bg); color: var(--warn); }
-    .badge.low { background: var(--success-bg); color: var(--success); }
-    .section-row { background: var(--bg-alt); font-weight: 800; text-transform: uppercase; font-size: 0.75rem; color: var(--text-secondary); letter-spacing: 0.8px; }
-    .tools { color: var(--text-secondary); font-size: 0.8rem; font-family: var(--font-mono); }
-    .details-col { color: var(--text-secondary); font-size: 0.82rem; line-height: 1.4; }
+/* ─── TIMELINE ─── */
+.timeline{position:relative;padding-left:2rem;margin:1.5rem 0}
+.timeline::before{content:'';position:absolute;left:8px;top:8px;bottom:8px;width:2px;background:var(--cream3)}
+.phase{position:relative;margin-bottom:1.4rem}
+.phase::before{content:'';position:absolute;left:-2rem;top:6px;width:14px;height:14px;background:var(--punch);border-radius:50%;border:3px solid var(--cream)}
+.phase h4{margin-bottom:.25rem;font-size:.95rem;font-family:var(--font-title);font-weight:700}
+.phase p{color:var(--ink2);font-size:.88rem;line-height:1.5}
 
-    .risks-list, .steps-list { list-style: none; padding: 0; margin-bottom: 2rem; }
-    .risks-list li, .steps-list li { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1rem 1rem 2.4rem; margin-bottom: 0.9rem; position: relative; box-shadow: var(--shadow); }
-    .risks-list li::before, .steps-list li::before { content: ''; position: absolute; left: 0.95rem; top: 1.1rem; width: 7px; height: 7px; border-radius: 50%; }
-    .risks-list li::before { background: var(--danger); box-shadow: 0 0 6px var(--danger); }
-    .steps-list li::before { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
-    .list-title { font-weight: 700; margin-bottom: 0.2rem; display: block; color: var(--text); font-size: 0.95rem; }
-    .list-text { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; }
+/* ─── ТАБЛИЦА ─── */
+.table-wrap{overflow-x:auto;border-radius:var(--r-lg);border:2px solid var(--ink);margin-bottom:2rem;background:var(--cream)}
+table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:1050px}
+th,td{padding:.7rem .9rem;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+th{background:var(--ink);color:var(--cream);font-family:var(--font-title);font-size:.72rem;font-weight:700;letter-spacing:.04em;position:sticky;top:0;z-index:10}
+tr:hover td{background:var(--cream2)}
+.role{font-weight:600;min-width:190px}
+.pct{font-weight:700;color:var(--punch);white-space:nowrap;font-family:var(--font-mono)}
+.badge{display:inline-block;padding:.15rem .45rem;border-radius:4px;font-size:.7rem;font-weight:700;letter-spacing:.3px;font-family:var(--font-title)}
+.badge.high{background:#fde8e1;color:var(--punch);border:1px solid #f0b0a0}
+.badge.med{background:var(--amber-pale);color:var(--amber);border:1px solid #e8c060}
+.badge.low{background:var(--teal-pale);color:var(--teal);border:1px solid #80c8bc}
+.section-row td{background:var(--ink);color:var(--cream);font-family:var(--font-title);font-size:.68rem;font-weight:700;letter-spacing:.08em}
+.tools{color:var(--ink3);font-size:.78rem;font-family:var(--font-mono)}
+.details-col{color:var(--ink2);font-size:.8rem;line-height:1.4}
 
-    .legal-box { background: var(--card); border-left: 4px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 1rem 1.2rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
-    .legal-box h4 { margin-bottom: 0.3rem; font-size: 0.95rem; }
-    .legal-box p { color: var(--text); font-size: 0.9rem; margin-bottom: 0.4rem; line-height: 1.5; }
-    .legal-box code { background: var(--bg-alt); padding: 0.15rem 0.4rem; border-radius: 4px; font-family: var(--font-mono); font-size: 0.85rem; }
+/* ─── РИСКИ ─── */
+.risks-list,.steps-list{list-style:none;padding:0;margin-bottom:2rem}
+.risks-list li,.steps-list li{background:var(--cream);border:2px solid var(--border);border-radius:var(--r-lg);padding:1rem 1rem 1rem 2.4rem;margin-bottom:.8rem;position:relative}
+.risks-list li::before,.steps-list li::before{content:'';position:absolute;left:.95rem;top:1.1rem;width:8px;height:8px;border-radius:50%}
+.risks-list li::before{background:var(--punch)}
+.steps-list li::before{background:var(--teal)}
+.list-title{font-weight:700;margin-bottom:.2rem;display:block;color:var(--ink);font-size:.95rem;font-family:var(--font-title)}
+.list-text{color:var(--ink2);font-size:.88rem;line-height:1.5}
 
-    .rag-simple-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
-    .rag-simple-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; }
-    
-    .rag-steps { display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0; }
-    .rag-step { display: flex; gap: 1rem; align-items: flex-start; }
-    .rag-step-num {
-      background: var(--accent); color: #fff; width: 32px; height: 32px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;
-    }
-    
-    .rag-checklist { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0.8rem; margin: 1rem 0; }
-    .rag-checklist label {
-      display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.9rem; cursor: pointer;
-    }
-    .rag-checklist input { margin-top: 0.2rem; }
-    
-    .rag-faq details {
-      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 1rem; cursor: pointer; margin-bottom: 0.8rem;
-    }
-    .rag-faq summary { font-weight: 600; cursor: pointer; }
-    .rag-faq p { margin-top: 0.5rem; color: var(--text-secondary); }
+/* ─── LEGAL ─── */
+.legal-box{background:var(--cream);border-left:4px solid var(--punch);border-radius:0 var(--r-lg) var(--r-lg) 0;border-top:1.5px solid var(--border);border-right:1.5px solid var(--border);border-bottom:1.5px solid var(--border);padding:1rem 1.2rem;margin-bottom:1rem}
+.legal-box h4{margin-bottom:.3rem;font-size:.95rem;font-family:var(--font-title);font-weight:700}
+.legal-box p{color:var(--ink2);font-size:.88rem;margin-bottom:.4rem;line-height:1.5}
+.legal-box code{background:var(--cream2);padding:.1rem .4rem;border-radius:4px;font-family:var(--font-mono);font-size:.82rem;border:1px solid var(--border)}
 
-    .rag-demo-zone {
-      background: var(--bg-alt); border: 2px solid var(--border); border-radius: var(--radius);
-      padding: 1.5rem; margin: 2rem 0;
-    }
-    .rag-demo-questions { display: grid; gap: 0.8rem; margin-bottom: 1.5rem; }
-    .rag-demo-qbtn {
-      text-align: left; padding: 0.8rem 1rem; background: var(--card); border: 1px solid var(--border);
-      border-radius: 8px; cursor: pointer; transition: all 0.2s;
-    }
-    .rag-demo-qbtn:hover { border-color: var(--accent); }
-    .rag-demo-qbtn strong { display: block; margin-bottom: 0.2rem; }
-    .rag-demo-qbtn small { color: var(--text-secondary); font-size: 0.85rem; }
-    
-    #ragDemoContainer { display: none; }
-    .rag-demo-step {
-      opacity: 0; transform: translateY(10px); transition: all 0.4s;
-      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
-      padding: 1rem; margin-bottom: 1rem;
-    }
-    .rag-demo-step.visible { opacity: 1; transform: translateY(0); }
-    
-    .rag-demo-spinner {
-      width: 20px; height: 20px; border: 3px solid var(--border); border-top-color: var(--accent);
-      border-radius: 50%; animation: spin 1s linear infinite; display: inline-block;
-      margin-right: 0.8rem; vertical-align: middle;
-    }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    
-    .rag-chunk-item {
-      background: var(--bg-alt); border-left: 3px solid var(--accent);
-      padding: 0.6rem 0.8rem; border-radius: 0 4px 4px 0; font-size: 0.85rem;
-      opacity: 0; transform: translateX(-10px); animation: slideIn 0.3s forwards;
-    }
-    @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
-    
-    .rag-demo-context {
-      background: var(--bg-alt); padding: 0.8rem; border-radius: 6px;
-      font-family: var(--font-mono); font-size: 0.85rem; color: var(--text); line-height: 1.5;
-    }
-    .rag-demo-answer {
-      background: linear-gradient(135deg, var(--success-bg), var(--card));
-      border: 1px solid var(--success); border-radius: 8px; padding: 1.2rem;
-    }
-    .rag-demo-answer strong { color: var(--text); }
-    
-    .rag-demo-reset {
-      display: none; margin-top: 1rem;
-      background: var(--bg-alt); border: 1px solid var(--border);
-      padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer;
-      color: var(--text-secondary);
-    }
+/* ─── RAG ─── */
+.rag-simple-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin:1.5rem 0}
+.rag-simple-card{background:var(--cream);border:1.5px solid var(--border);border-radius:var(--r-lg);padding:1rem}
+.rag-steps{display:flex;flex-direction:column;gap:1rem;margin:1.5rem 0}
+.rag-step{display:flex;gap:1rem;align-items:flex-start}
+.rag-step-num{background:var(--ink);color:var(--cream);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;font-family:var(--font-title);font-size:.8rem}
+.rag-checklist{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:.8rem;margin:1rem 0}
+.rag-checklist label{display:flex;align-items:flex-start;gap:.5rem;font-size:.88rem;cursor:pointer;color:var(--ink2)}
+.rag-checklist input{margin-top:.2rem;accent-color:var(--punch)}
+.rag-faq details{background:var(--cream);border:1.5px solid var(--border);border-radius:var(--r-lg);padding:1rem;cursor:pointer;margin-bottom:.8rem}
+.rag-faq summary{font-weight:600;cursor:pointer;font-size:.9rem}
+.rag-faq p{margin-top:.5rem;color:var(--ink2);font-size:.88rem}
+.rag-demo-zone{background:var(--cream2);border:2px solid var(--ink);border-radius:var(--r-lg);padding:1.5rem;margin:2rem 0}
+.rag-demo-questions{display:grid;gap:.8rem;margin-bottom:1.5rem}
+.rag-demo-qbtn{text-align:left;padding:.8rem 1rem;background:var(--cream);border:1.5px solid var(--border);border-radius:8px;cursor:pointer;transition:all .2s;font-family:var(--font)}
+.rag-demo-qbtn:hover{border-color:var(--ink);background:var(--cream)}
+.rag-demo-qbtn strong{display:block;margin-bottom:.2rem;font-size:.9rem}
+.rag-demo-qbtn small{color:var(--ink3);font-size:.82rem}
+#ragDemoContainer{display:none}
+.rag-demo-step{opacity:0;transform:translateY(8px);transition:all .4s;background:var(--cream);border:1.5px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem}
+.rag-demo-step.visible{opacity:1;transform:translateY(0)}
+.rag-demo-spinner{width:18px;height:18px;border:2.5px solid var(--border);border-top-color:var(--punch);border-radius:50%;animation:spin 1s linear infinite;display:inline-block;margin-right:.8rem;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.rag-chunk-item{background:var(--cream2);border-left:3px solid var(--punch);padding:.6rem .8rem;border-radius:0 4px 4px 0;font-size:.83rem;opacity:0;transform:translateX(-8px);animation:slideIn .3s forwards}
+@keyframes slideIn{to{opacity:1;transform:translateX(0)}}
+.rag-demo-context{background:var(--cream2);padding:.8rem;border-radius:6px;font-family:var(--font-mono);font-size:.82rem;line-height:1.5;border:1.5px solid var(--border)}
+.rag-demo-answer{background:var(--teal-pale);border:1.5px solid var(--teal);border-radius:8px;padding:1.2rem}
+.rag-demo-reset{display:none;margin-top:1rem;background:var(--cream);border:1.5px solid var(--border);padding:.5rem 1.1rem;border-radius:6px;cursor:pointer;color:var(--ink2);font-family:var(--font)}
 
-    .conclusion {
-      background: linear-gradient(150deg, var(--bg-alt), var(--card));
-      border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 1.5rem; margin-top: 2rem; box-shadow: var(--shadow);
-    }
-    .conclusion p { margin-bottom: 0.5rem; color: var(--text-secondary); line-height: 1.5; }
-    .highlight { color: var(--danger); font-weight: 700; }
+/* ─── CONCLUSION ─── */
+.conclusion{background:var(--ink);color:var(--cream);border-radius:var(--r-lg);padding:2rem;margin-top:2rem}
+.conclusion h2{color:var(--cream);border:none;padding:0;margin-bottom:.8rem}
+.conclusion p{color:rgba(255,255,255,.75);margin-bottom:.5rem;line-height:1.6}
+.highlight{color:#ff8060;font-weight:700}
 
-    footer {
-      text-align: center; margin-top: 4rem; padding-top: 1.5rem;
-      border-top: 1px solid var(--border); color: var(--text-secondary);
-      font-size: 0.8rem; letter-spacing: 0.4px;
-    }
+/* ─── FOOTER ─── */
+footer{text-align:center;padding:2.5rem 1.5rem;border-top:2px solid var(--ink);color:var(--ink3);font-size:.82rem}
+footer strong{color:var(--punch)}
 
-    @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-    @media (max-width: 768px) {
-      th, td { padding: 0.6rem 0.7rem; font-size: 0.82rem; }
-      h1 { font-size: 1.6rem; }
-      .steps-nav { justify-content: center; }
-      .nav-wrap { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
-      .toc-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+/* ─── ИНФО-БЛОКИ ─── */
+.info-box{border-radius:var(--r-lg);padding:1.2rem;margin:1rem 0;border:1.5px solid}
+.info-box.warn{background:var(--amber-pale);border-color:var(--amber)}
+.info-box.tip{background:var(--teal-pale);border-color:var(--teal);border-left:4px solid var(--teal)}
+.info-box.neutral{background:var(--cream2);border-color:var(--border);border-left:4px solid var(--punch)}
+
+/* ─── ТАБЛИЦА ВЫБОРА МОДЕЛИ ─── */
+.model-pick-table{border:2px solid var(--ink);border-radius:var(--r-lg);overflow:hidden;margin-top:.8rem}
+.model-pick-table table{min-width:auto}
+.model-pick-table th{font-size:.72rem}
+.model-pick-table td{font-size:.84rem;border-bottom:1px solid var(--border)}
+.model-pick-table tr:last-child td{border-bottom:none}
+
+@media(max-width:768px){
+  th,td{padding:.55rem .65rem;font-size:.78rem}
+  h2{font-size:1.4rem}
+  .steps-nav{justify-content:flex-start}
+  .nav-wrap{flex-direction:column;align-items:flex-start}
+  .hero{padding:3rem 0 2.5rem}
+}
+</style>
 </head>
 <body>
-  <header>
-    <div class="container nav-wrap">
-      <div class="logo">AI.EXPLAINER</div>
-      <nav>
-        <a href="#how-ai" class="active">Как работает ИИ</a>
-        <a href="#models">Типы моделей</a>
-        <a href="#rag-simple">RAG</a>
-        <a href="#replace">Кого заменит</a>
-        <a href="#risks">Риски</a>
-        <a href="#legal">Законодательство</a>
-      </nav>
-    </div>
-  </header>
-
-  <div class="container">
-    <!-- Hero Section -->
-    <section class="hero">
-      <h1>Нейросеть: от запроса до ответа</h1>
-      <p>Как ИИ понимает ваши слова, что происходит внутри — и почему одни модели умеют следовать инструкциям, а другие нет. Плюс анализ замены ролей в проектном отделе.</p>
-      <div class="tags">
-        <span class="tag">Трансформеры</span>
-        <span class="tag">Токенизация</span>
-        <span class="tag">RLHF</span>
-        <span class="tag">RAG / Чанкинг</span>
-        <span class="tag">Проектный отдел</span>
-        <span class="tag">BIM / СП / ГОСТ</span>
-      </div>
-
-      <div class="toc-grid">
-        <a href="#how-ai" class="toc-card">
-          <span class="toc-icon">⚙️</span>
-          <span class="toc-title">Как работает ИИ</span>
-          <span class="toc-desc">Токенизация, внимание, слои трансформера. Интерактивный разбор процесса.</span>
-        </a>
-        <a href="#models" class="toc-card">
-          <span class="toc-icon">🧠</span>
-          <span class="toc-title">Типы моделей</span>
-          <span class="toc-desc">Base vs Instruct, Reasoning, Multimodal. Какую выбрать для задач.</span>
-        </a>
-        <a href="#rag-simple" class="toc-card">
-          <span class="toc-icon">📚</span>
-          <span class="toc-title">RAG для чайников</span>
-          <span class="toc-desc">Как ИИ «читает» твои ГОСТы и СП. Простыми словами + демо.</span>
-        </a>
-        <a href="#replace" class="toc-card">
-          <span class="toc-icon">📉</span>
-          <span class="toc-title">Кого заменит ИИ</span>
-          <span class="toc-desc">Таблица ролей, проценты замены, риски и скрытые угрозы.</span>
-        </a>
-        <a href="#legal" class="toc-card">
-          <span class="toc-icon">⚖️</span>
-          <span class="toc-title">Законодательство</span>
-          <span class="toc-desc">152-ФЗ, КИИ, ответственность по ГрК РФ. Юридический контекст.</span>
-        </a>
-      </div>
-    </section>
-
-    <!-- How AI Works -->
-    <section id="how-ai">
-      <h2>Шаг за шагом: Что происходит с запросом</h2>
-      <p class="section-sub">Нажмите на любой шаг, чтобы увидеть детали и живые примеры.</p>
-      <div class="steps-nav">
-        <button class="step-btn active" data-step="1">01 ✍ Запрос</button>
-        <button class="step-btn" data-step="2">02 ✂ Токенизация</button>
-        <button class="step-btn" data-step="3">03 ◎ Внимание</button>
-        <button class="step-btn" data-step="4">04 ⚙ Слои</button>
-        <button class="step-btn" data-step="5">05 ◆ Ответ</button>
-      </div>
-      
-      <div class="step-content active" id="step-1">
-        <h3>Вы пишете запрос</h3>
-        <p>ИИ получает обычный текст — набор символов. На этом этапе никакого «понимания» ещё нет: просто поток байтов, который нужно преобразовать во что-то, с чем может работать нейросеть.</p>
-        <div class="step-meta">
-          <span><strong>Ввод</strong> Текст</span>
-          <span><strong>Формат</strong> Unicode</span>
-          <span><strong>Скорость</strong> &lt; 1 мс</span>
-        </div>
-        <div class="token-vis">
-          <span class="token">Как работает ИИ?</span>
-          <span style="margin-left:auto; color:var(--text-secondary)">16 символов · 3 слова · ~5 токенов</span>
-        </div>
-      </div>
-
-      <div class="step-content" id="step-2">
-        <h3>Токенизация</h3>
-        <p>Текст разбивается на токены — кусочки слов. Каждый токен получает числовой ID. Нейросеть работает исключительно с числами, не с буквами. Словарь GPT-4 — около 100 тысяч токенов.</p>
-        <div class="step-meta">
-          <span><strong>Словарь</strong> ~100к</span>
-          <span><strong>1 слово</strong> 1–3 токена</span>
-          <span><strong>Макс контекст</strong> 128к токенов</span>
-        </div>
-        <div class="token-vis">
-          <span class="token">Как(3083)</span><span class="arrow">→</span>
-          <span class="token">работ(7741)</span><span class="arrow">→</span>
-          <span class="token">ает(2291)</span><span class="arrow">→</span>
-          <span class="token">ИИ(1049)</span><span class="arrow">→</span>
-          <span class="token">?(30)</span>
-          <span style="margin-left:auto; color:var(--text-secondary)">«работ» + «ает» — два токена вместо одного слова</span>
-        </div>
-      </div>
-
-      <div class="step-content" id="step-3">
-        <h3>Механизм внимания</h3>
-        <p>Каждый токен «смотрит» на все остальные и оценивает их важность. Именно так модель понимает, что «он» в конце предложения относится к конкретному слову в начале.</p>
-        <div class="step-meta">
-          <span><strong>Формула</strong> Q·K·V</span>
-          <span><strong>Голов</strong> 96 (GPT-4)</span>
-          <span><strong>Связей</strong> N²</span>
-        </div>
-        <div style="margin-top:0.8rem; font-size:0.85rem;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:0.15rem;"><span>Как</span><span>100%</span></div><div class="attention-bar"><div class="attention-fill" style="width:100%"></div></div>
-          <div style="display:flex; justify-content:space-between; margin-bottom:0.15rem;"><span>работает</span><span>45%</span></div><div class="attention-bar"><div class="attention-fill" style="width:45%"></div></div>
-          <div style="display:flex; justify-content:space-between; margin-bottom:0.15rem;"><span>ИИ</span><span>85%</span></div><div class="attention-bar"><div class="attention-fill" style="width:85%"></div></div>
-          <div style="display:flex; justify-content:space-between; margin-bottom:0.15rem;"><span>?</span><span>20%</span></div><div class="attention-bar"><div class="attention-fill" style="width:20%"></div></div>
-        </div>
-      </div>
-
-      <div class="step-content" id="step-4">
-        <h3>Слои трансформера</h3>
-        <p>Данные проходят через десятки слоёв. Каждый добавляет новый уровень понимания — от морфологии до сложных рассуждений.</p>
-        <div class="step-meta">
-          <span><strong>GPT-4</strong> ~96 слоёв</span>
-          <span><strong>Параметры</strong> ~1 трлн</span>
-          <span><strong>Обучение</strong> ~90 дней</span>
-        </div>
-        <div style="margin-top:0.8rem; font-size:0.85rem; color:var(--text-secondary); display:grid; gap:0.4rem;">
-          <div>🔹 <span style="color:var(--text)">Слои 1–4:</span> Морфология (окончания, части речи)</div>
-          <div>🔹 <span style="color:var(--text)">Слои 5–16:</span> Синтаксис (порядок слов, грамматика)</div>
-          <div>🔹 <span style="color:var(--text)">Слои 17–48:</span> Семантика (смысл фраз)</div>
-          <div>🔹 <span style="color:var(--text)">Слои 49–80:</span> Знания (факты, закономерности)</div>
-          <div>🔹 <span style="color:var(--text)">Слои 81–96:</span> Рассуждение (логика, выводы)</div>
-        </div>
-      </div>
-
-      <div class="step-content" id="step-5">
-        <h3>Генерация ответа</h3>
-        <p>Модель выбирает следующий токен по вероятностям — и добавляет его в контекст. Затем снова. И снова. Ответ рождается по одному слову.</p>
-        <div class="step-meta">
-          <span><strong>Скорость</strong> ~30 токенов/сек</span>
-          <span><strong>Температура</strong> 0–2</span>
-          <span><strong>Алгоритм</strong> top-p / top-k</span>
-        </div>
-        <div style="background:var(--bg-alt); padding:1.5rem; border-radius:8px; margin-top:1rem; text-align:center;">
-          <div style="display:flex; align-items:center; justify-content:center; gap:0.5rem; flex-wrap:wrap; margin:1rem 0;">
-            <div style="background:var(--card); border:2px solid var(--accent); padding:0.6rem 1.2rem; border-radius:6px; font-family:var(--font-mono); font-size:1.1rem; font-weight:600;">ИИ</div>
-            <span style="color:var(--accent); font-size:1.2rem;">→</span>
-            <div style="background:var(--bg-alt); border:2px dashed var(--border); padding:0.6rem 1.2rem; border-radius:6px; font-family:var(--font-mono); font-size:1.1rem; opacity:0.6;">это</div>
-          </div>
-          <div style="margin-top:1.5rem; padding:1rem; background:var(--card); border-radius:8px;">
-            <div>Вероятность токена «это»:</div>
-            <div style="width:100%; height:12px; background:var(--border); border-radius:6px; overflow:hidden; margin:0.5rem 0;">
-              <div style="height:100%; background:linear-gradient(90deg, var(--accent), #7c3aed); width:87%;"></div>
-            </div>
-            <div style="font-size:1.2rem; font-weight:700; color:var(--accent);">87%</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Models Section -->
-    <section id="models">
-      <h2>Типы языковых моделей</h2>
-      <p class="section-sub">Одна архитектура трансформера — но разные способы обучения и совершенно разное поведение.</p>
-      
-      <div class="model-grid">
-        <div class="model-card" onclick="toggleModel(this)">
-          <div class="model-icon">📖</div>
-          <div class="model-title">Base / Pretrained</div>
-          <div class="model-desc">Базовая модель. Обучена предсказывать следующий токен. Продолжает текст, но не понимает инструкций.</div>
-          <div class="model-example">Пример: GPT-3, Llama-3 base</div>
-          <div class="model-detail">+ Знает огромный объём информации о мире<br>+ Отлично продолжает текст в заданном стиле<br>– Не понимает инструкции: «переведи», «суммируй»<br>– Может продолжить вопрос вопросом<br>~ Нужны сложные few-shot промпты</div>
-        </div>
-        <div class="model-card active" onclick="toggleModel(this)">
-          <div class="model-icon">💬</div>
-          <div class="model-title">Instruct / Chat ★</div>
-          <div class="model-desc">Дообучена на диалогах. Понимает инструкции и роль. Стандарт для ассистентов.</div>
-          <div class="model-example">Пример: Claude 3.5, GPT-4o</div>
-          <div class="model-detail">+ Следует командам на естественном языке<br>+ Понимает роль: «ты помощник, отвечай кратко»<br>+ Встроена безопасность и отказ от вредного<br>~ Иногда «угодничает»</div>
-        </div>
-        <div class="model-card" onclick="toggleModel(this)">
-          <div class="model-icon">🧠</div>
-          <div class="model-title">Reasoning</div>
-          <div class="model-desc">Перед ответом «думает вслух». Медленнее, но точнее в логике и математике.</div>
-          <div class="model-example">Пример: o3, Claude 3.7 Sonnet</div>
-          <div class="model-detail">+ Высокая точность в математике и логике<br>– Медленнее генерация<br>– Выше стоимость токенов</div>
-        </div>
-        <div class="model-card" onclick="toggleModel(this)">
-          <div class="model-icon">👁️</div>
-          <div class="model-title">Multimodal</div>
-          <div class="model-desc">Понимает текст, изображения, аудио. Читает чертежи, схемы, таблицы.</div>
-          <div class="model-example">Пример: GPT-4o, Gemini 1.5, Claude 3</div>
-          <div class="model-detail">+ Мультимодальный контекст<br>– Сложнее контролировать точность в узких доменах</div>
-        </div>
-        <div class="model-card" onclick="toggleModel(this)">
-          <div class="model-icon">📐</div>
-          <div class="model-title">Embedding</div>
-          <div class="model-desc">Превращает текст в вектор для поиска, сравнения, кластеризации документов.</div>
-          <div class="model-example">Пример: text-embedding-3, E5</div>
-          <div class="model-detail">+ Основа для RAG и семантического поиска<br>– Не генерирует текст</div>
-        </div>
-        <div class="model-card" onclick="toggleModel(this)">
-          <div class="model-icon">🏗️</div>
-          <div class="model-title">Domain-specific</div>
-          <div class="model-desc">Дообучены на узкой области: медицина, право, код, строительство.</div>
-          <div class="model-example">Пример: CodeLlama, Med-PaLM</div>
-          <div class="model-detail">+ Высокая точность в конкретной задаче<br>– Узкая область применения</div>
-        </div>
-      </div>
-
-      <h3>Главный вопрос: почему нельзя взять базовую модель?</h3>
-      <div class="compare-grid">
-        <div class="compare-box">
-          <div class="compare-title">Base — базовая</div>
-          <ul class="compare-list">
-            <li class="plus">Знает огромный объём информации о мире</li>
-            <li class="plus">Отлично продолжает текст в заданном стиле</li>
-            <li class="minus">Не понимает инструкции: «переведи», «суммируй»</li>
-            <li class="minus">Может продолжить вопрос вопросом вместо ответа</li>
-            <li class="tilde">Нужны сложные few-shot промпты</li>
-          </ul>
-        </div>
-        <div class="compare-box">
-          <div class="compare-title">Instruct — инструкт</div>
-          <ul class="compare-list">
-            <li class="plus">Следует инструкциям на естественном языке</li>
-            <li class="plus">Понимает роль: «ты помощник, отвечай кратко»</li>
-            <li class="plus">Встроена безопасность и отказ от вредного</li>
-            <li class="plus">Диалог: помнит контекст всего разговора</li>
-            <li class="tilde">Иногда «угодничает» — соглашается с ошибкой</li>
-          </ul>
-        </div>
-      </div>
-
-      <h3>Все топовые модели проходят 3 фазы обучения</h3>
-      <div class="timeline">
-        <div class="phase">
-          <h4>Фаза 1: Претрейнинг (Pre-training)</h4>
-          <p>Модель читает триллионы токенов: Википедия, книги, код, сайты. Учится предсказывать следующий токен. Месяцы на тысячах GPU. Результат: базовая модель, которая «знает мир».</p>
-        </div>
-        <div class="phase">
-          <h4>Фаза 2: Supervised Fine-Tuning (SFT)</h4>
-          <p>Люди пишут тысячи пар «вопрос → идеальный ответ». Модель дообучается на них. Начинает понимать формат диалога и инструкций. Результат: модель умеет следовать командам.</p>
-        </div>
-        <div class="phase">
-          <h4>Фаза 3: RLHF</h4>
-          <p>Люди ранжируют ответы модели. Обучается «модель-судья» (reward model). Основная модель оптимизируется под её оценки. Результат: полезная, безопасная, приятная в общении модель.</p>
-        </div>
-        <div class="phase">
-          <h4>Бонус: Chain-of-Thought / Reasoning</h4>
-          <p>Для моделей типа o3 или Claude 3.7: дополнительное обучение «думать вслух» перед ответом. Генерирует скрытую цепочку рассуждений, затем формулирует итог. Значительно улучшает математику, логику, код.</p>
-        </div>
-      </div>
-
-      <h3>Какую модель выбрать для задач</h3>
-      <div class="table-wrap" style="margin-top:0.8rem;">
-        <table>
-          <thead><tr><th>Задача</th><th>Тип модели</th><th>Почему</th></tr></thead>
-          <tbody>
-            <tr><td>Проектирование и BIM</td><td>Instruct + Multimodal</td><td>Читать чертежи, нормативы, помогать с КП. Claude или GPT-4o с vision.</td></tr>
-            <tr><td>Сложные расчёты и логика</td><td>Reasoning</td><td>Проверка сметы, анализ противоречий в документации. o3, Claude 3.7 Sonnet.</td></tr>
-            <tr><td>Поиск по ГОСТам / СП</td><td>Embedding + RAG</td><td>Семантический поиск по нормативам. Как твой NotebookLM стек.</td></tr>
-            <tr><td>Генерация рендеров</td><td>Диффузионные</td><td>Stable Diffusion, FLUX — отдельный класс. Не языковые модели.</td></tr>
-            <tr><td>Локально / без облака</td><td>Локальный Instruct</td><td>Qwen3, Llama-3 через Ollama. Конфиденциальность, работа без сети.</td></tr>
-            <tr><td>Автодополнение кода</td><td>Code-специализированные</td><td>CodeLlama, Codestral, Qwen-Coder. Лучше в конкретных языках.</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-    <!-- RAG Simple Section -->
-    <section id="rag-simple">
-      <h2>RAG для чайников: как ИИ «читает» твои документы</h2>
-      <p class="section-sub">Без магии. Без сложных терминов. На примерах из проектной работы.</p>
-
-      <div style="background:var(--bg-alt); border:1px solid var(--border); border-radius:var(--radius); padding:1.5rem; margin-bottom:2rem;">
-        <h3 style="margin-top:0;">🎯 Коротко: что такое RAG и зачем он тебе</h3>
-        <p><strong>RAG = Retrieval-Augmented Generation</strong> — это когда ИИ не «помнит всё», а <em>ищет нужное в твоих документах</em> и отвечает на основе найденного.</p>
-        <p style="margin-bottom:0;"><strong>Аналогия:</strong> Ты не помнишь наизусть все СП и ГОСТы. Ты открываешь нужный документ, находишь раздел, читаешь — и отвечаешь. RAG делает то же самое для ИИ.</p>
-      </div>
-
-      <h3>Почему ИИ не может просто «запомнить» все твои документы?</h3>
-      <div class="rag-simple-grid">
-        <div class="rag-simple-card">
-          <strong>🧠 Контекст ограничен</strong>
-          <p style="margin-top:0.5rem; color:var(--text-secondary); font-size:0.9rem;">У любой модели есть лимит токенов (слов). Влезает 100 страниц — а у тебя 10 000. Нельзя запихнуть всё сразу.</p>
-        </div>
-        <div class="rag-simple-card">
-          <strong>📚 Знания устаревают</strong>
-          <p style="margin-top:0.5rem; color:var(--text-secondary); font-size:0.9rem;">Модель обучалась в 2023 году. А СП 2.13130.2020 вышел в 2020, с изменениями 2024. ИИ «не знает» свежих норм — если не дать их ему явно.</p>
-        </div>
-        <div class="rag-simple-card">
-          <strong>🔐 Конфиденциальность</strong>
-          <p style="margin-top:0.5rem; color:var(--text-secondary); font-size:0.9rem;">Твои КП, договоры, внутренние регламенты — не в интернете. ИИ их не видел. Но может работать с ними, если правильно подать.</p>
-        </div>
-      </div>
-
-      <h3>Как работает RAG: 4 шага на примере ГОСТа</h3>
-      <div class="rag-steps">
-        <div class="rag-step">
-          <div class="rag-step-num">1</div>
-          <div>
-            <strong>Загружаешь документы</strong>
-            <p style="margin-top:0.3rem; color:var(--text-secondary);">Ты скидываешь ИИ папку: ГОСТы, СП, внутренние стандарты, шаблоны КП. Не «обучаешь» модель — просто даёшь доступ к файлам.</p>
-          </div>
-        </div>
-        <div class="rag-step">
-          <div class="rag-step-num">2</div>
-          <div>
-            <strong>Режешь на чанки (кусочки)</strong>
-            <p style="margin-top:0.3rem; color:var(--text-secondary);">Документ не скармливается целиком. Его режут на части: по 300–500 слов, с перекрытием. <strong>Важно:</strong> резать надо умно — не рвать таблицы, не ломать списки.</p>
-            <div style="background:var(--bg-alt); padding:0.8rem; border-radius:8px; margin-top:0.5rem; font-family:var(--font-mono); font-size:0.85rem;">
-              <code style="color:var(--accent);"># Чанк 1</code><br>
-              ГОСТ Р 10.00.00.01-2025. Область применения...<br><br>
-              <code style="color:var(--accent);"># Чанк 2</code><br>
-              ...объектов ОИМ. Термины и определения:<br>
-              • ОИМ — объект инф. моделирования...
-            </div>
-          </div>
-        </div>
-        <div class="rag-step">
-          <div class="rag-step-num">3</div>
-          <div>
-            <strong>Превращаешь в векторы (Embedding)</strong>
-            <p style="margin-top:0.3rem; color:var(--text-secondary);">Каждый чанк превращается в «цифровой отпечаток» — вектор. Это позволяет искать <em>по смыслу</em>, а не по ключевым словам.</p>
-            <p style="color:var(--text-secondary); font-size:0.9rem;">Запрос «какая огнестойкость у перегородок» найдёт чанк про «РЕИ-45», даже если слова «огнестойкость» там нет.</p>
-          </div>
-        </div>
-        <div class="rag-step">
-          <div class="rag-step-num">4</div>
-          <div>
-            <strong>Ищешь + генерируешь ответ</strong>
-            <p style="margin-top:0.3rem; color:var(--text-secondary);">Когда ты спрашиваешь — система:</p>
-            <ol style="margin:0.5rem 0 0 1.2rem; color:var(--text-secondary); font-size:0.9rem;">
-              <li>Превращает твой вопрос в вектор</li>
-              <li>Находит 3–5 самых похожих чанков</li>
-              <li>Подставляет их в контекст модели</li>
-              <li>Модель генерирует ответ <em>на основе найденного</em></li>
-            </ol>
-          </div>
-        </div>
-      </div>
-
-      <h3>Почему чанкинг — это 80% успеха</h3>
-      <div style="background:var(--warn-bg); border:1px solid var(--warn); border-radius:var(--radius); padding:1rem; margin:1rem 0;">
-        <strong style="color:var(--warn);">⚠️ Частая ошибка:</strong> резать документы «вслепую», по количеству слов.
-      </div>
-      
-      <div class="rag-simple-grid">
-        <div class="rag-simple-card">
-          <strong>❌ Наивный чанкинг</strong>
-          <p style="margin-top:0.5rem; color:var(--text-secondary); font-size:0.9rem;">Режет каждые 300 слов. Результат:</p>
-          <ul style="margin:0.5rem 0 0 1.2rem; color:var(--text-secondary); font-size:0.85rem;">
-            <li>Таблица разорвана пополам</li>
-            <li>Список требований обрезан</li>
-            <li>Контекст потерян</li>
-          </ul>
-        </div>
-        <div class="rag-simple-card">
-          <strong>✅ Структурный чанкинг</strong>
-          <p style="margin-top:0.5rem; color:var(--text-secondary); font-size:0.9rem;">Режет по заголовкам, разделам, таблицам. Результат:</p>
-          <ul style="margin:0.5rem 0 0 1.2rem; color:var(--text-secondary); font-size:0.85rem;">
-            <li>Каждый чанк — смысловой блок</li>
-            <li>Таблицы и списки целые</li>
-            <li>ИИ понимает контекст</li>
-          </ul>
-        </div>
-      </div>
-
-      <h3>Пример из практики: вопрос по СП</h3>
-      <div style="background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:1.2rem; margin:1.5rem 0;">
-        <p><strong>Твой вопрос:</strong> «Какая минимальная огнестойкость у перегородок в коридоре эвакуации?»</p>
-        <hr style="border:none; border-top:1px solid var(--border); margin:1rem 0;">
-        <p><strong>Что делает RAG:</strong></p>
-        <ol style="margin-left:1.2rem; color:var(--text-secondary);">
-          <li>Ищет в базе чанки со словами: «перегородка», «коридор», «эвакуация», «огнестойкость», «РЕИ»</li>
-          <li>Находит фрагмент из СП 2.13130.2020, п. 5.4.3</li>
-          <li>Подставляет его в контекст: <code>«Контекст: СП 2.13130.2020, п.5.4.3: Перегородки в путях эвакуации должны иметь предел огнестойкости не менее РЕИ-45...»</code></li>
-          <li>Модель отвечает: <strong>«Согласно СП 2.13130.2020, п. 5.4.3, перегородки в коридорах эвакуации должны иметь предел огнестойкости не менее РЕИ-45.»</strong></li>
-        </ol>
-        <p style="margin-top:0.8rem; font-size:0.9rem; color:var(--text-secondary);">
-          <strong>Без RAG:</strong> модель может выдать общее определение огнестойкости или устаревшую норму.<br>
-          <strong>С RAG:</strong> ответ привязан к конкретному документу и пункту.
-        </p>
-      </div>
-
-      <h3>Чек-лист: готов ли твой стек к RAG?</h3>
-      <div class="rag-checklist">
-        <label><input type="checkbox"> Документы в машиночитаемом формате (PDF с текстом, DOCX, Markdown), а не сканы</label>
-        <label><input type="checkbox"> Есть структура: заголовки, разделы, нумерация (не сплошной текст)</label>
-        <label><input type="checkbox"> Таблицы и списки оформлены корректно (не картинками внутри PDF)</label>
-        <label><input type="checkbox"> Версионирование: понятно, какой документ актуальный</label>
-        <label><input type="checkbox"> Метаданные: номер документа, дата, статус (действует/заменён)</label>
-        <label><input type="checkbox"> Политика доступа: кто может видеть какие документы</label>
-      </div>
-
-      <div style="background:var(--bg-alt); border-left:4px solid var(--accent); padding:1rem; border-radius:0 var(--radius) var(--radius) 0; margin:1.5rem 0;">
-        <strong>💡 Практический совет</strong>
-        <p style="margin-top:0.3rem; color:var(--text-secondary);">
-          Начни с малого: возьми один актуальный СП или внутренний регламент, разрежь его на чанки вручную (по разделам), загрузи в RAG-систему и протестируй на 5–10 типовых вопросах. 
-          Если ИИ отвечает точно — масштабируй. Если нет — сначала почини структуру документов.
-        </p>
-      </div>
-
-      <h3>Частые вопросы</h3>
-      <div class="rag-faq">
-        <details>
-          <summary>RAG и локальные модели — это одно и то же?</summary>
-          <p>Нет. RAG — это <em>архитектура</em> (поиск + генерация). Локальная модель — это <em>где работает ИИ</em>. Их можно комбинировать: локальная модель + RAG на твоих документах = полная конфиденциальность.</p>
-        </details>
-        <details>
-          <summary>А если документ обновился — как ИИ узнает?</summary>
-          <p>RAG не «обучается» заново. Ты просто заменяешь старый чанк на новый в базе векторов. Как обновить запись в базе данных. Поэтому важно версионировать документы.</p>
-        </details>
-        <details>
-          <summary>Можно ли использовать RAG с облачными моделями (GPT, Claude)?</summary>
-          <p>Технически — да. Но: если в документах есть ПДн, коммерческая тайна или объекты КИИ — это нарушение 152-ФЗ и 187-ФЗ. Для таких случаев — только локальный стек (Ollama + локальная эмбеддинг-модель).</p>
-        </details>
-      </div>
-
-      <!-- Interactive Demo Zone -->
-      <div class="rag-demo-zone">
-        <h3 style="margin-top:0;">🎮 Интерактивная демо-зона</h3>
-        <p style="color:var(--text-secondary); margin-bottom:1rem;">Выбери вопрос — увидишь, как RAG ищет чанки и формирует ответ</p>
-        
-        <div class="rag-demo-questions">
-          <button onclick="runRagDemo('fire_rating')" class="rag-demo-qbtn">
-            <strong>🔥 Какая огнестойкость у перегородок в коридоре эвакуации?</strong>
-            <small>Пример поиска по СП 2.13130.2020</small>
-          </button>
-          <button onclick="runRagDemo('exit_requirements')" class="rag-demo-qbtn">
-            <strong>🚪 Требования к эвакуационным выходам</strong>
-            <small>Поиск по нескольким разделам</small>
-          </button>
-          <button onclick="runRagDemo('oim_definition')" class="rag-demo-qbtn">
-            <strong>📐 Что такое ОИМ и ТИМ?</strong>
-            <small>Поиск определений в ГОСТ</small>
-          </button>
-        </div>
-
-        <div id="ragDemoContainer">
-          <div id="stepQuestion" class="rag-demo-step">
-            <div style="border-left:4px solid var(--accent); padding:1rem; border-radius:0 8px 8px 0; margin-bottom:1rem;">
-              <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.3rem;">ШАГ 1: Твой вопрос</div>
-              <div id="demoQuestion" style="font-weight:600; font-size:1.05rem;"></div>
-            </div>
-          </div>
-
-          <div id="stepSearch" class="rag-demo-step">
-            <div style="border:1px solid var(--border); border-radius:8px; padding:1rem; margin-bottom:1rem;">
-              <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.5rem;">ШАГ 2: Поиск релевантных чанков</div>
-              <div style="display:flex; align-items:center; gap:0.8rem; margin-bottom:0.8rem;">
-                <div class="rag-demo-spinner" id="searchSpinner"></div>
-                <div style="color:var(--text-secondary);">Векторный поиск по базе документов...</div>
-              </div>
-              <div id="foundChunks" style="display:none;">
-                <div style="color:var(--success); font-size:0.9rem; margin-bottom:0.5rem;">✓ Найдено 3 релевантных чанка</div>
-                <div id="chunksList" style="display:flex; flex-direction:column; gap:0.5rem;"></div>
-              </div>
-            </div>
-          </div>
-
-          <div id="stepContext" class="rag-demo-step">
-            <div style="border:1px solid var(--border); border-radius:8px; padding:1rem; margin-bottom:1rem;">
-              <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.5rem;">ШАГ 3: Контекст для модели</div>
-              <div id="contextContent" class="rag-demo-context"></div>
-            </div>
-          </div>
-
-          <div id="stepAnswer" class="rag-demo-step">
-            <div class="rag-demo-answer">
-              <div style="font-size:0.8rem; color:var(--success); margin-bottom:0.5rem; font-weight:600;">ШАГ 4: Ответ ИИ</div>
-              <div id="demoAnswer" style="font-size:1rem; line-height:1.6; color:var(--text);"></div>
-              <div style="margin-top:0.8rem; padding-top:0.8rem; border-top:1px solid var(--border); font-size:0.85rem; color:var(--text-secondary);">
-                <strong>Источники:</strong> <span id="answerSources"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <button onclick="resetRagDemo()" id="resetDemoBtn" class="rag-demo-reset">↺ Сбросить и выбрать другой вопрос</button>
-      </div>
-    </section>
-
-    <!-- Replacement Table Section -->
-    <section id="replace">
-      <h2>Кого заменит ИИ в проектном отделе</h2>
-      <p class="section-sub">Без маркетинга. Без человеколюбия. С учётом всех рисков. Горизонт: 3–5 лет. Процент замены — доля функций должности.</p>
-      
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Роль</th>
-              <th>Замена %</th>
-              <th>Инструменты</th>
-              <th>Что автоматизируется</th>
-              <th>Что остаётся / не уходит</th>
-              <th>Риск</th>
-              <th>Детали риска</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="section-row"><td colspan="7">ИСЧЕЗАЮТ КАК КЛАСС</td></tr>
-            <tr><td class="role">Техник-оформитель / BIM-техник</td><td class="pct">90–95%</td><td class="tools">Revit, NanoCAD, AutoCAD</td><td>Нарезка видов, расстановка выносок и размеров, оформление листов по ГОСТ 21.101, экспорт штампов</td><td>Нестандартные ситуации, финальная проверка перед выпуском</td><td><span class="badge high">КРИТИЧЕСКИЙ</span></td><td class="details-col">Деградация «насмотренности» у отдела. Некому проверять ИИ через 5 лет.</td></tr>
-            <tr><td class="role">Делопроизводитель / архивариус</td><td class="pct">95–100%</td><td class="tools">Word, Excel, почтовые клиенты, СЭД</td><td>Индексация, версионирование, рассылка, контроль сроков, поиск по архиву</td><td>Политика доступа, хранение оригиналов, аудит</td><td><span class="badge med">СРЕДНИЙ</span></td><td class="details-col">Утечки данных при автоматической классификации. Ошибки версий.</td></tr>
-            <tr><td class="role">Администратор проекта</td><td class="pct">80–90%</td><td class="tools">Word, Excel, почта, таск-трекеры, 1С</td><td>Протоколы совещаний, контроль сроков, рассылка документов, ведение реестров, напоминания</td><td>Эскалация конфликтов, работа с заказчиком, решения вне регламента</td><td><span class="badge med">СРЕДНИЙ</span></td><td class="details-col">Административная функция автоматизируется почти полностью, если процессы описаны. Большинство процессов не описаны — и в этом весь риск.</td></tr>
-            <tr><td class="role">Нормоконтролёр (формальный)</td><td class="pct">85–90%</td><td class="tools">Word, Excel, ручные сверки по СП/ГОСТ</td><td>Штампы, графы, шрифты, ссылки на актуальные СП и ГОСТ, размерные сетки, базовые коллизии</td><td>Трактовка серых зон норм, финальная подпись</td><td><span class="badge med">СРЕДНИЙ</span></td><td class="details-col">Ложные срабатывания на нетиповых объектах. Ответственность остаётся на подписанте.</td></tr>
-
-            <tr class="section-row"><td colspan="7">СОКРАЩЕНИЕ СОСТАВА В 3–5 РАЗ</td></tr>
-            <tr><td class="role">Рядовой проектировщик-моделер</td><td class="pct">60–70%</td><td class="tools">Revit, AutoCAD, NanoCAD, Word (ПЗ)</td><td>Типовые планировки, расстановка оборудования, трассировка на стандартных этажах, пояснительные записки по шаблону</td><td>Нестандартные решения, интерпретация ТЗ, координация с ГИПом</td><td><span class="badge high">КРИТИЧЕСКИЙ</span></td><td class="details-col">Уничтожается школа роста. Джун, минующий рутину, не вырастет в ведущего инженера.</td></tr>
-            <tr><td class="role">BIM-координатор базового уровня</td><td class="pct">55–65%</td><td class="tools">Revit, Navisworks, BIM 360, Excel</td><td>Clash detection, LOD-аудит, отчёты по коллизиям, ручное заполнение параметров, версионирование сводной модели</td><td>Приоритизация коллизий, переговоры со смежниками, нестандартные конфликты разделов</td><td><span class="badge med">СРЕДНИЙ</span></td><td class="details-col">Потеря контекста стройки. Коллизия найдена — но решение принять некому.</td></tr>
-            <tr><td class="role">Сметчик (объёмы из модели)</td><td class="pct">50–65%</td><td class="tools">Excel, Гранд-Смета, Revit выгрузки</td><td>Маппинг элементов модели в расценки, генерация ведомостей объёмов, проверка по нормам расхода</td><td>Спорные объёмы, скрытые работы, переговоры по актам с заказчиком</td><td><span class="badge med">СРЕДНИЙ</span></td><td class="details-col">Ошибки маппинга накапливаются тихо. Один неверный коэффициент = системная ошибка по всему проекту.</td></tr>
-            <tr><td class="role">Помощник ГИПа</td><td class="pct">50–65%</td><td class="tools">Word, Excel, почта, Revit (частично), телефон</td><td>Сбор спецификаций от смежников, ведение реестра замечаний, контроль комплектности выпуска, напоминания, протоколы</td><td>Неформальная коммуникация внутри команды, ситуационные решения, контекст проекта которого нет в документах</td><td><span class="badge high">ВЫСОКИЙ</span></td><td class="details-col">Помощник часто является единственным носителем оперативного контекста по проекту. Автоматизируешь — теряешь память о том, что реально происходит.</td></tr>
-            <tr><td class="role">ПТО (документооборот и исполнительная)</td><td class="pct">40–55%</td><td class="tools">Word, Excel, AutoCAD, 1С, самописные формы</td><td>Формирование исполнительных схем из модели, журналы работ по шаблонам, контроль комплектности, КС-2 по типовым позициям</td><td>Фиксация фактических отклонений на объекте. ИИ не видит, что плита ушла на 30 мм.</td><td><span class="badge high">ВЫСОКИЙ</span></td><td class="details-col">Большая часть ПТО живёт в Word и Excel вне модели. Автоматизация работает только при дисциплинированном BIM на стройке — чего пока нет.</td></tr>
-            <tr><td class="role">Расчётчик (ОВиК, гидравлика, КР типовые)</td><td class="pct">45–60%</td><td class="tools">Excel-расчёты, MagiCAD, специализированный софт, Word</td><td>Подбор сечений и оборудования по каталогам, теплопотери типовых помещений, гидравлика стандартных систем, проверка по формулам СП</td><td>Инженерное суждение при противоречии норм, нестандартные условия, юридическая ответственность</td><td><span class="badge high">КРИТИЧЕСКИЙ</span></td><td class="details-col">Цена ошибки максимальная — аварии, обрушения. Слепое доверие ИИ-расчёту без инженера = уголовная статья.</td></tr>
-
-            <tr class="section-row"><td colspan="7">МЕНЯЕТСЯ РОЛЬ, НЕ ИСЧЕЗАЕТ</td></tr>
-            <tr><td class="role">ГИП / ГАП</td><td class="pct">10–20%</td><td class="tools">Весь стек + переговоры + экспертиза</td><td>Трекинг рисков, генерация отчётов, контроль сроков</td><td>Субъект права. Уголовная и гражданская ответственность. СРО требует аттестованного физлица. Управление хаосом, работа с заказчиком.</td><td><span class="badge low">НИЗКИЙ</span></td><td class="details-col">ИИ не субъект права по ГК РФ и ГрК РФ. Замена невозможна без изменения законодательства.</td></tr>
-            <tr><td class="role">Руководитель проекта</td><td class="pct">15–25%</td><td class="tools">MS Project, Excel, почта, переговоры</td><td>Планирование графика, трекинг задач, риск-реестры, отчёты для заказчика</td><td>Переговоры, управление конфликтами, решения при срыве сроков, доверие заказчика — это не автоматизируется</td><td><span class="badge low">НИЗКИЙ</span></td><td class="details-col">Управленческая и коммуникационная роль. ИИ помогает с аналитикой, но ответственность и авторитет у человека.</td></tr>
-            <tr><td class="role">Главный специалист / ведущий инженер</td><td class="pct">15–25%</td><td class="tools">Весь инженерный стек</td><td>Генерация вариантов решений, проверка по СП, типовые узлы</td><td>Инженерное суждение в условиях неопределённости. «Посмотрел на узел — в реальности рухнет».</td><td><span class="badge high">КРИТИЧЕСКИЙ</span></td><td class="details-col">Системный дефицит через 10 лет: если убрать джунов, вырастить новых главных специалистов будет не из кого.</td></tr>
-            <tr><td class="role">Специалист по согласованиям («порешатель»)</td><td class="pct">&lt; 15%</td><td class="tools">Word, почта, телефон, личные связи</td><td>Подготовка пакетов документов, контроль сроков согласования</td><td>Неформальная среда согласований. Личные отношения и контекст договорённостей нечитаемы для машины.</td><td><span class="badge med">СРЕДНИЙ</span></td><td class="details-col">Концентрация знания в одном человеке. Уходит — уходят связи и понимание неформальных правил.</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- Risks Section -->
-    <section id="risks">
-      <h2>Системные риски — о которых не говорят вслух</h2>
-      <ol class="risks-list">
-        <li>
-          <span class="list-title">Разрыв поколений</span>
-          <div class="list-text">Убирая рутину у джунов, отрасль убирает школу. ГИП раньше вырастал из оформителя через 10 лет шишек. Оператор промптов, миновавший рутину, не понимает, почему узел не работает. Через 10 лет старые мастера уйдут — и валидировать ИИ будет некому.</div>
-        </li>
-        <li>
-          <span class="list-title">Спецификация ≠ закупка</span>
-          <div class="list-text">Выгрузка из модели покрывает 40–60% реального объёма закупки. Остальное: позиции вне модели (крепёж, расходники, монтажные допуски), замена оборудования под рынок, скрытые работы. ИИ этого не знает.</div>
-        </li>
-        <li>
-          <span class="list-title">ПТО живёт не в модели</span>
-          <div class="list-text">Большая часть рабочей и исполнительной документации — это Word, Excel и AutoCAD вне BIM. Автоматизация работает только при дисциплинированном ведении модели на стройке. На большинстве объектов этого нет.</div>
-        </li>
-        <li>
-          <span class="list-title">Регуляторный тормоз</span>
-          <div class="list-text">СРО требует штатных аттестованных специалистов. Госэкспертиза принимает подпись физлица. Лаг между технологией и регулятором — исторически 5–8 лет.</div>
-        </li>
-        <li>
-          <span class="list-title">Концентрация уязвимости</span>
-          <div class="list-text">Если весь отдел работает через одну платформу — один сбой, санкционный бан или апдейт API останавливает всё.</div>
-        </li>
-      </ol>
-
-      <h3>Три шага руководителю — прямо сейчас</h3>
-      <ol class="steps-list">
-        <li>
-          <span class="list-title">Шаг 1. Выбрать одну позицию из списка «90%+» и запустить пилот</span>
-          <div class="list-text">Лучший кандидат — нормоконтроль или оформление листов: результат измерим, цена ошибки низкая. Зафиксировать базовые метрики до старта: время на задачу, количество замечаний при проверке. Через месяц сравнить. Без цифр — нет разговора с командой.</div>
-        </li>
-        <li>
-          <span class="list-title">Шаг 2. Провести аудит: что описано, что в головах</span>
-          <div class="list-text">ИИ автоматизирует только то, что формализовано. Всё, что живёт в голове конкретного человека — не автоматизируется, а теряется при его уходе. Особенно критично для помощников ГИПов и ПТО: их контекст по проекту нигде не записан. Задача — перевести это в структурированный вид до того, как начнётся автоматизация.</div>
-        </li>
-        <li>
-          <span class="list-title">Шаг 3. Не сокращать людей до того, как процесс доказал стабильность</span>
-          <div class="list-text">Первая нетиповая ситуация при отсутствии людей — и исправлять некому. Правильная последовательность: ИИ работает параллельно с человеком → человек валидирует → через 3 месяца стабильной работы — решение о структуре.</div>
-        </li>
-      </ol>
-    </section>
-
-    <!-- Legal Section -->
-    <section id="legal">
-      <h2>Юридический и ИБ-контекст</h2>
-      <div class="legal-box">
-        <h4>152-ФЗ (персональные данные)</h4>
-        <p>Загружать в облачные LLM (ChatGPT, Gemini, Claude.ai) документы, содержащие персональные данные физлиц — нарушение. Проектная документация часто содержит ФИО подписантов, данные заказчиков, паспорта объектов.</p>
-        <p><strong>Решение:</strong> локальные модели или корпоративные контракты с обработчиком данных по ст. 6 152-ФЗ.</p>
-      </div>
-      <div class="legal-box">
-        <h4>КИИ и ограничения на облачные сервисы</h4>
-        <p>Объекты критической информационной инфраструктуры (187-ФЗ) — энергетика, транспорт, оборонка — запрещают передачу проектных данных на зарубежные серверы. Для таких объектов облачные LLM закрыты полностью.</p>
-        <p><strong>Единственный путь:</strong> локальный стек: Ollama, локальные модели, изолированная сеть.</p>
-      </div>
-      <div class="legal-box">
-        <h4>Кто подписывает результат ИИ (ст. 74.1 ГрК РФ)</h4>
-        <p>ИИ не является субъектом права и не несёт ответственности. Подпись под проектной документацией — физическое лицо с аттестацией. Это означает: специалист, поставивший подпись под ИИ-генерированным разделом, несёт полную ответственность за его содержание.</p>
-        <p><strong>Проверка результата ИИ — не формальность, а юридическая необходимость.</strong></p>
-      </div>
-      <p style="margin-top:1.5rem; color:var(--text-secondary); font-size:0.9rem; padding-left:0.8rem; border-left:3px solid var(--accent-light);">
-        <strong>Практический вывод.</strong> Перед внедрением любого облачного ИИ-инструмента — классифицировать данные, которые в него пойдут. Коммерческая тайна, ПДн, КИИ — три разных режима с разными последствиями. Локальный стек снимает большинство рисков, но требует инфраструктуры и поддержки.
-      </p>
-
-      <div class="conclusion">
-        <h2 style="margin-bottom:0.6rem; border:none; padding:0;">Итог без украшений</h2>
-        <p>Из типичного проектного отдела на 10 человек в горизонте 5 лет 3–4 позиции исчезают (оформители, архивариусы, администраторы, нормоконтролёры). Остальные меняют содержание работы радикально. Те, кто не адаптируется — не теряют работу мгновенно. Они становятся дорогими и медленными на фоне тех, кто адаптировался.</p>
-        <p style="margin-top:0.7rem;"><span class="highlight">Главная угроза — не «ИИ уволит», а «компания, использующая ИИ, вытеснит твою компанию» — и уволит всех сразу.</span></p>
-      </div>
-    </section>
+<header>
+  <div class="container nav-wrap">
+    <div class="logo">ИИ для <span>чайников</span><br>от чайников</div>
+    <nav>
+      <a href="#how-ai">Как работает</a>
+      <a href="#models">Типы</a>
+      <a href="#rag-simple">RAG</a>
+      <a href="#glossary">Словарь</a>
+      <a href="#replace">Кого заменит</a>
+      <a href="#risks">Риски</a>
+      <a href="#legal">Закон</a>
+      <a href="#cases">Кейсы</a>
+    </nav>
   </div>
+</header>
 
-  <footer>
-    <p>Апрель 2026 / МПСНКС • Интерактивный гид по языковым моделям и трансформации проектных отделов</p>
-  </footer>
+<div class="container">
+  <section class="hero" style="border-bottom:2px solid var(--ink);margin:0">
+    <div class="hero-tag">Апрель 2026 · Без воды</div>
+    <h1>Нейросеть:<br><span class="line-accent">без магии и страха</span></h1>
+    <p class="hero-desc">Как ИИ понимает твои слова, почему одни модели слушаются, а другие несут чушь — и кого из коллег первым заменят. Написано практиками, не маркетологами.</p>
+    <div class="hero-btns">
+      <a href="#how-ai" class="btn btn-solid">Разобраться →</a>
+      <a href="#replace" class="btn btn-ghost">Кого уволят?</a>
+    </div>
+    <div class="hero-cards">
+      <a href="#how-ai" class="hero-card">
+        <span class="hc-num">01</span>
+        <span class="hc-title">Как работает ИИ</span>
+        <span class="hc-desc">Токенизация, внимание, слои. Интерактивный разбор — без формул.</span>
+      </a>
+      <a href="#models" class="hero-card">
+        <span class="hc-num">02</span>
+        <span class="hc-title">Типы моделей</span>
+        <span class="hc-desc">Base vs Instruct, Reasoning, Multimodal. Что и когда выбирать.</span>
+      </a>
+      <a href="#rag-simple" class="hero-card">
+        <span class="hc-num">03</span>
+        <span class="hc-title">RAG для чайников</span>
+        <span class="hc-desc">Как ИИ читает твои ГОСТы и СП. С живым демо.</span>
+      </a>
+      <a href="#glossary" class="hero-card">
+        <span class="hc-num">04</span>
+        <span class="hc-title">Словарь терминов</span>
+        <span class="hc-desc">ИИ, AGI, MCP, RAG, агенты — что это вообще такое. Без занудства.</span>
+      </a>
+      <a href="#replace" class="hero-card">
+        <span class="hc-num">05</span>
+        <span class="hc-title">Кого заменит</span>
+        <span class="hc-desc">Таблица ролей проектного отдела. Проценты. Без оптимизма.</span>
+      </a>
+      <a href="#legal" class="hero-card">
+        <span class="hc-num">06</span>
+        <span class="hc-title">Закон и ответственность</span>
+        <span class="hc-desc">152-ФЗ, КИИ, кто подписывает результат ИИ по ГрК.</span>
+      </a>
+      <a href="#cases" class="hero-card">
+        <span class="hc-num">07</span>
+        <span class="hc-title">Кейсы</span>
+        <span class="hc-desc">Реальные примеры из практики. Скоро.</span>
+      </a>
+    </div>
+  </section>
 
-  <script>
-    // Step tabs
-    const stepBtns = document.querySelectorAll('.step-btn');
-    const stepContents = document.querySelectorAll('.step-content');
-    stepBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const step = btn.dataset.step;
-        stepBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        stepContents.forEach(c => c.classList.remove('active'));
-        document.getElementById(`step-${step}`).classList.add('active');
+  <!-- ШАГ ЗА ШАГОМ -->
+  <section id="how-ai">
+    <div class="sec-eyebrow">Шаг за шагом</div>
+    <h2>Что происходит с твоим запросом</h2>
+    <p class="sec-sub">Нажми на любой шаг — увидишь детали и живые примеры.</p>
+    <div class="steps-nav">
+      <button class="step-btn active" data-step="1">01 ✍ Запрос</button>
+      <button class="step-btn" data-step="2">02 ✂ Токенизация</button>
+      <button class="step-btn" data-step="3">03 ◎ Внимание</button>
+      <button class="step-btn" data-step="4">04 ⚙ Слои</button>
+      <button class="step-btn" data-step="5">05 ◆ Ответ</button>
+    </div>
+
+    <div class="step-content active" id="step-1">
+      <h3>Вы пишете запрос</h3>
+      <p>ИИ получает обычный текст — набор символов. На этом этапе никакого «понимания» нет: просто байты, которые нужно преобразовать во что-то, с чем может работать нейросеть.</p>
+      <div class="step-meta">
+        <span><strong>Ввод</strong> Текст</span>
+        <span><strong>Формат</strong> Unicode</span>
+        <span><strong>Скорость</strong> &lt; 1 мс</span>
+      </div>
+      <div class="token-vis" style="flex-direction:column;align-items:flex-start;gap:.6rem;">
+        <div style="display:flex;align-items:center;gap:.5rem;width:100%;">
+          <input id="s1-input" type="text" value="Как работает ИИ?" maxlength="40"
+            style="flex:1;padding:.5rem .8rem;border:2px solid var(--border);border-radius:7px;font-family:var(--font-mono);font-size:.88rem;background:var(--cream);outline:none;transition:border .15s"
+            onfocus="this.style.borderColor='var(--ink)'" onblur="this.style.borderColor='var(--border)'"
+            oninput="updateS1()">
+        </div>
+        <div style="display:flex;gap:1.5rem;font-size:.8rem;color:var(--ink3);flex-wrap:wrap;">
+          <span>Символов: <strong id="s1-chars" style="color:var(--ink)">16</strong></span>
+          <span>Слов: <strong id="s1-words" style="color:var(--ink)">3</strong></span>
+          <span>Токенов ~: <strong id="s1-toks" style="color:var(--punch)">5</strong></span>
+        </div>
+        <div id="s1-bytes" style="font-size:.75rem;color:var(--ink3);font-family:var(--font-mono);word-break:break-all;"></div>
+      </div>
+    </div>
+
+    <div class="step-content" id="step-2">
+      <h3>Токенизация</h3>
+      <p>Текст разбивается на токены — кусочки слов. Каждый токен получает числовой ID. Нейросеть работает исключительно с числами. Словарь GPT-4 — около 100 тысяч токенов.</p>
+      <div class="step-meta">
+        <span><strong>Словарь</strong> ~100к</span>
+        <span><strong>1 слово</strong> 1–3 токена</span>
+        <span><strong>Макс контекст</strong> 128к токенов</span>
+      </div>
+      <div class="token-vis" style="flex-direction:column;gap:.7rem;">
+        <div id="tok-chips" style="display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;"></div>
+        <div id="tok-ids" style="display:flex;flex-wrap:wrap;gap:.4rem;"></div>
+        <div style="font-size:.78rem;color:var(--ink3);">«работ» + «ает» — два токена вместо одного слова. Нажмите на токен.</div>
+        <div id="tok-info" style="font-size:.82rem;color:var(--punch);min-height:1.2em;font-style:italic;"></div>
+      </div>
+    </div>
+
+    <div class="step-content" id="step-3">
+      <h3>Механизм внимания</h3>
+      <p>Каждый токен «смотрит» на все остальные и вычисляет веса важности. Именно так модель понимает, что «он» в конце предложения относится к конкретному слову в начале. Нажмите на слово.</p>
+      <div class="step-meta">
+        <span><strong>Формула</strong> Q·K·V</span>
+        <span><strong>Голов</strong> 96 (GPT-4)</span>
+        <span><strong>Связей</strong> N²</span>
+      </div>
+      <div id="att-words" style="display:flex;gap:.5rem;flex-wrap:wrap;margin:.8rem 0;"></div>
+      <div id="att-bars" style="font-size:.85rem;margin-top:.4rem;"></div>
+      <div style="font-size:.75rem;color:var(--ink3);margin-top:.5rem;">Полосы показывают, насколько активный токен «смотрит» на остальные.</div>
+    </div>
+
+    <div class="step-content" id="step-4">
+      <h3>Слои трансформера</h3>
+      <p>Данные проходят через десятки слоёв. Каждый добавляет новый уровень понимания — от морфологии до сложных рассуждений. Нажмите на слой.</p>
+      <div class="step-meta">
+        <span><strong>GPT-4</strong> ~96 слоёв</span>
+        <span><strong>Параметры</strong> ~1 трлн</span>
+        <span><strong>Обучение</strong> ~90 дней</span>
+      </div>
+      <div id="layers-list" style="margin-top:.8rem;display:flex;flex-direction:column;gap:.5rem;"></div>
+      <div id="layer-detail" style="margin-top:.8rem;font-size:.85rem;color:var(--punch);min-height:1.4em;font-style:italic;transition:all .2s;"></div>
+    </div>
+
+    <div class="step-content" id="step-5">
+      <h3>Генерация ответа</h3>
+      <p>Модель вычисляет вероятности для всех токенов словаря и выбирает следующий. Добавляет его в контекст — и повторяет снова. Ответ рождается по одному токену за раз.</p>
+      <div class="step-meta">
+        <span><strong>Скорость</strong> ~30 токенов/сек</span>
+        <span><strong>Температура</strong> 0–2</span>
+        <span><strong>Алгоритм</strong> top-p / top-k</span>
+      </div>
+      <div style="background:var(--cream2);border:1.5px solid var(--border);padding:1.2rem;border-radius:10px;margin-top:.8rem;">
+        <div style="font-size:.8rem;color:var(--ink3);margin-bottom:.6rem;">Генерируемый текст:</div>
+        <div id="gen-output" style="font-family:var(--font-mono);font-size:1rem;color:var(--ink);min-height:2em;margin-bottom:1rem;line-height:1.6;"></div>
+        <div style="font-size:.8rem;color:var(--ink3);margin-bottom:.5rem;">Вероятности следующего токена:</div>
+        <div id="gen-probs" style="display:flex;flex-direction:column;gap:.35rem;"></div>
+        <div style="display:flex;gap:.6rem;margin-top:1rem;flex-wrap:wrap;">
+          <button onclick="genNext()" style="padding:.5rem 1rem;background:var(--ink);color:var(--cream);border:2px solid var(--ink);border-radius:7px;cursor:pointer;font-size:.85rem;font-family:var(--font);font-weight:600;transition:all .15s" onmouseover="this.style.background='var(--punch)';this.style.borderColor='var(--punch)'" onmouseout="this.style.background='var(--ink)';this.style.borderColor='var(--ink)'">Следующий токен →</button>
+          <button onclick="genReset()" style="padding:.5rem 1rem;background:transparent;color:var(--ink2);border:2px solid var(--border);border-radius:7px;cursor:pointer;font-size:.85rem;font-family:var(--font);transition:all .15s" onmouseover="this.style.background='var(--cream2)'" onmouseout="this.style.background='transparent'">Сначала ↺</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ТИПЫ МОДЕЛЕЙ -->
+  <section id="models">
+    <div class="sec-eyebrow">Классификация</div>
+    <h2>Типы языковых моделей</h2>
+    <p class="sec-sub">Одна архитектура трансформера — но разные способы обучения и совершенно разное поведение.</p>
+    <div class="model-grid">
+      <div class="model-card" onclick="toggleModel(this)">
+        <div class="model-icon">📖</div>
+        <div class="model-title">Base / Pretrained</div>
+        <div class="model-desc">Базовая модель. Обучена предсказывать следующий токен. Продолжает текст, но не понимает инструкций.</div>
+        <div class="model-example">GPT-3, Llama-3 base</div>
+        <div class="model-detail">+ Знает огромный объём информации о мире<br>+ Отлично продолжает текст в заданном стиле<br>– Не понимает инструкции: «переведи», «суммируй»<br>– Может продолжить вопрос вопросом<br>~ Нужны сложные few-shot промпты</div>
+      </div>
+      <div class="model-card active" onclick="toggleModel(this)">
+        <div class="model-icon">💬</div>
+        <div class="model-title">Instruct / Chat ★</div>
+        <div class="model-desc">Дообучена на диалогах. Понимает инструкции и роль. Стандарт для ассистентов.</div>
+        <div class="model-example">Claude 3.5, GPT-4o</div>
+        <div class="model-detail">+ Следует командам на естественном языке<br>+ Понимает роль: «ты помощник, отвечай кратко»<br>+ Встроена безопасность и отказ от вредного<br>~ Иногда «угодничает»</div>
+      </div>
+      <div class="model-card" onclick="toggleModel(this)">
+        <div class="model-icon">🧠</div>
+        <div class="model-title">Reasoning</div>
+        <div class="model-desc">Перед ответом «думает вслух». Медленнее, но точнее в логике и математике.</div>
+        <div class="model-example">o3, Claude 3.7 Sonnet</div>
+        <div class="model-detail">+ Высокая точность в математике и логике<br>– Медленнее генерация<br>– Выше стоимость токенов</div>
+      </div>
+      <div class="model-card" onclick="toggleModel(this)">
+        <div class="model-icon">👁️</div>
+        <div class="model-title">Multimodal</div>
+        <div class="model-desc">Понимает текст, изображения, аудио. Читает чертежи, схемы, таблицы.</div>
+        <div class="model-example">GPT-4o, Gemini 1.5, Claude 3</div>
+        <div class="model-detail">+ Мультимодальный контекст<br>– Сложнее контролировать точность в узких доменах</div>
+      </div>
+      <div class="model-card" onclick="toggleModel(this)">
+        <div class="model-icon">📐</div>
+        <div class="model-title">Embedding</div>
+        <div class="model-desc">Превращает текст в вектор для поиска, сравнения, кластеризации документов.</div>
+        <div class="model-example">text-embedding-3, E5</div>
+        <div class="model-detail">+ Основа для RAG и семантического поиска<br>– Не генерирует текст</div>
+      </div>
+      <div class="model-card" onclick="toggleModel(this)">
+        <div class="model-icon">🏗️</div>
+        <div class="model-title">Domain-specific</div>
+        <div class="model-desc">Дообучены на узкой области: медицина, право, код, строительство.</div>
+        <div class="model-example">CodeLlama, Med-PaLM</div>
+        <div class="model-detail">+ Высокая точность в конкретной задаче<br>– Узкая область применения</div>
+      </div>
+    </div>
+
+    <h3>Почему нельзя взять базовую модель?</h3>
+    <div class="compare-grid">
+      <div class="compare-box">
+        <div class="compare-title">Base — базовая</div>
+        <ul class="compare-list">
+          <li class="plus">Знает огромный объём информации о мире</li>
+          <li class="plus">Отлично продолжает текст в заданном стиле</li>
+          <li class="minus">Не понимает инструкции: «переведи», «суммируй»</li>
+          <li class="minus">Может продолжить вопрос вопросом вместо ответа</li>
+          <li class="tilde">Нужны сложные few-shot промпты</li>
+        </ul>
+      </div>
+      <div class="compare-box" style="border-color:var(--punch);">
+        <div class="compare-title" style="color:var(--punch);">Instruct — инструкт</div>
+        <ul class="compare-list">
+          <li class="plus">Следует инструкциям на естественном языке</li>
+          <li class="plus">Понимает роль: «ты помощник, отвечай кратко»</li>
+          <li class="plus">Встроена безопасность и отказ от вредного</li>
+          <li class="plus">Диалог: помнит контекст всего разговора</li>
+          <li class="tilde">Иногда «угодничает» — соглашается с ошибкой</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Все топовые модели проходят 3 фазы обучения</h3>
+    <div class="timeline">
+      <div class="phase"><h4>Фаза 1: Претрейнинг</h4><p>Модель читает триллионы токенов: Википедия, книги, код, сайты. Учится предсказывать следующий токен. Месяцы на тысячах GPU. Результат: базовая модель, которая «знает мир».</p></div>
+      <div class="phase"><h4>Фаза 2: Supervised Fine-Tuning (SFT)</h4><p>Люди пишут тысячи пар «вопрос → идеальный ответ». Модель дообучается. Начинает понимать формат диалога и инструкций. Результат: модель умеет следовать командам.</p></div>
+      <div class="phase"><h4>Фаза 3: RLHF</h4><p>Люди ранжируют ответы модели. Обучается «модель-судья». Основная модель оптимизируется под её оценки. Результат: полезная, безопасная, приятная в общении модель.</p></div>
+      <div class="phase"><h4>Бонус: Chain-of-Thought / Reasoning</h4><p>Для o3, Claude 3.7: дополнительное обучение «думать вслух» перед ответом. Генерирует скрытую цепочку рассуждений, затем итог. Значительно улучшает математику, логику, код.</p></div>
+    </div>
+
+    <h3>Что выбрать для задач</h3>
+    <div class="model-pick-table table-wrap">
+      <table>
+        <thead><tr><th>Задача</th><th>Тип модели</th><th>Почему</th></tr></thead>
+        <tbody>
+          <tr><td>Проектирование и BIM</td><td>Instruct + Multimodal</td><td>Читать чертежи, нормативы, помогать с КП. Claude или GPT-4o с vision.</td></tr>
+          <tr><td>Сложные расчёты и логика</td><td>Reasoning</td><td>Проверка сметы, анализ противоречий. o3, Claude 3.7 Sonnet.</td></tr>
+          <tr><td>Поиск по ГОСТам / СП</td><td>Embedding + RAG</td><td>Семантический поиск по нормативам. Как NotebookLM стек.</td></tr>
+          <tr><td>Генерация рендеров</td><td>Диффузионные</td><td>Stable Diffusion, FLUX — отдельный класс. Не языковые модели.</td></tr>
+          <tr><td>Локально / без облака</td><td>Локальный Instruct</td><td>Qwen3, Llama-3 через Ollama. Конфиденциальность, без сети.</td></tr>
+          <tr><td>Автодополнение кода</td><td>Code-специализированные</td><td>CodeLlama, Codestral, Qwen-Coder.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- RAG -->
+  <section id="rag-simple">
+    <div class="sec-eyebrow">Технология</div>
+    <h2>RAG для чайников: как ИИ «читает» твои документы</h2>
+    <p class="sec-sub">Без магии. Без сложных терминов. На примерах из проектной работы.</p>
+
+    <div class="info-box neutral">
+      <h3 style="margin-top:0;">Коротко: что такое RAG и зачем он тебе</h3>
+      <p><strong>RAG = Retrieval-Augmented Generation</strong> — это когда ИИ не «помнит всё», а <em>ищет нужное в твоих документах</em> и отвечает на основе найденного.</p>
+      <p style="margin-top:.5rem;"><strong>Аналогия:</strong> Ты не помнишь наизусть все СП и ГОСТы. Ты открываешь нужный документ, находишь раздел, читаешь — и отвечаешь. RAG делает то же самое для ИИ.</p>
+    </div>
+
+    <h3>Почему ИИ не может просто «запомнить» все твои документы?</h3>
+    <div class="rag-simple-grid">
+      <div class="rag-simple-card"><strong>🧠 Контекст ограничен</strong><p style="margin-top:.5rem;color:var(--ink2);font-size:.88rem;">Влезает 100 страниц — а у тебя 10 000. Нельзя запихнуть всё сразу.</p></div>
+      <div class="rag-simple-card"><strong>📚 Знания устаревают</strong><p style="margin-top:.5rem;color:var(--ink2);font-size:.88rem;">Модель обучалась в 2023 году. А СП с изменениями 2024 она «не знает» — если не дать явно.</p></div>
+      <div class="rag-simple-card"><strong>🔐 Конфиденциальность</strong><p style="margin-top:.5rem;color:var(--ink2);font-size:.88rem;">Твои КП, договоры, регламенты — не в интернете. ИИ их не видел, но может работать с ними.</p></div>
+    </div>
+
+    <h3>Как работает RAG: 4 шага на примере ГОСТа</h3>
+    <div class="rag-steps">
+      <div class="rag-step"><div class="rag-step-num">1</div><div><strong>Загружаешь документы</strong><p style="margin-top:.3rem;color:var(--ink2);">Ты скидываешь ИИ папку: ГОСТы, СП, внутренние стандарты. Не «обучаешь» — просто даёшь доступ к файлам.</p></div></div>
+      <div class="rag-step"><div class="rag-step-num">2</div><div><strong>Режешь на чанки (кусочки)</strong><p style="margin-top:.3rem;color:var(--ink2);">Документ нарезается на части по 300–500 слов, с перекрытием. <strong>Важно:</strong> резать умно — не рвать таблицы, не ломать списки.</p><div style="background:var(--cream2);border:1.5px solid var(--border);padding:.8rem;border-radius:8px;margin-top:.5rem;font-family:var(--font-mono);font-size:.82rem;"><span style="color:var(--punch);"># Чанк 1</span><br>ГОСТ Р 10.00.00.01-2025. Область применения...<br><br><span style="color:var(--punch);"># Чанк 2</span><br>...объектов ОИМ. Термины и определения:<br>• ОИМ — объект инф. моделирования...</div></div></div>
+      <div class="rag-step"><div class="rag-step-num">3</div><div><strong>Превращаешь в векторы (Embedding)</strong><p style="margin-top:.3rem;color:var(--ink2);">Каждый чанк превращается в «цифровой отпечаток» — вектор. Это позволяет искать <em>по смыслу</em>, а не по ключевым словам.</p><p style="color:var(--ink2);font-size:.88rem;margin-top:.3rem;">Запрос «какая огнестойкость у перегородок» найдёт чанк про «РЕИ-45», даже если слова «огнестойкость» там нет.</p></div></div>
+      <div class="rag-step"><div class="rag-step-num">4</div><div><strong>Ищешь + генерируешь ответ</strong><p style="margin-top:.3rem;color:var(--ink2);">Когда спрашиваешь — система: превращает вопрос в вектор → находит 3–5 похожих чанков → подставляет их в контекст → модель отвечает на основе найденного.</p></div></div>
+    </div>
+
+    <h3>Почему чанкинг — это 80% успеха</h3>
+    <div class="info-box warn"><strong>⚠️ Частая ошибка:</strong> резать документы «вслепую», по количеству слов.</div>
+    <div class="rag-simple-grid">
+      <div class="rag-simple-card"><strong>❌ Наивный чанкинг</strong><p style="margin-top:.5rem;color:var(--ink2);font-size:.88rem;">Режет каждые 300 слов. Таблица разорвана пополам. Список требований обрезан. Контекст потерян.</p></div>
+      <div class="rag-simple-card" style="border-color:var(--teal)"><strong>✅ Структурный чанкинг</strong><p style="margin-top:.5rem;color:var(--ink2);font-size:.88rem;">Режет по заголовкам, разделам, таблицам. Каждый чанк — смысловой блок. ИИ понимает контекст.</p></div>
+    </div>
+
+    <h3>Пример из практики: вопрос по СП</h3>
+    <div style="background:var(--cream);border:2px solid var(--border);border-radius:var(--r-lg);padding:1.2rem;margin:1.5rem 0;">
+      <p><strong>Твой вопрос:</strong> «Какая минимальная огнестойкость у перегородок в коридоре эвакуации?»</p>
+      <hr style="border:none;border-top:1px solid var(--border);margin:1rem 0;">
+      <ol style="margin-left:1.2rem;color:var(--ink2);font-size:.88rem;line-height:1.8;">
+        <li>Ищет в базе чанки: «перегородка», «коридор», «эвакуация», «огнестойкость», «РЕИ»</li>
+        <li>Находит фрагмент из СП 2.13130.2020, п. 5.4.3</li>
+        <li>Подставляет в контекст: <code style="font-family:var(--font-mono);background:var(--cream2);padding:.1rem .4rem;border-radius:4px;font-size:.8rem;">«...должны иметь предел огнестойкости не менее РЕИ-45...»</code></li>
+        <li>Модель отвечает: <strong>«Согласно СП 2.13130.2020, п. 5.4.3 — не менее РЕИ-45.»</strong></li>
+      </ol>
+      <p style="margin-top:.8rem;font-size:.86rem;color:var(--ink3);border-top:1px solid var(--border);padding-top:.8rem;"><strong style="color:var(--ink);">Без RAG:</strong> модель выдаст общее определение или устаревшую норму. <strong style="color:var(--punch);">С RAG:</strong> ответ привязан к конкретному документу и пункту.</p>
+    </div>
+
+    <h3>Чек-лист: готов ли твой стек к RAG?</h3>
+    <div class="rag-checklist">
+      <label><input type="checkbox"> Документы в машиночитаемом формате (PDF с текстом, DOCX), а не сканы</label>
+      <label><input type="checkbox"> Есть структура: заголовки, разделы, нумерация</label>
+      <label><input type="checkbox"> Таблицы оформлены корректно (не картинками внутри PDF)</label>
+      <label><input type="checkbox"> Версионирование: понятно, какой документ актуальный</label>
+      <label><input type="checkbox"> Метаданные: номер документа, дата, статус</label>
+      <label><input type="checkbox"> Политика доступа: кто видит какие документы</label>
+    </div>
+
+    <div class="info-box tip"><strong>💡 Практический совет</strong><p style="margin-top:.3rem;color:var(--ink2);">Начни с малого: один актуальный СП, разрежь по разделам вручную, загрузи в RAG, протестируй на 5–10 вопросах. Если ИИ отвечает точно — масштабируй. Нет — сначала почини структуру документов.</p></div>
+
+    <h3>Частые вопросы</h3>
+    <div class="rag-faq">
+      <details><summary>RAG — это одно и то же, что «загрузить файл в ChatGPT»?</summary><p>Почти — но не совсем. «Загрузить файл» = модель читает его целиком (ограничено контекстом). RAG = умный поиск по большой базе документов + подача только релевантных кусков. RAG масштабируется на тысячи документов.</p></details>
+      <details><summary>Можно ли использовать RAG с облачными моделями (GPT, Claude)?</summary><p>Технически — да. Но если в документах есть ПДн, коммерческая тайна или объекты КИИ — это нарушение 152-ФЗ и 187-ФЗ. Для таких случаев — только локальный стек.</p></details>
+    </div>
+
+    <div class="rag-demo-zone">
+      <h3 style="margin-top:0;font-family:var(--font-title);">🎮 Интерактивная демо-зона</h3>
+      <p style="color:var(--ink2);margin-bottom:1rem;font-size:.9rem;">Выбери вопрос — увидишь, как RAG ищет чанки и формирует ответ</p>
+      <div class="rag-demo-questions">
+        <button onclick="runRagDemo('fire_rating')" class="rag-demo-qbtn"><strong>🔥 Какая огнестойкость у перегородок в коридоре эвакуации?</strong><small>Поиск по СП 2.13130.2020</small></button>
+        <button onclick="runRagDemo('exit_requirements')" class="rag-demo-qbtn"><strong>🚪 Требования к эвакуационным выходам</strong><small>Поиск по нескольким разделам</small></button>
+        <button onclick="runRagDemo('oim_definition')" class="rag-demo-qbtn"><strong>📐 Что такое ОИМ и ТИМ?</strong><small>Поиск определений в ГОСТ</small></button>
+      </div>
+      <div id="ragDemoContainer">
+        <div id="stepQuestion" class="rag-demo-step"><div style="border-left:4px solid var(--punch);padding:1rem;border-radius:0 8px 8px 0;margin-bottom:1rem;"><div style="font-size:.78rem;color:var(--ink3);margin-bottom:.3rem;">ШАГ 1: Твой вопрос</div><div id="demoQuestion" style="font-weight:600;font-size:1.05rem;"></div></div></div>
+        <div id="stepSearch" class="rag-demo-step"><div style="border:1.5px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem;"><div style="font-size:.78rem;color:var(--ink3);margin-bottom:.5rem;">ШАГ 2: Поиск релевантных чанков</div><div style="display:flex;align-items:center;gap:.8rem;margin-bottom:.8rem;"><div class="rag-demo-spinner" id="searchSpinner"></div><div style="color:var(--ink2);font-size:.88rem;">Векторный поиск по базе документов...</div></div><div id="foundChunks" style="display:none;"><div style="color:var(--teal);font-size:.88rem;margin-bottom:.5rem;">✓ Найдено 3 релевантных чанка</div><div id="chunksList" style="display:flex;flex-direction:column;gap:.5rem;"></div></div></div></div>
+        <div id="stepContext" class="rag-demo-step"><div style="border:1.5px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem;"><div style="font-size:.78rem;color:var(--ink3);margin-bottom:.5rem;">ШАГ 3: Контекст для модели</div><div id="contextContent" class="rag-demo-context"></div></div></div>
+        <div id="stepAnswer" class="rag-demo-step"><div class="rag-demo-answer"><div style="font-size:.78rem;color:var(--teal);margin-bottom:.5rem;font-weight:600;">ШАГ 4: Ответ ИИ</div><div id="demoAnswer" style="font-size:.95rem;line-height:1.6;color:var(--ink);"></div><div style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--border);font-size:.83rem;color:var(--ink3);"><strong>Источники:</strong> <span id="answerSources"></span></div></div></div>
+      </div>
+      <button onclick="resetRagDemo()" id="resetDemoBtn" class="rag-demo-reset">↺ Сбросить и выбрать другой вопрос</button>
+    </div>
+  </section>
+
+  <!-- ТАБЛИЦА ЗАМЕНЫ -->
+  <section id="replace">
+    <div class="sec-eyebrow">Честный анализ</div>
+    <h2>Кого заменит ИИ в проектном отделе</h2>
+    <p class="sec-sub">Без маркетинга. Без человеколюбия. С учётом рисков. Горизонт: 3–5 лет. Процент замены — доля функций должности.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Роль</th><th>Замена %</th><th>Инструменты</th><th>Что автоматизируется</th><th>Что остаётся</th><th>Риск</th><th>Детали риска</th></tr></thead>
+        <tbody>
+          <tr class="section-row"><td colspan="7">ИСЧЕЗАЮТ КАК КЛАСС</td></tr>
+          <tr><td class="role">Техник-оформитель / BIM-техник</td><td class="pct">90–95%</td><td class="tools">Revit, NanoCAD, AutoCAD</td><td>Нарезка видов, выноски, размеры, оформление листов по ГОСТ 21.101, экспорт штампов</td><td>Нестандартные ситуации, финальная проверка</td><td><span class="badge high">КРИТИЧЕСКИЙ</span></td><td class="details-col">Деградация «насмотренности» у отдела. Некому проверять ИИ через 5 лет.</td></tr>
+          <tr><td class="role">Делопроизводитель / архивариус</td><td class="pct">95–100%</td><td class="tools">Word, Excel, почта, СЭД</td><td>Индексация, версионирование, рассылка, контроль сроков, поиск по архиву</td><td>Политика доступа, хранение оригиналов, аудит</td><td><span class="badge med">СРЕДНИЙ</span></td><td class="details-col">Утечки данных при автоматической классификации. Ошибки версий.</td></tr>
+          <tr><td class="role">Администратор проекта</td><td class="pct">80–90%</td><td class="tools">Word, Excel, почта, таск-трекеры, 1С</td><td>Протоколы совещаний, контроль сроков, рассылка документов, реестры, напоминания</td><td>Эскалация конфликтов, работа с заказчиком, решения вне регламента</td><td><span class="badge med">СРЕДНИЙ</span></td><td class="details-col">Автоматизируется почти полностью, если процессы описаны. Большинство — не описаны.</td></tr>
+          <tr><td class="role">Нормоконтролёр (формальный)</td><td class="pct">85–90%</td><td class="tools">Word, Excel, ручные сверки по СП/ГОСТ</td><td>Штампы, графы, шрифты, ссылки на актуальные СП, базовые коллизии</td><td>Трактовка серых зон норм, финальная подпись</td><td><span class="badge med">СРЕДНИЙ</span></td><td class="details-col">Ложные срабатывания на нетиповых объектах. Ответственность на подписанте.</td></tr>
+          <tr class="section-row"><td colspan="7">СОКРАЩЕНИЕ СОСТАВА В 3–5 РАЗ</td></tr>
+          <tr><td class="role">Рядовой проектировщик-моделер</td><td class="pct">60–70%</td><td class="tools">Revit, AutoCAD, NanoCAD, Word (ПЗ)</td><td>Типовые планировки, расстановка оборудования, трассировка, пояснительные записки</td><td>Нестандартные решения, интерпретация ТЗ, координация с ГИПом</td><td><span class="badge high">КРИТИЧЕСКИЙ</span></td><td class="details-col">Уничтожается школа роста. Джун, минующий рутину, не вырастет в ведущего инженера.</td></tr>
+          <tr><td class="role">BIM-координатор базового уровня</td><td class="pct">55–65%</td><td class="tools">Revit, Navisworks, BIM 360, Excel</td><td>Clash detection, LOD-аудит, отчёты, ручное заполнение параметров</td><td>Приоритизация коллизий, переговоры со смежниками</td><td><span class="badge med">СРЕДНИЙ</span></td><td class="details-col">Коллизия найдена — но решение принять некому.</td></tr>
+          <tr><td class="role">Сметчик (объёмы из модели)</td><td class="pct">50–65%</td><td class="tools">Excel, Гранд-Смета, Revit выгрузки</td><td>Маппинг элементов в расценки, ведомости объёмов, проверка по нормам расхода</td><td>Спорные объёмы, скрытые работы, переговоры по актам</td><td><span class="badge med">СРЕДНИЙ</span></td><td class="details-col">Ошибки маппинга накапливаются тихо. Один коэффициент = системная ошибка.</td></tr>
+          <tr><td class="role">Помощник ГИПа</td><td class="pct">50–65%</td><td class="tools">Word, Excel, почта, Revit, телефон</td><td>Сбор спецификаций, реестр замечаний, контроль комплектности, протоколы</td><td>Неформальная коммуникация, ситуационные решения, контекст проекта</td><td><span class="badge high">ВЫСОКИЙ</span></td><td class="details-col">Помощник — единственный носитель оперативного контекста по проекту.</td></tr>
+          <tr><td class="role">ПТО (документооборот)</td><td class="pct">40–55%</td><td class="tools">Word, Excel, AutoCAD, 1С</td><td>Исполнительные схемы из модели, журналы работ, КС-2 по типовым позициям</td><td>Фиксация фактических отклонений. ИИ не видит, что плита ушла на 30 мм.</td><td><span class="badge high">ВЫСОКИЙ</span></td><td class="details-col">Автоматизация работает только при дисциплинированном BIM на стройке — чего пока нет.</td></tr>
+          <tr><td class="role">Расчётчик (ОВиК, гидравлика)</td><td class="pct">45–60%</td><td class="tools">Excel, MagiCAD, спец. ПО, Word</td><td>Подбор сечений, теплопотери, гидравлика стандартных систем, проверка по СП</td><td>Инженерное суждение при противоречии норм, юридическая ответственность</td><td><span class="badge high">КРИТИЧЕСКИЙ</span></td><td class="details-col">Цена ошибки максимальная — аварии, обрушения. Слепое доверие ИИ-расчёту = уголовная статья.</td></tr>
+          <tr class="section-row"><td colspan="7">МЕНЯЕТСЯ РОЛЬ, НЕ ИСЧЕЗАЕТ</td></tr>
+          <tr><td class="role">ГИП / ГАП</td><td class="pct">10–20%</td><td class="tools">Весь стек + переговоры + экспертиза</td><td>Трекинг рисков, генерация отчётов, контроль сроков</td><td>Субъект права. СРО требует аттестованного физлица. Управление хаосом.</td><td><span class="badge low">НИЗКИЙ</span></td><td class="details-col">ИИ не субъект права по ГК РФ и ГрК РФ. Замена невозможна без изменения законодательства.</td></tr>
+          <tr><td class="role">Руководитель проекта</td><td class="pct">15–25%</td><td class="tools">MS Project, Excel, почта, переговоры</td><td>Планирование, трекинг, риск-реестры, отчёты</td><td>Переговоры, конфликты, решения при срыве сроков, доверие заказчика</td><td><span class="badge low">НИЗКИЙ</span></td><td class="details-col">ИИ помогает с аналитикой, но ответственность и авторитет у человека.</td></tr>
+          <tr><td class="role">Главный специалист / ведущий инженер</td><td class="pct">15–25%</td><td class="tools">Весь инженерный стек</td><td>Генерация вариантов, проверка по СП, типовые узлы</td><td>Инженерное суждение в условиях неопределённости.</td><td><span class="badge high">КРИТИЧЕСКИЙ</span></td><td class="details-col">Системный дефицит через 10 лет: если убрать джунов, вырастить новых главных — не из кого.</td></tr>
+          <tr><td class="role">«Порешатель» (согласования)</td><td class="pct">&lt; 15%</td><td class="tools">Word, почта, телефон, личные связи</td><td>Подготовка пакетов документов, контроль сроков</td><td>Неформальная среда. Личные отношения нечитаемы для машины.</td><td><span class="badge med">СРЕДНИЙ</span></td><td class="details-col">Уходит человек — уходят связи и понимание неформальных правил.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- РИСКИ -->
+  <section id="risks">
+    <div class="sec-eyebrow">Честно</div>
+    <h2>Системные риски — о которых не говорят вслух</h2>
+    <ol class="risks-list">
+      <li><span class="list-title">Разрыв поколений</span><div class="list-text">Убирая рутину у джунов, отрасль убирает школу. ГИП раньше вырастал из оформителя через 10 лет шишек. Оператор промптов, миновавший рутину, не понимает, почему узел не работает. Через 10 лет валидировать ИИ будет некому.</div></li>
+      <li><span class="list-title">Спецификация ≠ закупка</span><div class="list-text">Выгрузка из модели покрывает 40–60% реального объёма. Остальное: крепёж, расходники, монтажные допуски, замена оборудования под рынок, скрытые работы. ИИ этого не знает.</div></li>
+      <li><span class="list-title">ПТО живёт не в модели</span><div class="list-text">Большая часть рабочей и исполнительной документации — Word, Excel и AutoCAD вне BIM. Автоматизация работает только при дисциплинированном ведении модели на стройке. На большинстве объектов этого нет.</div></li>
+      <li><span class="list-title">Регуляторный тормоз</span><div class="list-text">СРО требует штатных аттестованных специалистов. Госэкспертиза принимает подпись физлица. Лаг между технологией и регулятором — исторически 5–8 лет.</div></li>
+      <li><span class="list-title">Концентрация уязвимости</span><div class="list-text">Если весь отдел работает через одну платформу — один сбой, санкционный бан или апдейт API останавливает всё.</div></li>
+    </ol>
+
+    <h3>Три шага руководителю — прямо сейчас</h3>
+    <ol class="steps-list">
+      <li><span class="list-title">Шаг 1. Выбрать одну позицию из «90%+» и запустить пилот</span><div class="list-text">Лучший кандидат — нормоконтроль или оформление листов: результат измерим, цена ошибки низкая. Зафиксировать базовые метрики до старта. Через месяц сравнить. Без цифр — нет разговора с командой.</div></li>
+      <li><span class="list-title">Шаг 2. Аудит: что описано, что в головах</span><div class="list-text">ИИ автоматизирует только то, что формализовано. Всё в голове конкретного человека — не автоматизируется, а теряется при его уходе. Особенно критично для помощников ГИПов и ПТО.</div></li>
+      <li><span class="list-title">Шаг 3. Не сокращать людей до того, как процесс доказал стабильность</span><div class="list-text">Правильная последовательность: ИИ параллельно с человеком → человек валидирует → через 3 месяца стабильной работы — решение о структуре.</div></li>
+    </ol>
+  </section>
+
+  <!-- LEGAL -->
+  <section id="legal">
+    <div class="sec-eyebrow">Юридический контекст</div>
+    <h2>Закон и ответственность</h2>
+    <div class="legal-box"><h4>152-ФЗ (персональные данные)</h4><p>Загружать в облачные LLM (ChatGPT, Gemini, Claude.ai) документы с персональными данными физлиц — нарушение. Проектная документация часто содержит ФИО подписантов, данные заказчиков.</p><p><strong>Решение:</strong> локальные модели или корпоративные контракты с обработчиком данных по ст. 6 152-ФЗ.</p></div>
+    <div class="legal-box"><h4>КИИ и ограничения на облачные сервисы</h4><p>Объекты критической информационной инфраструктуры (187-ФЗ) — энергетика, транспорт, оборонка — запрещают передачу проектных данных на зарубежные серверы.</p><p><strong>Единственный путь:</strong> локальный стек: Ollama, локальные модели, изолированная сеть.</p></div>
+    <div class="legal-box"><h4>Кто подписывает результат ИИ (ст. 74.1 ГрК РФ)</h4><p>ИИ не является субъектом права. Подпись под проектной документацией — физическое лицо с аттестацией. Специалист, поставивший подпись под ИИ-генерированным разделом, несёт полную ответственность.</p><p><strong>Проверка результата ИИ — не формальность, а юридическая необходимость.</strong></p></div>
+    <p style="margin-top:1.5rem;color:var(--ink2);font-size:.88rem;padding-left:.9rem;border-left:4px solid var(--punch)"><strong style="color:var(--ink)">Практический вывод.</strong> Перед внедрением любого облачного ИИ-инструмента — классифицировать данные. Коммерческая тайна, ПДн, КИИ — три разных режима с разными последствиями. Локальный стек снимает большинство рисков, но требует инфраструктуры.</p>
+
+    <div class="conclusion">
+      <h2>Итог без украшений</h2>
+      <p>Из типичного проектного отдела на 10 человек в горизонте 5 лет 3–4 позиции исчезают (оформители, архивариусы, администраторы, нормоконтролёры). Остальные меняют содержание работы радикально. Те, кто не адаптируется — не теряют работу мгновенно. Они становятся дорогими и медленными на фоне тех, кто адаптировался.</p>
+      <p style="margin-top:.7rem;"><span class="highlight">Главная угроза — не «ИИ уволит», а «компания с ИИ вытеснит твою компанию» — и уволит всех сразу.</span></p>
+    </div>
+  </section>
+  <!-- СЛОВАРЬ -->
+  <section id="glossary">
+    <div class="sec-eyebrow">Словарик</div>
+    <h2>Термины, которые все слышали, но путают</h2>
+    <p class="sec-sub">Один умный человек недавно сказал: вещи, которые кажутся тебе очевидными, для других могут быть откровением. Проверяем на практике.</p>
+
+    <div id="gloss-list" style="display:flex;flex-direction:column;gap:.5rem;"></div>
+
+    <style>
+    .gloss-item{border:1.5px solid var(--border);border-radius:var(--r-lg);background:var(--cream);overflow:hidden;transition:border-color .15s}
+    .gloss-item:hover{border-color:var(--ink)}
+    .gloss-item.open{border-color:var(--punch)}
+    .gloss-trigger{display:flex;align-items:center;gap:.9rem;padding:.85rem 1.1rem;cursor:pointer;user-select:none}
+    .gloss-term{font-family:var(--font-title);font-size:.88rem;font-weight:700;color:var(--ink);flex:1}
+    .gloss-abbr{font-family:var(--font-mono);font-size:.72rem;color:var(--punch);background:var(--punch-pale);padding:.15rem .5rem;border-radius:4px;flex-shrink:0}
+    .gloss-arrow{font-size:.8rem;color:var(--ink3);transition:transform .2s;flex-shrink:0}
+    .gloss-item.open .gloss-arrow{transform:rotate(90deg)}
+    .gloss-body{display:none;padding:.1rem 1.1rem 1rem 1.1rem;font-size:.9rem;color:var(--ink2);line-height:1.65;border-top:1px dashed var(--border)}
+    .gloss-item.open .gloss-body{display:block}
+    .gloss-body em{color:var(--punch);font-style:normal;font-weight:500}
+    .gloss-search{width:100%;padding:.65rem 1rem;border:2px solid var(--border);border-radius:var(--r);font-family:var(--font);font-size:.9rem;background:var(--cream);outline:none;margin-bottom:1.2rem;transition:border .15s}
+    .gloss-search:focus{border-color:var(--ink)}
+    </style>
+
+    <input class="gloss-search" type="text" placeholder="Поиск по словарю..." oninput="filterGloss(this.value)">
+
+    <script>
+    const GLOSSARY=[
+      {term:'ИИ',abbr:'Искусственный интеллект',body:'Общее название технологии, обсуждают уже под сотню лет. Где-то мечта о прекрасном будущем, где-то пугалка. По факту — чистый маркетинг и привет из фантастики, в реальной жизни пока не встречается. Впрочем, как и естественный. Но для единства терминологии пишем «ИИ».'},
+      {term:'AGI',abbr:'Artificial General Intelligence',body:'Тот самый настоящий ИИ. Гипотетический, который может решить любую задачу не хуже человека. Сейчас его нет. Когда Сэм Альтман или Илон Маск говорят про AGI, они имеют в виду момент, когда машина начнёт сама учиться и осознавать себя. Пока это просто горизонт, к которому все бегут, чтобы поднять раунд инвестиций.'},
+      {term:'Нейросеть',abbr:null,body:'Математическая модель, имитирующая работу мозга. Это «движок» внутри ИИ — состоящий из слоёв, которые обрабатывают информацию.'},
+      {term:'LLM',abbr:'Large Language Model',body:'Большая языковая модель. Конкретный тип нейросети, обученный на гигантском массиве текстов. Она не «думает», а виртуозно предсказывает следующее слово. Очень примитивно — это очень прокачанный Т9. На самом деле нет, но для аналогии сойдёт.'},
+      {term:'Параметры',abbr:null,body:'«Вес» или объём знаний модели. Когда говорят про модель на 70 миллиардов параметров (70B) — имеют в виду количество внутренних связей. Чем их больше, тем модель потенциально умнее, но тем мощнее железо ей нужно.'},
+      {term:'Квантование',abbr:'Quantization',body:'Способ заставить тяжёлую модель работать на обычном компьютере. Это сжатие данных с потерей точности. Нейронный MP3, если хотите. Или JPEG — кому как ближе.'},
+      {term:'Токены',abbr:null,body:'Части слов, которыми оперирует модель. ИИ не видит буквы — он видит числовые элементы. На токенах завязана и стоимость запроса, и память модели. По сути — единица обмена информацией с ИИ.'},
+      {term:'Контекстное окно',abbr:null,body:'Объём «оперативки» нейронки. То количество информации, которое она может удержать в голове за один раз. Если окно маленькое, ИИ забудет начало длинного документа, пока дочитает его до конца.'},
+      {term:'Промпт',abbr:null,body:'Ваш запрос, инструкция для модели. Качество промпта напрямую определяет результат. Что-то типа ТЗ. Как известно: без ТЗ результат ХЗ. У ИИ это очень наглядно выходит.'},
+      {term:'Системный промпт',abbr:'System Prompt',body:'Главная инструкция, «конституция» для модели. Обычный промпт — это разовая задача, системный — правила игры на весь диалог. В нём прописано, кем модель должна себя воображать («ты опытный юрист») и какие темы игнорировать.'},
+      {term:'Температура',abbr:'Temperature',body:'Ползунок «креативности» или, если угодно, «степени опьянения» нейронки. Обычно от 0 до 1. При низкой — скучный отличник, только проверенные факты. При высокой — начинает фантазировать. Выкрутить на максимум — получишь несвязную чушь.'},
+      {term:'Галлюцинации',abbr:null,body:'Когда ИИ с уверенным видом выдаёт бред. Модель просто подбирает наиболее вероятные слова — и если данных нет, правдоподобно выдумает. Всегда проверяйте факты и цифры. И да, почти все ИИ не умеют говорить «я не знаю» — они врут до конца.'},
+      {term:'Deep Search',abbr:'Глубокий поиск',body:'Режим, когда ИИ не выдаёт первый попавшийся ответ, а делает десятки запросов, читает разные сайты, сопоставляет — и только потом пишет отчёт. Долго, но в разы точнее. И дорого в токенах.'},
+      {term:'Агенты',abbr:'AI Agents',body:'Программы с доступом к инструментам. Агент не просто пишет текст — он может сам зайти в интернет, скачать файл, проанализировать его и выполнить задачу автономно. Следующий этап развития LLM, где машина умеет не просто делать мемы, а может прочитать вашу историю поиска и сделать выводы. Или удалить все мемы из папки(1) на рабочем столе.'},
+      {term:'Tool',abbr:'Инструмент',body:'Конкретная функция, которую ИИ может вызвать. Калькулятор, поиск в Google, запуск кода, распознавание PDF. ИИ сам решает, когда ему нужно «взять в руки» этот инструмент.'},
+      {term:'Skill',abbr:'Навык',body:'Умение модели использовать инструмент правильно. Звучит страшно, а по сути чаще всего — просто документ в markdown, где написано что и как делать.'},
+      {term:'API',abbr:'Application Programming Interface',body:'«Дверь», через которую программы общаются друг с другом. Когда встраиваешь нейронку в свой софт — общаешься с ней через API. И что важнее: через API можно использовать ИИ без подписки, с оплатой за каждый токен. Купил ключ — система посадила тебя на счётчик.'},
+      {term:'MCP',abbr:'Model Context Protocol',body:'Свежий стандарт, «универсальный переходник». Позволяет любой модели легко подключаться к вашим данным — Google Drive, Revit, Excel, помойка из файлов на рабочем столе — без написания сложного кода под каждый сервис.'},
+      {term:'RAG',abbr:'Retrieval-Augmented Generation',body:'Технология, которая заставляет ИИ отвечать по вашим личным документам. Модель сначала ищет информацию в вашей базе знаний — в векторном формате — и только потом формулирует ответ. Как библиотекарь и библиотека.'},
+      {term:'Локальный запуск',abbr:'те самые 10 макмини',body:'Работа с ИИ на своём железе, а не в облаке. Нужно для приватности данных и экономии на подписках. Но по-настоящему мощные думающие модели весят много и требуют очень сильного железа. Поэтому люди и собирают кластеры из маков прямо в офисе под столом.'},
+      {term:'Перемножение матриц',abbr:null,body:'То, что происходит под капотом. Любой запрос превращается в огромные таблицы чисел, которые видеокарты перемножают триллионы раз в секунду. Это и есть вся «магия» вычислений.'},
+    ];
+
+    function buildGloss(items){
+      const el=document.getElementById('gloss-list');
+      el.innerHTML='';
+      items.forEach((g,i)=>{
+        const item=document.createElement('div');
+        item.className='gloss-item';
+        item.dataset.idx=i;
+        item.innerHTML=`<div class="gloss-trigger" onclick="toggleGloss(this.parentElement)">
+          <div class="gloss-term">${g.term}</div>
+          ${g.abbr?`<div class="gloss-abbr">${g.abbr}</div>`:''}
+          <div class="gloss-arrow">▶</div>
+        </div>
+        <div class="gloss-body">${g.body.replace(/«([^»]+)»/g,'«<em>$1</em>»')}</div>`;
+        el.appendChild(item);
       });
-    });
-
-    // Model cards toggle
-    function toggleModel(card) {
-      const wasActive = card.classList.contains('active');
-      document.querySelectorAll('.model-card').forEach(c => c.classList.remove('active'));
-      if (!wasActive) card.classList.add('active');
     }
-
-    // RAG Demo Zone
-    const ragChunks = {
-      fire_rating: [
-        { text: 'СП 2.13130.2020, п. 5.4.3: Перегородки в путях эвакуации должны иметь предел огнестойкости не менее РЕИ-45.', source: 'СП 2.13130.2020', relevance: 0.94 },
-        { text: 'СП 1.13130.2020, п. 4.1.2: Коридоры эвакуационные — пути эвакуации, соединяющие выходы из помещений с эвакуационными выходами.', source: 'СП 1.13130.2020', relevance: 0.87 },
-        { text: 'ГОСТ Р 10.00.00.01-2025: ОИМ — объект информационного моделирования, ТИМ — технология информационного моделирования.', source: 'ГОСТ Р 10.00.00.01-2025', relevance: 0.72 }
-      ],
-      exit_requirements: [
-        { text: 'СП 1.13130.2020, п. 4.2.5: Ширина эвакуационного выхода из помещений должна быть не менее 0.8 м.', source: 'СП 1.13130.2020', relevance: 0.91 },
-        { text: 'СП 1.13130.2020, п. 4.2.8: Количество эвакуационных выходов из помещения должно быть не менее двух.', source: 'СП 1.13130.2020', relevance: 0.89 },
-        { text: 'СП 2.13130.2020, п. 5.1.1: Эвакуационные выходы должны располагаться рассредоточенно.', source: 'СП 2.13130.2020', relevance: 0.85 }
-      ],
-      oim_definition: [
-        { text: 'ГОСТ Р 10.00.00.01-2025, п. 3.1: ОИМ (Объект информационного моделирования) — здание, сооружение или комплекс, в отношении которого осуществляется информационное моделирование.', source: 'ГОСТ Р 10.00.00.01-2025', relevance: 0.96 },
-        { text: 'ГОСТ Р 10.00.00.01-2025, п. 3.2: ТИМ (Технология информационного моделирования) — совокупность методов, способов и инструментов создания, ведения и использования информационной модели.', source: 'ГОСТ Р 10.00.00.01-2025', relevance: 0.95 },
-        { text: 'ГОСТ Р 10.00.00.01-2025, п. 3.5: BIM (Building Information Modeling) — синоним ТИМ в международной практике.', source: 'ГОСТ Р 10.00.00.01-2025', relevance: 0.88 }
-      ]
-    };
-
-    const ragAnswers = {
-      fire_rating: 'Согласно <strong>СП 2.13130.2020, п. 5.4.3</strong>, перегородки в коридорах эвакуации должны иметь предел огнестойкости <strong>не менее РЕИ-45</strong>.<br><br>Это означает, что перегородка должна сохранять:<br>• R (несущая способность) — 45 минут<br>• E (целостность) — 45 минут<br>• I (теплоизолирующая способность) — 45 минут',
-      exit_requirements: 'Требования к эвакуационным выходам регулируются <strong>СП 1.13130.2020</strong>:<br><br>1. <strong>Ширина выхода</strong> — не менее 0.8 м (п. 4.2.5)<br>2. <strong>Количество выходов</strong> — не менее двух из помещения (п. 4.2.8)<br>3. <strong>Расположение</strong> — выходы должны быть рассредоточены (СП 2.13130.2020, п. 5.1.1)',
-      oim_definition: '<strong>ОИМ</strong> (Объект информационного моделирования) — это здание, сооружение или комплекс, в отношении которого осуществляется информационное моделирование.<br><br><strong>ТИМ</strong> (Технология информационного моделирования) — совокупность методов, способов и инструментов создания, ведения и использования информационной модели.<br><br>В международной практике используется синоним <strong>BIM</strong> (Building Information Modeling).'
-    };
-
-    function runRagDemo(type) {
-      document.getElementById('resetDemoBtn').style.display = 'none';
-      const container = document.getElementById('ragDemoContainer');
-      container.style.display = 'block';
-      
-      ['stepQuestion', 'stepSearch', 'stepContext', 'stepAnswer'].forEach(id => {
-        document.getElementById(id).classList.remove('visible');
-      });
-      
-      const questions = {
-        fire_rating: 'Какая огнестойкость у перегородок в коридоре эвакуации?',
-        exit_requirements: 'Требования к эвакуационным выходам',
-        oim_definition: 'Что такое ОИМ и ТИМ?'
-      };
-      document.getElementById('demoQuestion').textContent = questions[type];
-      
-      setTimeout(() => { document.getElementById('stepQuestion').classList.add('visible'); }, 100);
-      
-      setTimeout(() => {
-        document.getElementById('stepSearch').classList.add('visible');
-        setTimeout(() => {
-          document.getElementById('searchSpinner').style.display = 'none';
-          document.getElementById('foundChunks').style.display = 'block';
-          const chunksList = document.getElementById('chunksList');
-          chunksList.innerHTML = '';
-          ragChunks[type].forEach((chunk, index) => {
-            const chunkDiv = document.createElement('div');
-            chunkDiv.className = 'rag-chunk-item';
-            chunkDiv.style.animationDelay = `${index * 0.15}s`;
-            chunkDiv.innerHTML = `<div style="font-size:0.75rem; color:var(--text-secondary); margin-bottom:0.2rem;">${chunk.source} • Релевантность: ${(chunk.relevance * 100).toFixed(0)}%</div><div>${chunk.text}</div>`;
-            chunksList.appendChild(chunkDiv);
-          });
-        }, 1500);
-      }, 800);
-      
-      setTimeout(() => {
-        document.getElementById('stepContext').classList.add('visible');
-        document.getElementById('contextContent').textContent = ragChunks[type].map(c => c.text).join('\n\n');
-      }, 2800);
-      
-      setTimeout(() => {
-        document.getElementById('stepAnswer').classList.add('visible');
-        document.getElementById('demoAnswer').innerHTML = ragAnswers[type];
-        const sources = ragChunks[type].map(c => c.source).filter((v, i, a) => a.indexOf(v) === i).join(', ');
-        document.getElementById('answerSources').textContent = sources;
-        setTimeout(() => { document.getElementById('resetDemoBtn').style.display = 'inline-block'; }, 500);
-      }, 3800);
+    function toggleGloss(item){
+      item.classList.toggle('open');
     }
-
-    function resetRagDemo() {
-      document.getElementById('ragDemoContainer').style.display = 'none';
-      document.getElementById('resetDemoBtn').style.display = 'none';
-      document.getElementById('searchSpinner').style.display = 'inline-block';
-      document.getElementById('foundChunks').style.display = 'none';
+    function filterGloss(q){
+      const lo=q.toLowerCase();
+      const filtered=q?GLOSSARY.filter(g=>g.term.toLowerCase().includes(lo)||(g.abbr||'').toLowerCase().includes(lo)||g.body.toLowerCase().includes(lo)):GLOSSARY;
+      buildGloss(filtered);
+      if(q) document.querySelectorAll('.gloss-item').forEach(el=>el.classList.add('open'));
     }
+    buildGloss(GLOSSARY);
+    </script>
+  </section>
 
-    // Smooth scroll & active nav
-    document.querySelectorAll('nav a').forEach(anchor => {
-      anchor.addEventListener('click', e => {
-        e.preventDefault();
-        const target = document.querySelector(anchor.getAttribute('href'));
-        if(target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    });
+  <!-- КЕЙСЫ -->
+  <section id="cases">
+    <div class="sec-eyebrow">Из практики</div>
+    <h2>Кейсы</h2>
+    <p class="sec-sub">Реальные примеры внедрения ИИ в проектных и строительных компаниях. Что сработало, что нет и почему.</p>
 
-    const sections = document.querySelectorAll('section[id]');
-    window.addEventListener('scroll', () => {
-      let current = '';
-      sections.forEach(section => {
-        const sectionTop = section.offsetTop - 100;
-        if (pageYOffset >= sectionTop) current = section.getAttribute('id');
+    <div style="border:2px dashed var(--border);border-radius:var(--r-lg);padding:3rem 2rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:1rem;">🚧</div>
+      <div style="font-family:var(--font-title);font-weight:700;font-size:1.1rem;color:var(--ink);margin-bottom:.6rem;">Раздел готовится</div>
+      <p style="color:var(--ink3);font-size:.9rem;max-width:420px;margin:0 auto .8rem;">Собираем реальные кейсы из практики. Если есть что рассказать — пишите в канал.</p>
+      <a href="https://t.me/wearefired" target="_blank" style="display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.2rem;background:var(--ink);color:var(--cream);border-radius:var(--r);font-size:.85rem;font-weight:600;text-decoration:none;font-family:var(--font);transition:background .15s" onmouseover="this.style.background='var(--punch)'" onmouseout="this.style.background='var(--ink)'">→ @wearefired</a>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>Сделано с ❤️ и <strong>Claude</strong> · Апрель 2026 · Подписывайся: <a href="https://t.me/wearefired" target="_blank" style="color:var(--punch);font-weight:600;text-decoration:none">@wearefired</a></p>
+</footer>
+
+<script>
+// ШАГ 1
+function updateS1(){
+  const v=document.getElementById('s1-input').value;
+  document.getElementById('s1-chars').textContent=v.length;
+  document.getElementById('s1-words').textContent=v.trim()?v.trim().split(/\s+/).length:0;
+  document.getElementById('s1-toks').textContent=Math.max(1,Math.round(v.length/3.2));
+  const bytes=Array.from(v).map(c=>'0x'+c.charCodeAt(0).toString(16).toUpperCase().padStart(2,'0'));
+  document.getElementById('s1-bytes').textContent=bytes.slice(0,14).join(' ')+(bytes.length>14?' …':'');
+}
+updateS1();
+
+// ШАГ 2: токены
+const TOKENS=[
+  {w:'Как',id:'3083',info:'Вопросительное слово. Соседние в словаре: «Зачем»(3812), «Где»(2104)'},
+  {w:'работ',id:'7741',info:'Корень глагола. Модель знает его по 40+ формам в обучающих текстах'},
+  {w:'ает',id:'2291',info:'Окончание. Отдельный токен — типично для русского языка'},
+  {w:'ИИ',id:'1049',info:'Аббревиатура. Встречалась миллионы раз при обучении — ID низкий'},
+  {w:'?',id:'30',info:'Знак вопроса. Очень частый токен — ID всего 30'},
+];
+let selTok=-1;
+function buildToks(){
+  const chips=document.getElementById('tok-chips');
+  const ids=document.getElementById('tok-ids');
+  if(!chips)return;
+  chips.innerHTML='';ids.innerHTML='';
+  TOKENS.forEach((t,i)=>{
+    const c=document.createElement('span');
+    c.className='tok-chip'+(i===selTok?' sel':'');
+    c.style.animationDelay=i*.07+'s';
+    c.textContent=t.w;
+    c.onclick=()=>{selTok=selTok===i?-1:i;buildToks();document.getElementById('tok-info').textContent=selTok>=0?TOKENS[selTok].info:'';};
+    chips.appendChild(c);
+    if(i<TOKENS.length-1){const a=document.createElement('span');a.className='arrow';a.textContent='→';chips.appendChild(a);}
+    const id=document.createElement('span');
+    id.className='tok-id-chip';id.style.animationDelay=i*.07+'s';id.textContent=t.id;
+    ids.appendChild(id);
+  });
+}
+buildToks();
+
+// ШАГ 3: внимание
+const ATT_WORDS=['Как','работает','ИИ','?'];
+const ATT_MATRIX=[[100,45,85,20],[45,100,70,15],[85,70,100,30],[20,15,30,100]];
+let selAtt=2;
+function buildAtt(){
+  const wb=document.getElementById('att-words');
+  const ab=document.getElementById('att-bars');
+  if(!wb||!ab)return;
+  wb.innerHTML='';ab.innerHTML='';
+  ATT_WORDS.forEach((w,i)=>{
+    const btn=document.createElement('button');
+    btn.className='att-word-btn'+(i===selAtt?' active':'');
+    btn.textContent=w;btn.onclick=()=>{selAtt=i;buildAtt();};
+    wb.appendChild(btn);
+  });
+  const weights=ATT_MATRIX[selAtt];
+  ATT_WORDS.forEach((w,i)=>{
+    const row=document.createElement('div');row.className='att-bar-row';
+    row.innerHTML=`<div class="att-bar-label"><span>${w}</span><span>${weights[i]}%</span></div><div class="att-bar-track"><div class="att-bar-fill" id="attfill-${i}"></div></div>`;
+    ab.appendChild(row);
+    setTimeout(()=>{const f=document.getElementById('attfill-'+i);if(f)f.style.width=weights[i]+'%';},30+i*60);
+  });
+}
+buildAtt();
+
+// ШАГ 4: слои
+const LAYERS=[
+  {name:'Морфология',sub:'слои 1–4',color:'#0a7c6a',pct:20,detail:'Разбирает слова на морфемы, определяет части речи, падежи, окончания.'},
+  {name:'Синтаксис',sub:'слои 5–16',color:'#e8400c',pct:45,detail:'Строит дерево предложения: подлежащее, сказуемое, зависимости слов.'},
+  {name:'Семантика',sub:'слои 17–48',color:'#1a5faa',pct:70,detail:'Понимает значение слов в контексте. «Банк» у реки — не «банк» с деньгами.'},
+  {name:'Знания',sub:'слои 49–80',color:'#c97a00',pct:88,detail:'Факты о мире: даты, имена, законы, закономерности из обучающих данных.'},
+  {name:'Рассуждение',sub:'слои 81–96',color:'#6b21a8',pct:100,detail:'Строит логику ответа, связывает факты, учитывает весь контекст запроса.'},
+];
+let selLayer=-1;
+function buildLayers(){
+  const el=document.getElementById('layers-list');if(!el)return;
+  el.innerHTML='';
+  LAYERS.forEach((l,i)=>{
+    const row=document.createElement('div');
+    row.className='layer-row'+(i===selLayer?' active':'');
+    row.style.animationDelay=i*.07+'s';
+    row.innerHTML=`<div class="layer-dot" style="background:${l.color}"></div><div class="layer-name">${l.name}<div class="layer-sub">${l.sub}</div></div><div class="layer-track"><div class="layer-fill" id="lf-${i}" style="background:${l.color};width:0%"></div></div><div class="layer-pct">${l.pct}%</div>`;
+    row.onclick=()=>{selLayer=selLayer===i?-1:i;buildLayers();document.getElementById('layer-detail').textContent=selLayer>=0?LAYERS[selLayer].detail:'';};
+    el.appendChild(row);
+    setTimeout(()=>{const f=document.getElementById('lf-'+i);if(f)f.style.width=l.pct+'%';},50+i*80);
+  });
+}
+buildLayers();
+
+// ШАГ 5: генерация
+const GEN_SEQ=[
+  {probs:[{w:'программа',p:38,c:'#e8400c'},{w:'система',p:29,c:'#f07050'},{w:'алгоритм',p:18,c:'#f09070'},{w:'модель',p:10,c:'#f8c0a0'},{w:'технология',p:5,c:'#fce0d0'}],chosen:'программа'},
+  {probs:[{w:'которая',p:52,c:'#e8400c'},{w:',',p:22,c:'#f07050'},{w:'способная',p:14,c:'#f09070'},{w:'обученная',p:8,c:'#f8c0a0'},{w:'—',p:4,c:'#fce0d0'}],chosen:'которая'},
+  {probs:[{w:'учится',p:44,c:'#e8400c'},{w:'анализирует',p:31,c:'#f07050'},{w:'распознаёт',p:14,c:'#f09070'},{w:'предсказывает',p:7,c:'#f8c0a0'},{w:'понимает',p:4,c:'#fce0d0'}],chosen:'учится'},
+  {probs:[{w:'на',p:61,c:'#e8400c'},{w:'по',p:21,c:'#f07050'},{w:'из',p:10,c:'#f09070'},{w:'с',p:5,c:'#f8c0a0'},{w:'от',p:3,c:'#fce0d0'}],chosen:'на'},
+  {probs:[{w:'данных',p:55,c:'#e8400c'},{w:'примерах',p:27,c:'#f07050'},{w:'текстах',p:11,c:'#f09070'},{w:'паттернах',p:5,c:'#f8c0a0'},{w:'образцах',p:2,c:'#fce0d0'}],chosen:'данных'},
+];
+let genStep=0;let genText='ИИ — это ';
+function renderGenProbs(probs){
+  const el=document.getElementById('gen-probs');if(!el)return;
+  el.innerHTML='';
+  probs.forEach(p=>{
+    const row=document.createElement('div');row.className='gen-prob-row';
+    row.innerHTML=`<div class="gen-prob-word">${p.w}</div><div class="gen-prob-track"><div class="gen-prob-fill" style="background:${p.c};width:0%"></div></div><div class="gen-prob-pct">${p.p}%</div>`;
+    el.appendChild(row);
+    setTimeout(()=>{const f=row.querySelector('.gen-prob-fill');if(f)f.style.width=p.p+'%';},30);
+  });
+}
+function updateGenOutput(){
+  const el=document.getElementById('gen-output');if(!el)return;
+  el.innerHTML=genText+'<span style="display:inline-block;width:2px;height:1em;background:var(--punch);vertical-align:middle;animation:blink-cur 1s step-end infinite;"></span>';
+}
+function genNext(){
+  if(genStep>=GEN_SEQ.length){genReset();return;}
+  genText+=GEN_SEQ[genStep].chosen+' ';genStep++;
+  updateGenOutput();
+  if(genStep<GEN_SEQ.length)renderGenProbs(GEN_SEQ[genStep].probs);
+  else{const el=document.getElementById('gen-probs');if(el)el.innerHTML='<div style="font-size:.82rem;color:var(--ink3)">Ответ сформирован. Нажмите «Сначала» для сброса.</div>';}
+}
+function genReset(){genStep=0;genText='ИИ — это ';updateGenOutput();renderGenProbs(GEN_SEQ[0].probs);}
+updateGenOutput();renderGenProbs(GEN_SEQ[0].probs);
+
+// ПЕРЕКЛЮЧЕНИЕ ШАГОВ
+const stepBtns=document.querySelectorAll('.step-btn');
+const stepContents=document.querySelectorAll('.step-content');
+stepBtns.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const step=btn.dataset.step;
+    stepBtns.forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+    stepContents.forEach(c=>c.classList.remove('active'));
+    const target=document.getElementById('step-'+step);if(target)target.classList.add('active');
+    if(step==='1')setTimeout(updateS1,30);
+    if(step==='2')setTimeout(buildToks,50);
+    if(step==='3')setTimeout(buildAtt,50);
+    if(step==='4')setTimeout(buildLayers,50);
+    if(step==='5')setTimeout(()=>{updateGenOutput();renderGenProbs(GEN_SEQ[Math.min(genStep,GEN_SEQ.length-1)].probs);},50);
+  });
+});
+
+// КАРТОЧКИ МОДЕЛЕЙ
+function toggleModel(card){
+  const wasActive=card.classList.contains('active');
+  document.querySelectorAll('.model-card').forEach(c=>c.classList.remove('active'));
+  if(!wasActive)card.classList.add('active');
+}
+
+// RAG ДЕМО
+const ragChunks={
+  fire_rating:[
+    {text:'СП 2.13130.2020, п. 5.4.3: Перегородки в путях эвакуации должны иметь предел огнестойкости не менее РЕИ-45.',source:'СП 2.13130.2020',relevance:.94},
+    {text:'СП 1.13130.2020, п. 4.1.2: Коридоры эвакуационные — пути эвакуации, соединяющие выходы из помещений с эвакуационными выходами.',source:'СП 1.13130.2020',relevance:.87},
+    {text:'ГОСТ Р 10.00.00.01-2025: ОИМ — объект информационного моделирования, ТИМ — технология информационного моделирования.',source:'ГОСТ Р 10.00.00.01-2025',relevance:.72}
+  ],
+  exit_requirements:[
+    {text:'СП 1.13130.2020, п. 4.2.5: Ширина эвакуационного выхода из помещений должна быть не менее 0.8 м.',source:'СП 1.13130.2020',relevance:.91},
+    {text:'СП 1.13130.2020, п. 4.2.8: Количество эвакуационных выходов из помещения должно быть не менее двух.',source:'СП 1.13130.2020',relevance:.89},
+    {text:'СП 2.13130.2020, п. 5.1.1: Эвакуационные выходы должны располагаться рассредоточенно.',source:'СП 2.13130.2020',relevance:.85}
+  ],
+  oim_definition:[
+    {text:'ГОСТ Р 10.00.00.01-2025, п. 3.1: ОИМ — здание, сооружение или комплекс, в отношении которого осуществляется информационное моделирование.',source:'ГОСТ Р 10.00.00.01-2025',relevance:.96},
+    {text:'ГОСТ Р 10.00.00.01-2025, п. 3.2: ТИМ — совокупность методов, способов и инструментов создания, ведения и использования информационной модели.',source:'ГОСТ Р 10.00.00.01-2025',relevance:.95},
+    {text:'ГОСТ Р 10.00.00.01-2025, п. 3.5: BIM (Building Information Modeling) — синоним ТИМ в международной практике.',source:'ГОСТ Р 10.00.00.01-2025',relevance:.88}
+  ]
+};
+const ragAnswers={
+  fire_rating:'Согласно <strong>СП 2.13130.2020, п. 5.4.3</strong>, перегородки в коридорах эвакуации должны иметь предел огнестойкости <strong>не менее РЕИ-45</strong>.<br><br>Это означает:<br>• R (несущая способность) — 45 минут<br>• E (целостность) — 45 минут<br>• I (теплоизолирующая способность) — 45 минут',
+  exit_requirements:'Требования к эвакуационным выходам по <strong>СП 1.13130.2020</strong>:<br><br>1. <strong>Ширина</strong> — не менее 0.8 м (п. 4.2.5)<br>2. <strong>Количество</strong> — не менее двух (п. 4.2.8)<br>3. <strong>Расположение</strong> — рассредоточенно (СП 2.13130.2020, п. 5.1.1)',
+  oim_definition:'<strong>ОИМ</strong> — здание, сооружение или комплекс, в отношении которого осуществляется информационное моделирование.<br><br><strong>ТИМ</strong> — совокупность методов, способов и инструментов создания, ведения и использования информационной модели.<br><br>В международной практике: <strong>BIM</strong> (Building Information Modeling).'
+};
+function runRagDemo(type){
+  document.getElementById('resetDemoBtn').style.display='none';
+  const container=document.getElementById('ragDemoContainer');container.style.display='block';
+  ['stepQuestion','stepSearch','stepContext','stepAnswer'].forEach(id=>document.getElementById(id).classList.remove('visible'));
+  const questions={fire_rating:'Какая огнестойкость у перегородок в коридоре эвакуации?',exit_requirements:'Требования к эвакуационным выходам',oim_definition:'Что такое ОИМ и ТИМ?'};
+  document.getElementById('demoQuestion').textContent=questions[type];
+  setTimeout(()=>document.getElementById('stepQuestion').classList.add('visible'),100);
+  setTimeout(()=>{
+    document.getElementById('stepSearch').classList.add('visible');
+    setTimeout(()=>{
+      document.getElementById('searchSpinner').style.display='none';
+      document.getElementById('foundChunks').style.display='block';
+      const chunksList=document.getElementById('chunksList');chunksList.innerHTML='';
+      ragChunks[type].forEach((chunk,index)=>{
+        const d=document.createElement('div');d.className='rag-chunk-item';d.style.animationDelay=index*.15+'s';
+        d.innerHTML=`<div style="font-size:.72rem;color:var(--ink3);margin-bottom:.2rem;">${chunk.source} · Релевантность: ${(chunk.relevance*100).toFixed(0)}%</div><div style="font-size:.84rem;">${chunk.text}</div>`;
+        chunksList.appendChild(d);
       });
-      document.querySelectorAll('nav a').forEach(a => {
-        a.classList.remove('active');
-        if (a.getAttribute('href') === `#${current}`) a.classList.add('active');
-      });
-    });
-  </script>
+    },1500);
+  },800);
+  setTimeout(()=>{document.getElementById('stepContext').classList.add('visible');document.getElementById('contextContent').textContent=ragChunks[type].map(c=>c.text).join('\n\n');},2800);
+  setTimeout(()=>{
+    document.getElementById('stepAnswer').classList.add('visible');
+    document.getElementById('demoAnswer').innerHTML=ragAnswers[type];
+    const sources=ragChunks[type].map(c=>c.source).filter((v,i,a)=>a.indexOf(v)===i).join(', ');
+    document.getElementById('answerSources').textContent=sources;
+    setTimeout(()=>document.getElementById('resetDemoBtn').style.display='inline-block',500);
+  },3800);
+}
+function resetRagDemo(){
+  document.getElementById('ragDemoContainer').style.display='none';
+  document.getElementById('resetDemoBtn').style.display='none';
+  document.getElementById('searchSpinner').style.display='inline-block';
+  document.getElementById('foundChunks').style.display='none';
+}
+
+// ACTIVE NAV
+const sections=document.querySelectorAll('section[id]');
+window.addEventListener('scroll',()=>{
+  let current='';
+  sections.forEach(section=>{if(pageYOffset>=section.offsetTop-100)current=section.getAttribute('id');});
+  document.querySelectorAll('nav a').forEach(a=>{a.classList.remove('active');if(a.getAttribute('href')==='#'+current)a.classList.add('active');});
+});
+</script>
 </body>
 </html>
