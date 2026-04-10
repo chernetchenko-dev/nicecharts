@@ -159,7 +159,7 @@
     .legal-box p { color: var(--text); font-size: 0.9rem; margin-bottom: 0.4rem; line-height: 1.5; }
     .legal-box code { background: var(--bg-alt); padding: 0.15rem 0.4rem; border-radius: 4px; font-family: var(--font-mono); font-size: 0.85rem; }
 
-    /* RAG Section Styles */
+    /* RAG Section */
     .rag-controls { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
     .rag-btn {
       background: var(--card); border: 1px solid var(--border); color: var(--text-secondary);
@@ -207,12 +207,97 @@
     .md-chunk .str { color: #c2410c; }
     .md-chunk .err { color: var(--danger); }
 
+    /* RAG Simple Section */
+    .rag-simple-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .rag-simple-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; }
+    
+    .rag-steps { display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0; }
+    .rag-step { display: flex; gap: 1rem; align-items: flex-start; }
+    .rag-step-num {
+      background: var(--accent); color: #fff; width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;
+    }
+    
+    .rag-checklist { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0.8rem; margin: 1rem 0; }
+    .rag-checklist label {
+      display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.9rem; cursor: pointer;
+    }
+    .rag-checklist input { margin-top: 0.2rem; }
+    
+    .rag-faq details {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1rem; cursor: pointer; margin-bottom: 0.8rem;
+    }
+    .rag-faq summary { font-weight: 600; cursor: pointer; }
+    .rag-faq p { margin-top: 0.5rem; color: var(--text-secondary); }
+
+    /* RAG Demo Zone */
+    .rag-demo-zone {
+      background: var(--bg-alt); border: 2px solid var(--border); border-radius: var(--radius);
+      padding: 1.5rem; margin: 2rem 0;
+    }
+    .rag-demo-questions { display: grid; gap: 0.8rem; margin-bottom: 1.5rem; }
+    .rag-demo-qbtn {
+      text-align: left; padding: 0.8rem 1rem; background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; cursor: pointer; transition: all 0.2s;
+    }
+    .rag-demo-qbtn:hover { border-color: var(--accent); }
+    .rag-demo-qbtn strong { display: block; margin-bottom: 0.2rem; }
+    .rag-demo-qbtn small { color: var(--text-secondary); font-size: 0.85rem; }
+    
+    #ragDemoContainer { display: none; }
+    .rag-demo-step {
+      opacity: 0; transform: translateY(10px); transition: all 0.4s;
+      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+      padding: 1rem; margin-bottom: 1rem;
+    }
+    .rag-demo-step.visible { opacity: 1; transform: translateY(0); }
+    
+    .rag-demo-spinner {
+      width: 20px; height: 20px; border: 3px solid var(--border); border-top-color: var(--accent);
+      border-radius: 50%; animation: spin 1s linear infinite; display: inline-block;
+      margin-right: 0.8rem; vertical-align: middle;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    
+    .rag-chunk-item {
+      background: var(--bg-alt); border-left: 3px solid var(--accent);
+      padding: 0.6rem 0.8rem; border-radius: 0 4px 4px 0; font-size: 0.85rem;
+      opacity: 0; transform: translateX(-10px); animation: slideIn 0.3s forwards;
+    }
+    @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
+    
+    .rag-demo-context {
+      background: var(--bg-alt); padding: 0.8rem; border-radius: 6px;
+      font-family: var(--font-mono); font-size: 0.85rem; color: var(--text); line-height: 1.5;
+    }
+    .rag-demo-answer {
+      background: linear-gradient(135deg, var(--success-bg), var(--card));
+      border: 1px solid var(--success); border-radius: 8px; padding: 1.2rem;
+    }
+    .rag-demo-answer strong { color: var(--text); }
+    
+    .rag-demo-reset {
+      display: none; margin-top: 1rem;
+      background: var(--bg-alt); border: 1px solid var(--border);
+      padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer;
+      color: var(--text-secondary);
+    }
+
     /* Conclusion */
-    .conclusion { background: linear-gradient(150deg, var(--bg-alt), var(--card)); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-top: 2rem; box-shadow: var(--shadow); }
+    .conclusion {
+      background: linear-gradient(150deg, var(--bg-alt), var(--card));
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.5rem; margin-top: 2rem; box-shadow: var(--shadow);
+    }
     .conclusion p { margin-bottom: 0.5rem; color: var(--text-secondary); line-height: 1.5; }
     .highlight { color: var(--danger); font-weight: 700; }
 
-    footer { text-align: center; margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--text-secondary); font-size: 0.8rem; letter-spacing: 0.4px; }
+    footer {
+      text-align: center; margin-top: 4rem; padding-top: 1.5rem;
+      border-top: 1px solid var(--border); color: var(--text-secondary);
+      font-size: 0.8rem; letter-spacing: 0.4px;
+    }
 
     @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
     @media (max-width: 768px) {
@@ -233,9 +318,9 @@
       <nav>
         <a href="#how-ai" class="active">Как работает ИИ</a>
         <a href="#models">Типы моделей</a>
-        <a href="#rag">RAG и чанкинг</a>
+        <a href="#rag-simple">RAG для чайников</a>
         <a href="#replace">Кого заменит</a>
-        <a href="#risks">Риски и шаги</a>
+        <a href="#risks">Риски</a>
         <a href="#legal">Законодательство</a>
       </nav>
     </div>
@@ -265,10 +350,10 @@
           <span class="toc-title">Типы моделей</span>
           <span class="toc-desc">Base vs Instruct, Reasoning, Multimodal. Какую выбрать для задач.</span>
         </a>
-        <a href="#rag" class="toc-card">
-          <span class="toc-icon">📄</span>
-          <span class="toc-title">RAG и чанкинг</span>
-          <span class="toc-desc">Как документы попадают в контекст ИИ. Визуализация методов нарезки.</span>
+        <a href="#rag-simple" class="toc-card">
+          <span class="toc-icon">📚</span>
+          <span class="toc-title">RAG для чайников</span>
+          <span class="toc-desc">Как ИИ «читает» твои ГОСТы и СП. Простыми словами + демо.</span>
         </a>
         <a href="#replace" class="toc-card">
           <span class="toc-icon">📉</span>
@@ -485,46 +570,217 @@
       </div>
     </section>
 
-    <!-- RAG Section -->
-    <section id="rag">
-      <h2>RAG и чанкинг: как документы попадают в ИИ</h2>
-      <p class="section-sub">Retrieval-Augmented Generation — поиск нужных фрагментов документа и подача их в контекст модели. Ключевой этап — чанкинг: как разбить документ на части.</p>
-      
-      <div class="rag-controls">
-        <button class="rag-btn" onclick="runNaive()">Наивный (Naive)</button>
-        <button class="rag-btn" onclick="runLaws()">Структурный (Laws)</button>
-        <button class="rag-btn" onclick="runDocling()">Docling (Умный)</button>
+    <!-- RAG Simple Section -->
+    <section id="rag-simple">
+      <h2>RAG для чайников: как ИИ «читает» твои документы</h2>
+      <p class="section-sub">Без магии. Без сложных терминов. На примерах из проектной работы.</p>
+
+      <div style="background:var(--bg-alt); border:1px solid var(--border); border-radius:var(--radius); padding:1.5rem; margin-bottom:2rem;">
+        <h3 style="margin-top:0;">🎯 Коротко: что такое RAG и зачем он тебе</h3>
+        <p><strong>RAG = Retrieval-Augmented Generation</strong> — это когда ИИ не «помнит всё», а <em>ищет нужное в твоих документах</em> и отвечает на основе найденного.</p>
+        <p style="margin-bottom:0;"><strong>Аналогия:</strong> Ты не помнишь наизусть все СП и ГОСТы. Ты открываешь нужный документ, находишь раздел, читаешь — и отвечаешь. RAG делает то же самое для ИИ.</p>
       </div>
 
-      <div class="rag-container">
-        <div class="doc-panel" id="pdfDoc">
-          <div class="scanner" id="scanner"></div>
-          <div class="chunk-line" style="top: 130px;"></div>
-          <div class="chunk-line" style="top: 270px;"></div>
-          <div class="chunk-line" style="top: 410px;"></div>
+      <h3>Почему ИИ не может просто «запомнить» все твои документы?</h3>
+      <div class="rag-simple-grid">
+        <div class="rag-simple-card">
+          <strong>🧠 Контекст ограничен</strong>
+          <p style="margin-top:0.5rem; color:var(--text-secondary); font-size:0.9rem;">У любой модели есть лимит токенов (слов). Влезает 100 страниц — а у тебя 10 000. Нельзя запихнуть всё сразу.</p>
+        </div>
+        <div class="rag-simple-card">
+          <strong>📚 Знания устаревают</strong>
+          <p style="margin-top:0.5rem; color:var(--text-secondary); font-size:0.9rem;">Модель обучалась в 2023 году. А СП 2.13130.2020 вышел в 2020, с изменениями 2024. ИИ «не знает» свежих норм — если не дать их ему явно.</p>
+        </div>
+        <div class="rag-simple-card">
+          <strong>🔐 Конфиденциальность</strong>
+          <p style="margin-top:0.5rem; color:var(--text-secondary); font-size:0.9rem;">Твои КП, договоры, внутренние регламенты — не в интернете. ИИ их не видел. Но может работать с ними, если правильно подать.</p>
+        </div>
+      </div>
 
-          <div class="doc-element doc-title" id="elTitle">ГОСТ Р 10.00.00.01-2025</div>
-          <div class="doc-element doc-text" id="elText">Настоящий стандарт устанавливает термины и определения в области информационного моделирования на всем жизненном цикле объектов ОИМ.</div>
-          <div class="doc-element doc-table" id="elTable">
-            <div style="font-weight: 700; background: var(--bg-alt);">Термин</div><div style="font-weight: 700; background: var(--bg-alt);">Определение</div>
-            <div>ОИМ</div><div>Объект инф. моделирования</div>
-            <div>ТИМ</div><div>Технология инф. моделирования</div>
+      <h3>Как работает RAG: 4 шага на примере ГОСТа</h3>
+      <div class="rag-steps">
+        <div class="rag-step">
+          <div class="rag-step-num">1</div>
+          <div>
+            <strong>Загружаешь документы</strong>
+            <p style="margin-top:0.3rem; color:var(--text-secondary);">Ты скидываешь ИИ папку: ГОСТы, СП, внутренние стандарты, шаблоны КП. Не «обучаешь» модель — просто даёшь доступ к файлам.</p>
+          </div>
+        </div>
+        <div class="rag-step">
+          <div class="rag-step-num">2</div>
+          <div>
+            <strong>Режешь на чанки (кусочки)</strong>
+            <p style="margin-top:0.3rem; color:var(--text-secondary);">Документ не скармливается целиком. Его режут на части: по 300–500 слов, с перекрытием. <strong>Важно:</strong> резать надо умно — не рвать таблицы, не ломать списки.</p>
+            <div style="background:var(--bg-alt); padding:0.8rem; border-radius:8px; margin-top:0.5rem; font-family:var(--font-mono); font-size:0.85rem;">
+              <code style="color:var(--accent);"># Чанк 1</code><br>
+              ГОСТ Р 10.00.00.01-2025. Область применения...<br><br>
+              <code style="color:var(--accent);"># Чанк 2</code><br>
+              ...объектов ОИМ. Термины и определения:<br>
+              • ОИМ — объект инф. моделирования...
+            </div>
+          </div>
+        </div>
+        <div class="rag-step">
+          <div class="rag-step-num">3</div>
+          <div>
+            <strong>Превращаешь в векторы (Embedding)</strong>
+            <p style="margin-top:0.3rem; color:var(--text-secondary);">Каждый чанк превращается в «цифровой отпечаток» — вектор. Это позволяет искать <em>по смыслу</em>, а не по ключевым словам.</p>
+            <p style="color:var(--text-secondary); font-size:0.9rem;">Запрос «какая огнестойкость у перегородок» найдёт чанк про «РЕИ-45», даже если слова «огнестойкость» там нет.</p>
+          </div>
+        </div>
+        <div class="rag-step">
+          <div class="rag-step-num">4</div>
+          <div>
+            <strong>Ищешь + генерируешь ответ</strong>
+            <p style="margin-top:0.3rem; color:var(--text-secondary);">Когда ты спрашиваешь — система:</p>
+            <ol style="margin:0.5rem 0 0 1.2rem; color:var(--text-secondary); font-size:0.9rem;">
+              <li>Превращает твой вопрос в вектор</li>
+              <li>Находит 3–5 самых похожих чанков</li>
+              <li>Подставляет их в контекст модели</li>
+              <li>Модель генерирует ответ <em>на основе найденного</em></li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <h3>Почему чанкинг — это 80% успеха</h3>
+      <div style="background:var(--warn-bg); border:1px solid var(--warn); border-radius:var(--radius); padding:1rem; margin:1rem 0;">
+        <strong style="color:var(--warn);">⚠️ Частая ошибка:</strong> резать документы «вслепую», по количеству слов.
+      </div>
+      
+      <div class="rag-simple-grid">
+        <div class="rag-simple-card">
+          <strong>❌ Наивный чанкинг</strong>
+          <p style="margin-top:0.5rem; color:var(--text-secondary); font-size:0.9rem;">Режет каждые 300 слов. Результат:</p>
+          <ul style="margin:0.5rem 0 0 1.2rem; color:var(--text-secondary); font-size:0.85rem;">
+            <li>Таблица разорвана пополам</li>
+            <li>Список требований обрезан</li>
+            <li>Контекст потерян</li>
+          </ul>
+        </div>
+        <div class="rag-simple-card">
+          <strong>✅ Структурный чанкинг</strong>
+          <p style="margin-top:0.5rem; color:var(--text-secondary); font-size:0.9rem;">Режет по заголовкам, разделам, таблицам. Результат:</p>
+          <ul style="margin:0.5rem 0 0 1.2rem; color:var(--text-secondary); font-size:0.85rem;">
+            <li>Каждый чанк — смысловой блок</li>
+            <li>Таблицы и списки целые</li>
+            <li>ИИ понимает контекст</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Пример из практики: вопрос по СП</h3>
+      <div style="background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:1.2rem; margin:1.5rem 0;">
+        <p><strong>Твой вопрос:</strong> «Какая минимальная огнестойкость у перегородок в коридоре эвакуации?»</p>
+        <hr style="border:none; border-top:1px solid var(--border); margin:1rem 0;">
+        <p><strong>Что делает RAG:</strong></p>
+        <ol style="margin-left:1.2rem; color:var(--text-secondary);">
+          <li>Ищет в базе чанки со словами: «перегородка», «коридор», «эвакуация», «огнестойкость», «РЕИ»</li>
+          <li>Находит фрагмент из СП 2.13130.2020, п. 5.4.3</li>
+          <li>Подставляет его в контекст: <code>«Контекст: СП 2.13130.2020, п.5.4.3: Перегородки в путях эвакуации должны иметь предел огнестойкости не менее РЕИ-45...»</code></li>
+          <li>Модель отвечает: <strong>«Согласно СП 2.13130.2020, п. 5.4.3, перегородки в коридорах эвакуации должны иметь предел огнестойкости не менее РЕИ-45.»</strong></li>
+        </ol>
+        <p style="margin-top:0.8rem; font-size:0.9rem; color:var(--text-secondary);">
+          <strong>Без RAG:</strong> модель может выдать общее определение огнестойкости или устаревшую норму.<br>
+          <strong>С RAG:</strong> ответ привязан к конкретному документу и пункту.
+        </p>
+      </div>
+
+      <h3>Чек-лист: готов ли твой стек к RAG?</h3>
+      <div class="rag-checklist">
+        <label><input type="checkbox"> Документы в машиночитаемом формате (PDF с текстом, DOCX, Markdown), а не сканы</label>
+        <label><input type="checkbox"> Есть структура: заголовки, разделы, нумерация (не сплошной текст)</label>
+        <label><input type="checkbox"> Таблицы и списки оформлены корректно (не картинками внутри PDF)</label>
+        <label><input type="checkbox"> Версионирование: понятно, какой документ актуальный</label>
+        <label><input type="checkbox"> Метаданные: номер документа, дата, статус (действует/заменён)</label>
+        <label><input type="checkbox"> Политика доступа: кто может видеть какие документы</label>
+      </div>
+
+      <div style="background:var(--bg-alt); border-left:4px solid var(--accent); padding:1rem; border-radius:0 var(--radius) var(--radius) 0; margin:1.5rem 0;">
+        <strong>💡 Практический совет</strong>
+        <p style="margin-top:0.3rem; color:var(--text-secondary);">
+          Начни с малого: возьми один актуальный СП или внутренний регламент, разрежь его на чанки вручную (по разделам), загрузи в RAG-систему и протестируй на 5–10 типовых вопросах. 
+          Если ИИ отвечает точно — масштабируй. Если нет — сначала почини структуру документов.
+        </p>
+      </div>
+
+      <h3>Частые вопросы</h3>
+      <div class="rag-faq">
+        <details>
+          <summary>RAG и локальные модели — это одно и то же?</summary>
+          <p>Нет. RAG — это <em>архитектура</em> (поиск + генерация). Локальная модель — это <em>где работает ИИ</em>. Их можно комбинировать: локальная модель + RAG на твоих документах = полная конфиденциальность.</p>
+        </details>
+        <details>
+          <summary>А если документ обновился — как ИИ узнает?</summary>
+          <p>RAG не «обучается» заново. Ты просто заменяешь старый чанк на новый в базе векторов. Как обновить запись в базе данных. Поэтому важно версионировать документы.</p>
+        </details>
+        <details>
+          <summary>Можно ли использовать RAG с облачными моделями (GPT, Claude)?</summary>
+          <p>Технически — да. Но: если в документах есть ПДн, коммерческая тайна или объекты КИИ — это нарушение 152-ФЗ и 187-ФЗ. Для таких случаев — только локальный стек (Ollama + локальная эмбеддинг-модель).</p>
+        </details>
+      </div>
+
+      <!-- Interactive Demo Zone -->
+      <div class="rag-demo-zone">
+        <h3 style="margin-top:0;">🎮 Интерактивная демо-зона</h3>
+        <p style="color:var(--text-secondary); margin-bottom:1rem;">Выбери вопрос — увидишь, как RAG ищет чанки и формирует ответ</p>
+        
+        <div class="rag-demo-questions">
+          <button onclick="runRagDemo('fire_rating')" class="rag-demo-qbtn">
+            <strong>🔥 Какая огнестойкость у перегородок в коридоре эвакуации?</strong>
+            <small>Пример поиска по СП 2.13130.2020</small>
+          </button>
+          <button onclick="runRagDemo('exit_requirements')" class="rag-demo-qbtn">
+            <strong>🚪 Требования к эвакуационным выходам</strong>
+            <small>Поиск по нескольким разделам</small>
+          </button>
+          <button onclick="runRagDemo('oim_definition')" class="rag-demo-qbtn">
+            <strong>📐 Что такое ОИМ и ТИМ?</strong>
+            <small>Поиск определений в ГОСТ</small>
+          </button>
+        </div>
+
+        <div id="ragDemoContainer">
+          <div id="stepQuestion" class="rag-demo-step">
+            <div style="border-left:4px solid var(--accent); padding:1rem; border-radius:0 8px 8px 0; margin-bottom:1rem;">
+              <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.3rem;">ШАГ 1: Твой вопрос</div>
+              <div id="demoQuestion" style="font-weight:600; font-size:1.05rem;"></div>
+            </div>
+          </div>
+
+          <div id="stepSearch" class="rag-demo-step">
+            <div style="border:1px solid var(--border); border-radius:8px; padding:1rem; margin-bottom:1rem;">
+              <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.5rem;">ШАГ 2: Поиск релевантных чанков</div>
+              <div style="display:flex; align-items:center; gap:0.8rem; margin-bottom:0.8rem;">
+                <div class="rag-demo-spinner" id="searchSpinner"></div>
+                <div style="color:var(--text-secondary);">Векторный поиск по базе документов...</div>
+              </div>
+              <div id="foundChunks" style="display:none;">
+                <div style="color:var(--success); font-size:0.9rem; margin-bottom:0.5rem;">✓ Найдено 3 релевантных чанка</div>
+                <div id="chunksList" style="display:flex; flex-direction:column; gap:0.5rem;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="stepContext" class="rag-demo-step">
+            <div style="border:1px solid var(--border); border-radius:8px; padding:1rem; margin-bottom:1rem;">
+              <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.5rem;">ШАГ 3: Контекст для модели</div>
+              <div id="contextContent" class="rag-demo-context"></div>
+            </div>
+          </div>
+
+          <div id="stepAnswer" class="rag-demo-step">
+            <div class="rag-demo-answer">
+              <div style="font-size:0.8rem; color:var(--success); margin-bottom:0.5rem; font-weight:600;">ШАГ 4: Ответ ИИ</div>
+              <div id="demoAnswer" style="font-size:1rem; line-height:1.6; color:var(--text);"></div>
+              <div style="margin-top:0.8rem; padding-top:0.8rem; border-top:1px solid var(--border); font-size:0.85rem; color:var(--text-secondary);">
+                <strong>Источники:</strong> <span id="answerSources"></span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="result-panel" id="resultPanel">
-          <div class="result-message" id="resultMsg">Выберите метод парсинга для теста</div>
-          <div id="outputArea"></div>
-        </div>
-      </div>
-
-      <div style="margin-top:1.5rem; padding:1rem; background:var(--bg-alt); border-radius:var(--radius); border:1px solid var(--border);">
-        <h3 style="margin:0 0 0.5rem 0;">Кратко о методах</h3>
-        <ul style="margin:0; padding-left:1.2rem; color:var(--text-secondary); font-size:0.9rem; line-height:1.5;">
-          <li><strong>Naive:</strong> слепая нарезка по количеству токенов. Быстро, но рвёт таблицы и списки.</li>
-          <li><strong>Laws:</strong> поиск структурных маркеров («Глава», «Статья»). Работает на законах, падает на ГОСТах без явной структуры.</li>
-          <li><strong>Docling / Layout-aware:</strong> понимает визуальную структуру: заголовки, таблицы, списки. Даёт чистый Markdown, сохраняет семантику.</li>
-        </ul>
+        <button onclick="resetRagDemo()" id="resetDemoBtn" class="rag-demo-reset">↺ Сбросить и выбрать другой вопрос</button>
       </div>
     </section>
 
@@ -666,108 +922,87 @@
       if (!wasActive) card.classList.add('active');
     }
 
-    // RAG Animation Functions
-    function resetRag() {
-      anime.remove('.scanner, .chunk-line, .doc-element, .md-chunk');
-      document.getElementById('scanner').style.display = 'none';
-      document.querySelectorAll('.chunk-line').forEach(el => el.style.display = 'none');
-      document.querySelectorAll('.doc-element').forEach(el => {
-        el.style.backgroundColor = '#fff';
-        if(el.id === 'elTable') el.style.backgroundColor = 'transparent';
+    // RAG Simple - no extra JS needed, just HTML/CSS
+
+    // RAG Demo Zone
+    const ragChunks = {
+      fire_rating: [
+        { text: 'СП 2.13130.2020, п. 5.4.3: Перегородки в путях эвакуации должны иметь предел огнестойкости не менее РЕИ-45.', source: 'СП 2.13130.2020', relevance: 0.94 },
+        { text: 'СП 1.13130.2020, п. 4.1.2: Коридоры эвакуационные — пути эвакуации, соединяющие выходы из помещений с эвакуационными выходами.', source: 'СП 1.13130.2020', relevance: 0.87 },
+        { text: 'ГОСТ Р 10.00.00.01-2025: ОИМ — объект информационного моделирования, ТИМ — технология информационного моделирования.', source: 'ГОСТ Р 10.00.00.01-2025', relevance: 0.72 }
+      ],
+      exit_requirements: [
+        { text: 'СП 1.13130.2020, п. 4.2.5: Ширина эвакуационного выхода из помещений должна быть не менее 0.8 м.', source: 'СП 1.13130.2020', relevance: 0.91 },
+        { text: 'СП 1.13130.2020, п. 4.2.8: Количество эвакуационных выходов из помещения должно быть не менее двух.', source: 'СП 1.13130.2020', relevance: 0.89 },
+        { text: 'СП 2.13130.2020, п. 5.1.1: Эвакуационные выходы должны располагаться рассредоточенно.', source: 'СП 2.13130.2020', relevance: 0.85 }
+      ],
+      oim_definition: [
+        { text: 'ГОСТ Р 10.00.00.01-2025, п. 3.1: ОИМ (Объект информационного моделирования) — здание, сооружение или комплекс, в отношении которого осуществляется информационное моделирование.', source: 'ГОСТ Р 10.00.00.01-2025', relevance: 0.96 },
+        { text: 'ГОСТ Р 10.00.00.01-2025, п. 3.2: ТИМ (Технология информационного моделирования) — совокупность методов, способов и инструментов создания, ведения и использования информационной модели.', source: 'ГОСТ Р 10.00.00.01-2025', relevance: 0.95 },
+        { text: 'ГОСТ Р 10.00.00.01-2025, п. 3.5: BIM (Building Information Modeling) — синоним ТИМ в международной практике.', source: 'ГОСТ Р 10.00.00.01-2025', relevance: 0.88 }
+      ]
+    };
+
+    const ragAnswers = {
+      fire_rating: 'Согласно <strong>СП 2.13130.2020, п. 5.4.3</strong>, перегородки в коридорах эвакуации должны иметь предел огнестойкости <strong>не менее РЕИ-45</strong>.<br><br>Это означает, что перегородка должна сохранять:<br>• R (несущая способность) — 45 минут<br>• E (целостность) — 45 минут<br>• I (теплоизолирующая способность) — 45 минут',
+      exit_requirements: 'Требования к эвакуационным выходам регулируются <strong>СП 1.13130.2020</strong>:<br><br>1. <strong>Ширина выхода</strong> — не менее 0.8 м (п. 4.2.5)<br>2. <strong>Количество выходов</strong> — не менее двух из помещения (п. 4.2.8)<br>3. <strong>Расположение</strong> — выходы должны быть рассредоточены (СП 2.13130.2020, п. 5.1.1)',
+      oim_definition: '<strong>ОИМ</strong> (Объект информационного моделирования) — это здание, сооружение или комплекс, в отношении которого осуществляется информационное моделирование.<br><br><strong>ТИМ</strong> (Технология информационного моделирования) — совокупность методов, способов и инструментов создания, ведения и использования информационной модели.<br><br>В международной практике используется синоним <strong>BIM</strong> (Building Information Modeling).'
+    };
+
+    function runRagDemo(type) {
+      document.getElementById('resetDemoBtn').style.display = 'none';
+      const container = document.getElementById('ragDemoContainer');
+      container.style.display = 'block';
+      
+      ['stepQuestion', 'stepSearch', 'stepContext', 'stepAnswer'].forEach(id => {
+        document.getElementById(id).classList.remove('visible');
       });
-      document.getElementById('outputArea').innerHTML = '';
-      document.getElementById('resultMsg').className = 'result-message';
-      document.getElementById('resultMsg').innerText = 'Выберите метод парсинга для теста';
-    }
-
-    function runNaive() {
-      resetRag();
-      const msg = document.getElementById('resultMsg');
-      msg.innerText = 'Слепая нарезка по объёму слов (рвёт таблицы)';
-      msg.className = 'result-message warning';
-
-      const lines = document.querySelectorAll('.chunk-line');
-      lines.forEach(el => { el.style.display = 'block'; el.style.width = '0%'; });
-
-      anime({
-        targets: '.chunk-line',
-        width: '100%',
-        duration: 600,
-        easing: 'easeInOutQuad',
-        delay: anime.stagger(300)
-      });
-    }
-
-    function runLaws() {
-      resetRag();
-      const msg = document.getElementById('resultMsg');
-      const scanner = document.getElementById('scanner');
-      scanner.style.display = 'block';
-      scanner.style.top = '0px';
-
-      anime({
-        targets: scanner,
-        top: '100%',
-        duration: 1800,
-        easing: 'linear',
-        complete: function() {
-          scanner.style.display = 'none';
-          msg.innerText = "IndexError('list index out of range')";
-          msg.className = 'result-message error';
-          
-          const errDiv = document.createElement('div');
-          errDiv.className = 'md-chunk';
-          errDiv.style.borderLeftColor = 'var(--danger)';
-          errDiv.innerHTML = '<span class="err">> Ошибка парсера:</span> маркеры "Глава" или "Статья" не найдены. Массив чанков пуст.';
-          document.getElementById('outputArea').appendChild(errDiv);
-          
-          anime({
-            targets: errDiv,
-            translateX: 0,
-            opacity: 1,
-            duration: 400
+      
+      const questions = {
+        fire_rating: 'Какая огнестойкость у перегородок в коридоре эвакуации?',
+        exit_requirements: 'Требования к эвакуационным выходам',
+        oim_definition: 'Что такое ОИМ и ТИМ?'
+      };
+      document.getElementById('demoQuestion').textContent = questions[type];
+      
+      setTimeout(() => { document.getElementById('stepQuestion').classList.add('visible'); }, 100);
+      
+      setTimeout(() => {
+        document.getElementById('stepSearch').classList.add('visible');
+        setTimeout(() => {
+          document.getElementById('searchSpinner').style.display = 'none';
+          document.getElementById('foundChunks').style.display = 'block';
+          const chunksList = document.getElementById('chunksList');
+          chunksList.innerHTML = '';
+          ragChunks[type].forEach((chunk, index) => {
+            const chunkDiv = document.createElement('div');
+            chunkDiv.className = 'rag-chunk-item';
+            chunkDiv.style.animationDelay = `${index * 0.15}s`;
+            chunkDiv.innerHTML = `<div style="font-size:0.75rem; color:var(--text-secondary); margin-bottom:0.2rem;">${chunk.source} • Релевантность: ${(chunk.relevance * 100).toFixed(0)}%</div><div>${chunk.text}</div>`;
+            chunksList.appendChild(chunkDiv);
           });
-        }
-      });
+        }, 1500);
+      }, 800);
+      
+      setTimeout(() => {
+        document.getElementById('stepContext').classList.add('visible');
+        document.getElementById('contextContent').textContent = ragChunks[type].map(c => c.text).join('\n\n');
+      }, 2800);
+      
+      setTimeout(() => {
+        document.getElementById('stepAnswer').classList.add('visible');
+        document.getElementById('demoAnswer').innerHTML = ragAnswers[type];
+        const sources = ragChunks[type].map(c => c.source).filter((v, i, a) => a.indexOf(v) === i).join(', ');
+        document.getElementById('answerSources').textContent = sources;
+        setTimeout(() => { document.getElementById('resetDemoBtn').style.display = 'inline-block'; }, 500);
+      }, 3800);
     }
 
-    function runDocling() {
-      resetRag();
-      const msg = document.getElementById('resultMsg');
-      const outputArea = document.getElementById('outputArea');
-
-      msg.innerText = 'Умный парсинг структуры в Markdown';
-      msg.className = 'result-message success';
-
-      const chunks = [
-        '<span class="kw">#</span> ГОСТ Р 10.00.00.01-2025',
-        'Настоящий стандарт устанавливает термины...',
-        '<span class="str">| Термин | Определение |</span><br><span class="str">|---|---|</span><br><span class="str">| ОИМ | Объект инф. моделирования |</span>'
-      ];
-
-      chunks.forEach(text => {
-        const div = document.createElement('div');
-        div.className = 'md-chunk';
-        div.innerHTML = text;
-        outputArea.appendChild(div);
-      });
-
-      const elements = document.querySelectorAll('.doc-element');
-
-      anime.timeline()
-      .add({
-        targets: elements,
-        backgroundColor: '#ecfdf5',
-        duration: 400,
-        delay: anime.stagger(400)
-      })
-      .add({
-        targets: '.md-chunk',
-        translateX: 0,
-        opacity: 1,
-        duration: 400,
-        delay: anime.stagger(400)
-      }, '-=1000');
+    function resetRagDemo() {
+      document.getElementById('ragDemoContainer').style.display = 'none';
+      document.getElementById('resetDemoBtn').style.display = 'none';
+      document.getElementById('searchSpinner').style.display = 'inline-block';
+      document.getElementById('foundChunks').style.display = 'none';
     }
 
     // Smooth scroll & active nav
