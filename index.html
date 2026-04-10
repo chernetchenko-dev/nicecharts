@@ -151,7 +151,8 @@ h3{font-family:var(--font-title);font-size:1rem;font-weight:700;margin:2rem 0 .8
 .phase p{color:var(--ink2);font-size:.88rem;line-height:1.5}
 
 /* ─── ТАБЛИЦА ─── */
-.table-wrap{overflow-x:auto;border-radius:var(--r-lg);border:2px solid var(--ink);margin-bottom:2rem;background:var(--cream)}
+.table-wrap{border-radius:var(--r-lg);border:2px solid var(--ink);margin-bottom:2rem;background:var(--cream)}
+.table-scroll{overflow-x:auto}
 table{width:100%;border-collapse:separate;border-spacing:0;font-size:.85rem;min-width:1050px}
 th,td{padding:.7rem .9rem;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
 th{background:var(--ink);color:var(--cream);font-family:var(--font-title);font-size:.72rem;font-weight:700;letter-spacing:.04em;position:sticky;top:56px;z-index:10;border-bottom:2px solid var(--punch);white-space:nowrap}
@@ -490,6 +491,7 @@ footer strong{color:var(--punch)}
 
     <h3>Что выбрать для задач</h3>
     <div class="model-pick-table table-wrap">
+      <div class="table-scroll">
       <table>
         <thead><tr><th>Задача</th><th>Тип модели</th><th>Почему</th></tr></thead>
         <tbody>
@@ -501,6 +503,7 @@ footer strong{color:var(--punch)}
           <tr><td>Автодополнение кода</td><td>Code-специализированные</td><td>CodeLlama, Codestral, Qwen-Coder.</td></tr>
         </tbody>
       </table>
+      </div>
     </div>
   </section>
 
@@ -593,6 +596,7 @@ footer strong{color:var(--punch)}
     <h2>Кого заменит ИИ в проектном отделе</h2>
     <p class="sec-sub">Без маркетинга. Без человеколюбия. С учётом рисков. Горизонт: 3–5 лет. Процент замены — доля функций должности.</p>
     <div class="table-wrap">
+      <div class="table-scroll">
       <table>
         <thead><tr><th>Роль</th><th>Замена %</th><th>Инструменты</th><th>Что автоматизируется</th><th>Что остаётся</th><th>Риск</th><th>Детали риска</th></tr></thead>
         <tbody>
@@ -615,10 +619,9 @@ footer strong{color:var(--punch)}
           <tr><td class="role">«Порешатель» (согласования)</td><td class="pct">&lt; 15%</td><td class="tools">Word, почта, телефон, личные связи</td><td>Подготовка пакетов документов, контроль сроков</td><td>Неформальная среда. Личные отношения нечитаемы для машины.</td><td><span class="badge med">СРЕДНИЙ</span></td><td class="details-col">Уходит человек — уходят связи и понимание неформальных правил.</td></tr>
         </tbody>
       </table>
+      </div>
     </div>
   </section>
-
-  <!-- РИСКИ -->
   <section id="risks">
     <div class="sec-eyebrow">Честно</div>
     <h2>Системные риски — о которых не говорят вслух</h2>
