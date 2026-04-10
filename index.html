@@ -1,851 +1,517 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Как работает ИИ</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root {
-  --ink: #0f0e0d;
-  --ink-2: #3a3836;
-  --ink-3: #767370;
-  --ink-4: #b0ada9;
-  --paper: #f7f5f2;
-  --paper-2: #edeae6;
-  --paper-3: #e2dfd9;
-  --accent: #5c3bfe;
-  --accent-2: #8b6fff;
-  --accent-pale: #ede9ff;
-  --teal: #0ea37a;
-  --teal-pale: #dcf5ec;
-  --amber: #d97706;
-  --amber-pale: #fef3c7;
-  --coral: #e04f2a;
-  --coral-pale: #fde8e1;
-  --blue: #1d6fb8;
-  --blue-pale: #dbeafe;
-  --r: 10px;
-  --r-lg: 16px;
-  --font: 'Onest', sans-serif;
-  --mono: 'JetBrains Mono', monospace;
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ИИ: Как работает и кого заменит</title>
+  <style>
+    :root {
+      --bg: #0a0c10;
+      --bg-alt: #111318;
+      --card: #161920;
+      --card-hover: #1c2029;
+      --text: #e6e8ec;
+      --muted: #9aa0ad;
+      --accent: #4f8cff;
+      --accent-glow: rgba(79, 140, 255, 0.15);
+      --danger: #ff6b6b;
+      --warn: #f59e0b;
+      --ok: #22c55e;
+      --border: #232733;
+      --radius: 12px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: "SF Mono", "Fira Code", "Consolas", monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--text); font-family: var(--font);
+      line-height: 1.6; padding: 0 1rem 3rem;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    
+    /* Header & Nav */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10, 12, 16, 0.9); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border); padding: 0.8rem 0;
+    }
+    .nav-wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+    .logo { font-weight: 700; font-size: 1.1rem; color: var(--accent); letter-spacing: 0.5px; }
+    nav { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    nav a {
+      color: var(--muted); text-decoration: none; padding: 0.4rem 0.8rem;
+      border-radius: 8px; font-size: 0.9rem; transition: all 0.2s;
+    }
+    nav a:hover, nav a.active { color: var(--text); background: var(--card); }
+    
+    /* Hero */
+    .hero { padding: 4rem 0 3rem; text-align: center; }
+    .hero h1 { font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 0.5rem; }
+    .hero p { color: var(--muted); max-width: 700px; margin: 0 auto 1.5rem; }
+    .tags { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
+    .tag {
+      background: var(--card); border: 1px solid var(--border); padding: 0.3rem 0.7rem;
+      border-radius: 99px; font-size: 0.8rem; color: var(--muted);
+    }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* Section Base */
+    section { margin-bottom: 4rem; scroll-margin-top: 80px; }
+    h2 {
+      font-size: 1.6rem; margin-bottom: 1.5rem; padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border); position: relative;
+    }
+    h2::after {
+      content: ''; position: absolute; bottom: -1px; left: 0; width: 60px; height: 3px;
+      background: var(--accent); border-radius: 3px;
+    }
+    h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; color: var(--accent); }
+    .section-sub { color: var(--muted); margin-bottom: 1.5rem; }
 
-html { scroll-behavior: smooth; }
+    /* Pipeline Steps */
+    .steps-nav { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .step-btn {
+      background: var(--card); border: 1px solid var(--border); color: var(--muted);
+      padding: 0.6rem 1rem; border-radius: var(--radius); cursor: pointer;
+      transition: all 0.2s; font-weight: 500;
+    }
+    .step-btn.active { background: var(--accent-glow); border-color: var(--accent); color: var(--text); }
+    .step-content {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.5rem; display: none;
+    }
+    .step-content.active { display: block; animation: fade 0.3s ease; }
+    .step-meta {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--border);
+      font-size: 0.85rem; color: var(--muted);
+    }
+    .step-meta span { display: flex; flex-direction: column; }
+    .step-meta strong { color: var(--text); font-size: 0.95rem; }
+    .token-vis {
+      background: #0d0f14; padding: 1rem; border-radius: 8px; font-family: var(--font-mono);
+      margin: 1rem 0; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;
+    }
+    .token { background: #232733; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem; }
+    .arrow { color: var(--accent); margin: 0 0.2rem; }
 
-body {
-  font-family: var(--font);
-  background: var(--paper);
-  color: var(--ink);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
+    /* Models Grid */
+    .model-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+    .model-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.25rem; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;
+    }
+    .model-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .model-card.active { border-color: var(--accent); background: var(--accent-glow); }
+    .model-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .model-title { font-weight: 700; margin-bottom: 0.25rem; }
+    .model-desc { font-size: 0.9rem; color: var(--muted); margin-bottom: 0.5rem; }
+    .model-example { font-size: 0.8rem; font-family: var(--font-mono); color: var(--accent); }
+    .model-detail {
+      margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border);
+      font-size: 0.85rem; color: var(--text); display: none;
+    }
+    .model-card.active .model-detail { display: block; animation: fade 0.3s ease; }
 
-/* ─── ШАПКА ─── */
-.site-header {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(247,245,242,.92);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--paper-3);
-  padding: 0 32px;
-  display: flex; align-items: center; justify-content: space-between;
-  height: 56px;
-}
-.logo {
-  font-size: 15px; font-weight: 600; color: var(--ink);
-  display: flex; align-items: center; gap: 8px;
-}
-.logo-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--accent); display: inline-block;
-  animation: pulse-dot 2.4s ease-in-out infinite;
-}
-@keyframes pulse-dot {
-  0%,100%{ transform: scale(1); opacity:1; }
-  50%{ transform: scale(1.5); opacity:.6; }
-}
-.site-nav { display: flex; gap: 4px; }
-.site-nav a {
-  font-size: 13px; color: var(--ink-3); text-decoration: none;
-  padding: 6px 12px; border-radius: 6px; transition: all .15s;
-}
-.site-nav a:hover { background: var(--paper-2); color: var(--ink); }
+    /* Training Phases */
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before {
+      content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px;
+      background: var(--border);
+    }
+    .phase { position: relative; margin-bottom: 1.5rem; }
+    .phase::before {
+      content: ''; position: absolute; left: -2rem; top: 4px; width: 16px; height: 16px;
+      background: var(--accent); border-radius: 50%; border: 3px solid var(--bg);
+    }
+    .phase h4 { margin-bottom: 0.3rem; }
+    .phase p { color: var(--muted); font-size: 0.95rem; }
 
-/* ─── HERO ─── */
-.hero {
-  padding: 80px 32px 64px;
-  max-width: 860px; margin: 0 auto; text-align: center;
-}
-.hero-eyebrow {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 11px; font-weight: 500; letter-spacing: .1em;
-  color: var(--accent); text-transform: uppercase;
-  background: var(--accent-pale); border: 1px solid #d4caff;
-  padding: 5px 12px; border-radius: 20px; margin-bottom: 24px;
-}
-.hero h1 {
-  font-size: clamp(36px,6vw,64px); font-weight: 600; line-height: 1.1;
-  color: var(--ink); margin-bottom: 20px; letter-spacing: -.02em;
-}
-.hero h1 em { font-style: normal; color: var(--accent); }
-.hero-desc {
-  font-size: 17px; color: var(--ink-3); line-height: 1.65;
-  max-width: 520px; margin: 0 auto 36px;
-}
-.hero-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-.btn {
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 11px 22px; border-radius: var(--r); font-size: 14px;
-  font-weight: 500; font-family: var(--font); cursor: pointer;
-  transition: all .2s; text-decoration: none; border: none;
-}
-.btn-primary {
-  background: var(--accent); color: #fff;
-}
-.btn-primary:hover { background: #4a2de0; transform: translateY(-1px); }
-.btn-outline {
-  background: transparent; color: var(--ink-2);
-  border: 1px solid var(--paper-3);
-}
-.btn-outline:hover { background: var(--paper-2); }
+    /* Table */
+    .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 2rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: var(--card); min-width: 900px; }
+    th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { background: #1c2029; position: sticky; top: 0; font-weight: 600; }
+    tr:hover { background: var(--card-hover); }
+    .role { font-weight: 600; min-width: 220px; }
+    .pct { font-weight: 700; color: var(--accent); white-space: nowrap; }
+    .risk-cell { white-space: nowrap; }
+    .badge { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+    .badge.high { background: rgba(255,107,107,0.15); color: var(--danger); }
+    .badge.med { background: rgba(245,158,11,0.15); color: var(--warn); }
+    .badge.low { background: rgba(34,197,94,0.15); color: var(--ok); }
+    .section-row { background: #232733; font-weight: 700; text-transform: uppercase; font-size: 0.8rem; color: var(--muted); letter-spacing: 0.5px; }
+    .tools { color: var(--muted); font-size: 0.85rem; }
 
-/* ─── PIPELINE ─── */
-.section { padding: 72px 32px; max-width: 960px; margin: 0 auto; }
-.section-label {
-  font-size: 11px; font-weight: 500; letter-spacing: .1em;
-  color: var(--ink-4); text-transform: uppercase; margin-bottom: 10px;
-}
-.section-title {
-  font-size: 28px; font-weight: 600; color: var(--ink);
-  margin-bottom: 8px; letter-spacing: -.01em;
-}
-.section-sub {
-  font-size: 15px; color: var(--ink-3); line-height: 1.6;
-  margin-bottom: 40px; max-width: 580px;
-}
+    /* Risks & Steps */
+    .risks-list, .steps-list { list-style: none; padding: 0; }
+    .risks-list li, .steps-list li {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1rem; margin-bottom: 1rem; position: relative; padding-left: 2.5rem;
+    }
+    .risks-list li::before, .steps-list li::before {
+      content: ''; position: absolute; left: 1rem; top: 1rem; width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+    .risks-list li::before { background: var(--danger); }
+    .steps-list li::before { background: var(--accent); }
+    .list-title { font-weight: 600; margin-bottom: 0.25rem; display: block; color: var(--text); }
 
-.pipeline-steps {
-  display: flex; gap: 0; align-items: stretch;
-  overflow-x: auto; padding-bottom: 4px;
-  margin-bottom: 32px;
-}
-.pipe-card {
-  flex: 1; min-width: 130px;
-  background: var(--paper); border: 1px solid var(--paper-3);
-  border-radius: 0; padding: 20px 16px;
-  cursor: pointer; transition: all .2s; position: relative;
-  display: flex; flex-direction: column; gap: 8px;
-}
-.pipe-card:first-child { border-radius: var(--r) 0 0 var(--r); }
-.pipe-card:last-child { border-radius: 0 var(--r) var(--r) 0; }
-.pipe-card + .pipe-card { border-left: none; }
-.pipe-card:hover, .pipe-card.active {
-  background: var(--accent-pale); border-color: var(--accent-2); z-index:1;
-}
-.pipe-card.active .pipe-num { color: var(--accent); }
-.pipe-card.active .pipe-name { color: var(--accent); }
-.pipe-num {
-  font-family: var(--mono); font-size: 10px; color: var(--ink-4); font-weight: 500;
-}
-.pipe-name { font-size: 13px; font-weight: 500; color: var(--ink); }
-.pipe-icon { font-size: 20px; margin-bottom: 2px; }
+    /* Legal Box */
+    .legal-box {
+      background: var(--card); border-left: 4px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 1rem; margin-bottom: 1rem;
+    }
+    .legal-box h4 { margin-bottom: 0.4rem; }
+    .legal-box p { color: var(--text); font-size: 0.95rem; }
+    .legal-box code { background: #0d0f14; padding: 0.15rem 0.4rem; border-radius: 4px; font-family: var(--font-mono); }
 
-.step-detail {
-  display: none; animation: fadeSlide .3s ease;
-  border: 1px solid var(--paper-3); border-radius: var(--r-lg);
-  background: var(--paper); overflow: hidden;
-}
-.step-detail.visible { display: grid; grid-template-columns: 1fr 1fr; }
-@media(max-width:640px){ .step-detail.visible { grid-template-columns:1fr; } }
+    /* Conclusion */
+    .conclusion {
+      background: linear-gradient(135deg, var(--card), var(--bg-alt));
+      border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem;
+    }
+    .conclusion p { margin-bottom: 0.5rem; }
+    .highlight { color: var(--danger); font-weight: 600; }
 
-@keyframes fadeSlide {
-  from { opacity:0; transform: translateY(8px); }
-  to { opacity:1; transform: translateY(0); }
-}
-.detail-main { padding: 32px; border-right: 1px solid var(--paper-3); }
-.detail-main h3 { font-size: 20px; font-weight: 600; margin-bottom: 10px; letter-spacing:-.01em; }
-.detail-main p { font-size: 14px; color: var(--ink-3); line-height: 1.65; margin-bottom: 16px; }
-.detail-viz { padding: 32px; background: var(--paper-2); display: flex; flex-direction:column; justify-content:center; }
+    footer { text-align: center; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; }
 
-.token-viz { display: flex; flex-direction:column; gap:12px; }
-.token-row { display:flex; gap:6px; flex-wrap:wrap; }
-.tok-chip {
-  padding: 5px 12px; border-radius: 20px; font-size: 13px; font-weight: 500;
-  border: 1px solid transparent; cursor: default;
-  font-family: var(--mono);
-}
-.tok-chip.a { background: var(--accent-pale); color: var(--accent); border-color: #c9beff; }
-.tok-chip.b { background: var(--teal-pale); color: var(--teal); border-color: #a7e8cf; }
-.tok-id-row { display:flex; gap:6px; flex-wrap:wrap; }
-.tok-id { font-size:10px; font-family:var(--mono); color:var(--ink-4); padding:2px 8px; background:var(--paper); border-radius:4px; border:1px solid var(--paper-3); }
-
-.att-demo { display:flex; flex-direction:column; gap:6px; }
-.att-word {
-  display:flex; align-items:center; gap:10px;
-  font-size:13px; cursor:pointer; padding: 6px 10px;
-  border-radius: 6px; transition:background .15s;
-}
-.att-word:hover { background: var(--paper-3); }
-.att-word.selected { background: var(--accent-pale); }
-.att-word .aw-label { font-weight:500; min-width:80px; font-family:var(--mono); color:var(--ink); }
-.att-bar-wrap { flex:1; height:8px; background:var(--paper-3); border-radius:4px; overflow:hidden; }
-.att-bar { height:100%; border-radius:4px; background: var(--accent); transition: width .4s ease; }
-.att-pct { font-size:11px; color:var(--ink-3); min-width:30px; text-align:right; font-family:var(--mono); }
-
-.layer-list { display:flex; flex-direction:column; gap:4px; }
-.layer-row {
-  display:flex; align-items:center; gap:10px; padding:8px 10px;
-  border-radius:6px; cursor:pointer; transition:background .15s;
-}
-.layer-row:hover { background: var(--paper-3); }
-.layer-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
-.layer-text { flex:1; }
-.layer-name2 { font-size:12px; font-weight:500; color:var(--ink); }
-.layer-hint { font-size:11px; color:var(--ink-3); }
-.layer-pct-bar { width:60px; height:4px; background:var(--paper-3); border-radius:2px; overflow:hidden; }
-.layer-pct-fill { height:100%; border-radius:2px; }
-
-.gen-demo { display:flex; flex-direction:column; gap:12px; }
-.gen-output {
-  font-size:14px; color:var(--ink); line-height:1.7;
-  min-height:60px; font-family:var(--mono);
-}
-.gen-cursor { display:inline-block; width:2px; height:14px; background:var(--accent); vertical-align:middle; margin-left:2px; animation:blink 1s step-end infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-.gen-probs { display:flex; flex-direction:column; gap:4px; }
-.gen-row { display:flex; align-items:center; gap:8px; }
-.gen-word { font-size:11px; font-family:var(--mono); color:var(--ink-2); min-width:90px; }
-.gen-bar-wrap { flex:1; height:16px; background:var(--paper-3); border-radius:3px; overflow:hidden; }
-.gen-bar { height:100%; border-radius:3px; transition: width .5s ease; }
-.gen-pct { font-size:10px; color:var(--ink-3); min-width:28px; text-align:right; font-family:var(--mono); }
-.gen-next-btn {
-  align-self:flex-start; padding:7px 14px; font-size:12px;
-  border-radius:6px; border:1px solid var(--paper-3);
-  background:var(--paper); cursor:pointer; font-family:var(--font);
-  color:var(--ink); transition:all .15s;
-}
-.gen-next-btn:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
-
-/* stat chips */
-.detail-stats { display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; }
-.stat-chip {
-  padding:4px 10px; background:var(--paper-2); border-radius:6px;
-  font-size:11px; color:var(--ink-3); border:1px solid var(--paper-3);
-}
-.stat-chip strong { color:var(--ink); font-weight:600; }
-
-/* ─── РАЗДЕЛИТЕЛЬ ─── */
-.divider { border: none; border-top: 1px solid var(--paper-3); margin: 0 32px; }
-
-/* ─── ТИПЫ МОДЕЛЕЙ ─── */
-.model-tabs { display:flex; gap:0; border-bottom:1px solid var(--paper-3); margin-bottom:32px; overflow-x:auto; }
-.mtab {
-  padding:11px 20px; font-size:13px; font-weight:500; cursor:pointer;
-  color:var(--ink-3); border-bottom:2px solid transparent;
-  background:none; border-top:none; border-left:none; border-right:none;
-  font-family:var(--font); white-space:nowrap; transition:all .2s;
-}
-.mtab.active { color:var(--accent); border-bottom-color:var(--accent); }
-.mtab:hover { color:var(--ink); }
-
-.mpanel { display:none; animation:fadeSlide .25s ease; }
-.mpanel.active { display:block; }
-
-.model-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px; margin-bottom:24px; }
-.mcard {
-  border:1px solid var(--paper-3); border-radius:var(--r-lg);
-  padding:20px; background:var(--paper);
-  transition:all .2s; cursor:default;
-}
-.mcard:hover { border-color: var(--paper-3); background:var(--paper-2); }
-.mcard.featured { border-color:#c9beff; background:var(--accent-pale); }
-.mcard-badge {
-  display:inline-block; font-size:10px; font-weight:600; letter-spacing:.06em;
-  padding:3px 9px; border-radius:20px; margin-bottom:12px; text-transform:uppercase;
-}
-.mcard h4 { font-size:15px; font-weight:600; color:var(--ink); margin-bottom:6px; }
-.mcard p { font-size:13px; color:var(--ink-3); line-height:1.55; margin-bottom:12px; }
-.mcard-ex { font-size:11px; color:var(--ink-4); }
-.mcard-ex span { color:var(--ink-3); }
-
-.compare-2col { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px; }
-@media(max-width:600px){ .compare-2col { grid-template-columns:1fr; } }
-.comp-col { border:1px solid var(--paper-3); border-radius:var(--r-lg); overflow:hidden; }
-.comp-col.accent-border { border-color: #c9beff; }
-.comp-head {
-  padding:12px 16px; border-bottom:1px solid var(--paper-3);
-  font-size:13px; font-weight:600; color:var(--ink);
-  display:flex; align-items:center; gap:8px;
-}
-.comp-head-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
-.comp-body { padding:4px 0; }
-.comp-row {
-  display:flex; align-items:flex-start; gap:10px;
-  padding:9px 16px; border-bottom:1px solid var(--paper-3);
-}
-.comp-row:last-child { border-bottom:none; }
-.comp-mark {
-  width:16px; height:16px; border-radius:50%; flex-shrink:0; margin-top:1px;
-  display:flex; align-items:center; justify-content:center;
-  font-size:9px; font-weight:700;
-}
-.mark-yes { background:#dcf5ec; color:#085041; }
-.mark-no { background:#fee2e2; color:#991b1b; }
-.mark-mid { background:#fef3c7; color:#92400e; }
-.comp-text { font-size:12px; color:var(--ink-3); line-height:1.4; }
-
-.chat-mock { border:1px solid var(--paper-3); border-radius:var(--r-lg); overflow:hidden; margin-bottom:12px; }
-.chat-mock-head {
-  padding:10px 14px; background:var(--paper-2); border-bottom:1px solid var(--paper-3);
-  display:flex; align-items:center; gap:8px; font-size:12px; color:var(--ink-3);
-}
-.chat-mock-dot { width:8px; height:8px; border-radius:50%; }
-.chat-mock-body { padding:16px; display:flex; flex-direction:column; gap:10px; background:var(--paper); }
-.cmsg {
-  max-width:80%; padding:9px 13px; border-radius:10px;
-  font-size:13px; line-height:1.5;
-}
-.cmsg.u { align-self:flex-end; background:var(--accent-pale); color:#26215C; border-bottom-right-radius:3px; }
-.cmsg.ai { align-self:flex-start; background:var(--paper-2); color:var(--ink); border:1px solid var(--paper-3); border-bottom-left-radius:3px; }
-.cmsg .alabel { font-size:10px; color:var(--ink-4); margin-bottom:3px; }
-
-.tl { display:flex; flex-direction:column; gap:0; }
-.tl-item { display:flex; gap:16px; padding-bottom:24px; }
-.tl-left { display:flex; flex-direction:column; align-items:center; width:28px; flex-shrink:0; }
-.tl-dot2 { width:12px; height:12px; border-radius:50%; flex-shrink:0; margin-top:3px; }
-.tl-line2 { width:1px; flex:1; background:var(--paper-3); margin-top:6px; }
-.tl-item:last-child .tl-line2 { display:none; }
-.tl-body { flex:1; padding-top:0; }
-.tl-phase { font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; padding:2px 8px; border-radius:10px; display:inline-block; margin-bottom:6px; }
-.tl-title2 { font-size:14px; font-weight:600; color:var(--ink); margin-bottom:4px; }
-.tl-desc2 { font-size:13px; color:var(--ink-3); line-height:1.55; }
-
-.use-rows { display:flex; flex-direction:column; gap:8px; }
-.use-row {
-  border:1px solid var(--paper-3); border-radius:var(--r); padding:14px 16px;
-  background:var(--paper); display:grid; grid-template-columns:1fr 1fr 2fr; gap:12px; align-items:start;
-}
-@media(max-width:600px){ .use-row { grid-template-columns:1fr; } }
-.use-case { font-size:12px; font-weight:500; color:var(--ink-3); }
-.use-model { font-size:13px; font-weight:600; color:var(--ink); }
-.use-why { font-size:12px; color:var(--ink-3); line-height:1.45; }
-
-/* ─── FOOTER ─── */
-.site-footer {
-  border-top:1px solid var(--paper-3); padding:32px;
-  display:flex; align-items:center; justify-content:space-between;
-  max-width:960px; margin:0 auto;
-}
-.footer-note { font-size:12px; color:var(--ink-4); }
-.footer-badge {
-  font-size:11px; background:var(--accent-pale); color:var(--accent);
-  padding:4px 10px; border-radius:20px; border:1px solid #d4caff;
-}
-
-/* scroll reveal */
-.reveal { opacity:0; transform:translateY(16px); transition: opacity .5s ease, transform .5s ease; }
-.reveal.visible { opacity:1; transform:translateY(0); }
-</style>
+    @keyframes fade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) {
+      th, td { padding: 0.6rem 0.75rem; font-size: 0.85rem; }
+      h1 { font-size: 1.6rem; }
+      .steps-nav { justify-content: center; }
+      .nav-wrap { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
 </head>
 <body>
-
-<header class="site-header">
-  <div class="logo">
-    <span class="logo-dot"></span>
-    Как работает ИИ
-  </div>
-  <nav class="site-nav">
-    <a href="#pipeline">Процесс</a>
-    <a href="#models">Типы моделей</a>
-  </nav>
-</header>
-
-<!-- HERO -->
-<section class="hero reveal">
-  <div class="hero-eyebrow">
-    <span class="logo-dot" style="width:6px;height:6px"></span>
-    интерактивный гид
-  </div>
-  <h1>Нейросеть:<br><em>от запроса до ответа</em></h1>
-  <p class="hero-desc">Как ИИ понимает ваши слова, что происходит внутри — и почему одни модели умеют следовать инструкциям, а другие нет.</p>
-  <div class="hero-ctas">
-    <a href="#pipeline" class="btn btn-primary">Смотреть процесс</a>
-    <a href="#models" class="btn btn-outline">Типы моделей</a>
-  </div>
-</section>
-
-<hr class="divider">
-
-<!-- PIPELINE -->
-<section class="section reveal" id="pipeline">
-  <div class="section-label">Шаг за шагом</div>
-  <h2 class="section-title">Что происходит с вашим запросом</h2>
-  <p class="section-sub">Нажмите на любой шаг, чтобы увидеть детали и живые примеры.</p>
-
-  <div class="pipeline-steps" id="pipelineSteps">
-    <div class="pipe-card active" onclick="showStep(0)">
-      <div class="pipe-num">01</div>
-      <div class="pipe-icon">✍</div>
-      <div class="pipe-name">Запрос</div>
+  <header>
+    <div class="container nav-wrap">
+      <div class="logo">AI.EXPLAINER</div>
+      <nav>
+        <a href="#how" class="active">Как работает</a>
+        <a href="#models">Типы моделей</a>
+        <a href="#replace">Кого заменит</a>
+        <a href="#risks">Риски</a>
+        <a href="#legal">Законодательство</a>
+      </nav>
     </div>
-    <div class="pipe-card" onclick="showStep(1)">
-      <div class="pipe-num">02</div>
-      <div class="pipe-icon">✂</div>
-      <div class="pipe-name">Токенизация</div>
-    </div>
-    <div class="pipe-card" onclick="showStep(2)">
-      <div class="pipe-num">03</div>
-      <div class="pipe-icon">◎</div>
-      <div class="pipe-name">Внимание</div>
-    </div>
-    <div class="pipe-card" onclick="showStep(3)">
-      <div class="pipe-num">04</div>
-      <div class="pipe-icon">⚙</div>
-      <div class="pipe-name">Слои</div>
-    </div>
-    <div class="pipe-card" onclick="showStep(4)">
-      <div class="pipe-num">05</div>
-      <div class="pipe-icon">◆</div>
-      <div class="pipe-name">Ответ</div>
-    </div>
-  </div>
+  </header>
 
-  <!-- Step 0 -->
-  <div class="step-detail visible" id="step0">
-    <div class="detail-main">
-      <h3>Вы пишете запрос</h3>
-      <p>ИИ получает обычный текст — набор символов. На этом этапе никакого «понимания» ещё нет: просто поток байтов, который нужно преобразовать во что-то, с чем может работать нейросеть.</p>
-      <div class="detail-stats">
-        <div class="stat-chip">Ввод: <strong>текст</strong></div>
-        <div class="stat-chip">Формат: <strong>Unicode</strong></div>
-        <div class="stat-chip">Скорость: <strong>&lt; 1 мс</strong></div>
+  <div class="container">
+    <section class="hero">
+      <h1>ИИ: от запроса до замены ролей</h1>
+      <p>Как нейросеть понимает ваши слова, что происходит внутри — и кого реально заменит в проектном отделе. Без маркетинга. Без человеколюбия.</p>
+      <div class="tags">
+        <span class="tag">Трансформеры</span>
+        <span class="tag">Токенизация</span>
+        <span class="tag">RLHF</span>
+        <span class="tag">Проектный отдел</span>
+        <span class="tag">ГОСТ / СП</span>
       </div>
-    </div>
-    <div class="detail-viz">
-      <div style="background:var(--paper);border:1px solid var(--paper-3);border-radius:var(--r);padding:14px 16px;font-family:var(--mono);font-size:14px;color:var(--ink);margin-bottom:10px">
-        Как работает ИИ?<span style="color:var(--accent);animation:blink 1s step-end infinite">|</span>
-      </div>
-      <div style="font-size:12px;color:var(--ink-4)">16 символов · 3 слова · ~5 токенов</div>
-    </div>
-  </div>
+    </section>
 
-  <!-- Step 1 -->
-  <div class="step-detail" id="step1">
-    <div class="detail-main">
-      <h3>Токенизация</h3>
-      <p>Текст разбивается на токены — кусочки слов. Каждый токен получает числовой ID. Нейросеть работает исключительно с числами, не с буквами. Словарь GPT-4 — около 100 тысяч токенов.</p>
-      <div class="detail-stats">
-        <div class="stat-chip">Словарь: <strong>~100к</strong></div>
-        <div class="stat-chip">1 слово = <strong>1–3 токена</strong></div>
-        <div class="stat-chip">Макс: <strong>128к токенов</strong></div>
+    <section id="how">
+      <h2>Шаг за шагом: Что происходит с запросом</h2>
+      <p class="section-sub">Нажмите на любой шаг, чтобы увидеть детали и живые примеры.</p>
+      <div class="steps-nav">
+        <button class="step-btn active" data-step="1">01 ✍ Запрос</button>
+        <button class="step-btn" data-step="2">02 ✂ Токенизация</button>
+        <button class="step-btn" data-step="3">03 ◎ Внимание</button>
+        <button class="step-btn" data-step="4">04 ⚙ Слои</button>
+        <button class="step-btn" data-step="5">05 ◆ Ответ</button>
       </div>
-    </div>
-    <div class="detail-viz">
-      <div class="token-viz">
-        <div class="token-row">
-          <span class="tok-chip a">Как</span>
-          <span class="tok-chip a">работ</span>
-          <span class="tok-chip a">ает</span>
-          <span class="tok-chip b">ИИ</span>
-          <span class="tok-chip b">?</span>
+      
+      <div class="step-content active" id="step-1">
+        <h3>Вы пишете запрос</h3>
+        <p>ИИ получает обычный текст — набор символов. На этом этапе никакого «понимания» ещё нет: просто поток байтов, который нужно преобразовать во что-то, с чем может работать нейросеть.</p>
+        <div class="step-meta">
+          <span><strong>Ввод</strong> Текст</span>
+          <span><strong>Формат</strong> Unicode</span>
+          <span><strong>Скорость</strong> &lt; 1 мс</span>
         </div>
-        <div class="tok-id-row">
-          <span class="tok-id">3083</span>
-          <span class="tok-id">7741</span>
-          <span class="tok-id">2291</span>
-          <span class="tok-id">1049</span>
-          <span class="tok-id">30</span>
-        </div>
-        <div style="font-size:11px;color:var(--ink-4);margin-top:4px">«работ» + «ает» — два токена вместо одного слова</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Step 2 -->
-  <div class="step-detail" id="step2">
-    <div class="detail-main">
-      <h3>Механизм внимания</h3>
-      <p>Каждый токен «смотрит» на все остальные и оценивает их важность. Нажмите на слово — увидите веса внимания. Именно так модель понимает, что «он» в конце предложения относится к конкретному слову в начале.</p>
-      <div class="detail-stats">
-        <div class="stat-chip">Формула: <strong>Q·K·V</strong></div>
-        <div class="stat-chip">Голов: <strong>96 (GPT-4)</strong></div>
-        <div class="stat-chip">Связей: <strong>N²</strong></div>
-      </div>
-    </div>
-    <div class="detail-viz">
-      <div class="att-demo" id="attDemo">
-        <div class="att-word selected" onclick="selectAtt(0,this)" data-weights="100,45,85,20,10">
-          <span class="aw-label">Как</span>
-          <div class="att-bar-wrap"><div class="att-bar" style="width:100%"></div></div>
-          <span class="att-pct">100%</span>
-        </div>
-        <div class="att-word" onclick="selectAtt(1,this)" data-weights="45,100,70,30,15">
-          <span class="aw-label">работает</span>
-          <div class="att-bar-wrap"><div class="att-bar" style="width:45%"></div></div>
-          <span class="att-pct">45%</span>
-        </div>
-        <div class="att-word" onclick="selectAtt(2,this)" data-weights="85,70,100,40,20">
-          <span class="aw-label">ИИ</span>
-          <div class="att-bar-wrap"><div class="att-bar" style="width:85%"></div></div>
-          <span class="att-pct">85%</span>
-        </div>
-        <div class="att-word" onclick="selectAtt(3,this)" data-weights="20,30,40,100,5">
-          <span class="aw-label">?</span>
-          <div class="att-bar-wrap"><div class="att-bar" style="width:20%"></div></div>
-          <span class="att-pct">20%</span>
+        <div class="token-vis">
+          <span class="token">Как</span><span class="arrow">→</span>
+          <span class="token">работает</span><span class="arrow">→</span>
+          <span class="token">ИИ?</span>
+          <span style="margin-left:auto; color:var(--muted)">16 символов · 3 слова · ~5 токенов</span>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Step 3 -->
-  <div class="step-detail" id="step3">
-    <div class="detail-main">
-      <h3>Слои трансформера</h3>
-      <p>Данные проходят через десятки слоёв. Каждый добавляет новый уровень понимания — от морфологии до сложных рассуждений. Нажмите на слой, чтобы раскрыть детали.</p>
-      <div class="detail-stats">
-        <div class="stat-chip">GPT-4: <strong>~96 слоёв</strong></div>
-        <div class="stat-chip">Параметры: <strong>~1 трлн</strong></div>
-        <div class="stat-chip">Обучение: <strong>~90 дней</strong></div>
-      </div>
-    </div>
-    <div class="detail-viz">
-      <div class="layer-list" id="layerList">
-        <div class="layer-row" onclick="toggleLayer(this,'Разбивает текст на части слов, понимает форму и падеж.')">
-          <div class="layer-dot" style="background:var(--teal)"></div>
-          <div class="layer-text"><div class="layer-name2">Морфология</div><div class="layer-hint">слои 1–4</div></div>
-          <div class="layer-pct-bar"><div class="layer-pct-fill" style="width:20%;background:var(--teal)"></div></div>
+      <div class="step-content" id="step-2">
+        <h3>Токенизация</h3>
+        <p>Текст разбивается на токены — кусочки слов. Каждый токен получает числовой ID. Нейросеть работает исключительно с числами, не с буквами. Словарь GPT-4 — около 100 тысяч токенов.</p>
+        <div class="step-meta">
+          <span><strong>Словарь</strong> ~100к</span>
+          <span><strong>1 слово</strong> 1–3 токена</span>
+          <span><strong>Макс контекст</strong> 128к токенов</span>
         </div>
-        <div class="layer-row" onclick="toggleLayer(this,'Строит дерево предложения: субъект, предикат, объект.')">
-          <div class="layer-dot" style="background:var(--accent)"></div>
-          <div class="layer-text"><div class="layer-name2">Синтаксис</div><div class="layer-hint">слои 5–16</div></div>
-          <div class="layer-pct-bar"><div class="layer-pct-fill" style="width:45%;background:var(--accent)"></div></div>
-        </div>
-        <div class="layer-row" onclick="toggleLayer(this,'Понимает значение слов в контексте. «Банк» у реки — это не банк с деньгами.')">
-          <div class="layer-dot" style="background:var(--blue)"></div>
-          <div class="layer-text"><div class="layer-name2">Семантика</div><div class="layer-hint">слои 17–48</div></div>
-          <div class="layer-pct-bar"><div class="layer-pct-fill" style="width:70%;background:var(--blue)"></div></div>
-        </div>
-        <div class="layer-row" onclick="toggleLayer(this,'Факты о мире: даты, имена, науки — всё из обучающих данных.')">
-          <div class="layer-dot" style="background:var(--amber)"></div>
-          <div class="layer-text"><div class="layer-name2">Знания</div><div class="layer-hint">слои 49–80</div></div>
-          <div class="layer-pct-bar"><div class="layer-pct-fill" style="width:88%;background:var(--amber)"></div></div>
-        </div>
-        <div class="layer-row" onclick="toggleLayer(this,'Строит логику ответа, связывает факты, учитывает весь контекст.')">
-          <div class="layer-dot" style="background:var(--coral)"></div>
-          <div class="layer-text"><div class="layer-name2">Рассуждение</div><div class="layer-hint">слои 81–96</div></div>
-          <div class="layer-pct-bar"><div class="layer-pct-fill" style="width:100%;background:var(--coral)"></div></div>
+        <div class="token-vis">
+          <span class="token">Как (3083)</span><span class="arrow">→</span>
+          <span class="token">работ (7741)</span><span class="arrow">→</span>
+          <span class="token">ает (2291)</span><span class="arrow">→</span>
+          <span class="token">ИИ (1049)</span><span class="arrow">→</span>
+          <span class="token">? (30)</span>
+          <span style="margin-left:auto; color:var(--muted)">«работ» + «ает» — два токена вместо одного слова</span>
         </div>
       </div>
-      <div id="layerTooltip" style="font-size:12px;color:var(--ink-3);margin-top:10px;min-height:18px;transition:opacity .2s"></div>
-    </div>
-  </div>
 
-  <!-- Step 4 -->
-  <div class="step-detail" id="step4">
-    <div class="detail-main">
-      <h3>Генерация ответа</h3>
-      <p>Модель выбирает следующий токен по вероятностям — и добавляет его в контекст. Затем снова. И снова. Ответ рождается по одному слову. Нажмите кнопку и смотрите.</p>
-      <div class="detail-stats">
-        <div class="stat-chip">Скорость: <strong>~30 токенов/сек</strong></div>
-        <div class="stat-chip">Температура: <strong>0–2</strong></div>
-        <div class="stat-chip">Алгоритм: <strong>top-p / top-k</strong></div>
-      </div>
-    </div>
-    <div class="detail-viz">
-      <div class="gen-demo">
-        <div class="gen-output" id="genOutput">ИИ — это <span class="gen-cursor"></span></div>
-        <div style="font-size:11px;color:var(--ink-4);margin-bottom:6px">Следующий токен (вероятности):</div>
-        <div class="gen-probs" id="genProbs"></div>
-        <button class="gen-next-btn" onclick="genNext()">Следующее слово →</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="divider">
-
-<!-- МОДЕЛИ -->
-<section class="section reveal" id="models">
-  <div class="section-label">Классификация</div>
-  <h2 class="section-title">Типы языковых моделей</h2>
-  <p class="section-sub">Одна архитектура трансформера — но разные способы обучения и совершенно разное поведение.</p>
-
-  <div class="model-tabs">
-    <button class="mtab active" onclick="switchMTab(0)">Обзор типов</button>
-    <button class="mtab" onclick="switchMTab(1)">Base vs Instruct</button>
-    <button class="mtab" onclick="switchMTab(2)">Как обучают</button>
-    <button class="mtab" onclick="switchMTab(3)">Что выбрать</button>
-  </div>
-
-  <!-- Панель 0 -->
-  <div class="mpanel active" id="mp0">
-    <div class="model-cards">
-      <div class="mcard">
-        <div class="mcard-badge" style="background:#f0ede8;color:#767370">Base / Pretrained</div>
-        <h4>Базовая модель</h4>
-        <p>Обучена предсказывать следующий токен на триллионах слов. Не умеет следовать инструкциям — просто продолжает текст.</p>
-        <div class="mcard-ex">Пример: <span>GPT-3, Llama-3 base</span></div>
-      </div>
-      <div class="mcard featured">
-        <div class="mcard-badge" style="background:#d4caff;color:#3c3489">Instruct / Chat ★</div>
-        <h4>Инструкт-модель</h4>
-        <p>Дообучена на диалогах. Понимает «сделай то», «объясни это». Именно с ней вы работаете в ChatGPT, Claude, Gemini.</p>
-        <div class="mcard-ex">Пример: <span>Claude 3.5, GPT-4o</span></div>
-      </div>
-      <div class="mcard">
-        <div class="mcard-badge" style="background:#fef3c7;color:#92400e">Reasoning</div>
-        <h4>Модель рассуждений</h4>
-        <p>Перед ответом «думает вслух» — строит цепочку рассуждений. Медленнее, но точнее в сложных задачах.</p>
-        <div class="mcard-ex">Пример: <span>o3, Claude 3.7 Sonnet</span></div>
-      </div>
-      <div class="mcard">
-        <div class="mcard-badge" style="background:#dcf5ec;color:#085041">Multimodal</div>
-        <h4>Мультимодальная</h4>
-        <p>Понимает текст, изображения, аудио. Видит содержимое фото, читает схемы, чертежи, таблицы.</p>
-        <div class="mcard-ex">Пример: <span>GPT-4o, Gemini 1.5, Claude 3</span></div>
-      </div>
-      <div class="mcard">
-        <div class="mcard-badge" style="background:#fde8e1;color:#712b13">Embedding</div>
-        <h4>Эмбеддинг-модель</h4>
-        <p>Не генерирует текст — превращает его в вектор. Для поиска, сравнения, кластеризации документов.</p>
-        <div class="mcard-ex">Пример: <span>text-embedding-3, E5</span></div>
-      </div>
-      <div class="mcard">
-        <div class="mcard-badge" style="background:#dbeafe;color:#1e3a8a">Domain-specific</div>
-        <h4>Специализированные</h4>
-        <p>Дообучены на узкой области: медицина, право, код, строительство. Точнее в нише, слабее в общем.</p>
-        <div class="mcard-ex">Пример: <span>CodeLlama, Med-PaLM</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Панель 1 -->
-  <div class="mpanel" id="mp1">
-    <div style="background:var(--paper-2);border:1px solid var(--paper-3);border-radius:var(--r);padding:12px 16px;font-size:13px;color:var(--ink-3);margin-bottom:20px;line-height:1.5">
-      <strong style="color:var(--ink)">Главный вопрос:</strong> почему нельзя взять базовую модель и использовать как ассистента?
-    </div>
-    <div class="compare-2col">
-      <div class="comp-col">
-        <div class="comp-head"><div class="comp-head-dot" style="background:#888780"></div>Base — базовая</div>
-        <div class="comp-body">
-          <div class="comp-row"><div class="comp-mark mark-yes">+</div><div class="comp-text">Знает огромный объём информации о мире</div></div>
-          <div class="comp-row"><div class="comp-mark mark-yes">+</div><div class="comp-text">Отлично продолжает текст в заданном стиле</div></div>
-          <div class="comp-row"><div class="comp-mark mark-no">—</div><div class="comp-text">Не понимает инструкции: «переведи», «суммируй»</div></div>
-          <div class="comp-row"><div class="comp-mark mark-no">—</div><div class="comp-text">Может продолжить вопрос вопросом вместо ответа</div></div>
-          <div class="comp-row"><div class="comp-mark mark-no">—</div><div class="comp-text">Нет роли ассистента, нет безопасности</div></div>
-          <div class="comp-row"><div class="comp-mark mark-mid">~</div><div class="comp-text">Нужны сложные few-shot промпты</div></div>
+      <div class="step-content" id="step-3">
+        <h3>Механизм внимания</h3>
+        <p>Каждый токен «смотрит» на все остальные и оценивает их важность. Именно так модель понимает, что «он» в конце предложения относится к конкретному слову в начале. Формула: <code>Q·K·V</code>. GPT-4 использует 96 голов внимания.</p>
+        <div class="step-meta">
+          <span><strong>Голов</strong> 96</span>
+          <span><strong>Связей</strong> N²</span>
+          <span><strong>Фокус</strong> Контекстные зависимости</span>
         </div>
       </div>
-      <div class="comp-col accent-border">
-        <div class="comp-head"><div class="comp-head-dot" style="background:var(--accent)"></div>Instruct — инструкт</div>
-        <div class="comp-body">
-          <div class="comp-row"><div class="comp-mark mark-yes">+</div><div class="comp-text">Следует инструкциям на естественном языке</div></div>
-          <div class="comp-row"><div class="comp-mark mark-yes">+</div><div class="comp-text">Понимает роль: «ты помощник, отвечай кратко»</div></div>
-          <div class="comp-row"><div class="comp-mark mark-yes">+</div><div class="comp-text">Встроена безопасность и отказ от вредного</div></div>
-          <div class="comp-row"><div class="comp-mark mark-yes">+</div><div class="comp-text">Диалог: помнит контекст всего разговора</div></div>
-          <div class="comp-row"><div class="comp-mark mark-mid">~</div><div class="comp-text">Иногда «угодничает» — соглашается с ошибкой</div></div>
-          <div class="comp-row"><div class="comp-mark mark-mid">~</div><div class="comp-text">Чуть хуже в чистой генерации без инструкций</div></div>
+
+      <div class="step-content" id="step-4">
+        <h3>Слои трансформера</h3>
+        <p>Данные проходят через десятки слоёв. Каждый добавляет новый уровень понимания — от морфологии до сложных рассуждений.</p>
+        <div class="step-meta">
+          <span><strong>GPT-4</strong> ~96 слоёв</span>
+          <span><strong>Параметры</strong> ~1 трлн</span>
+          <span><strong>Обучение</strong> ~90 дней</span>
+        </div>
+        <div style="margin-top:1rem; font-size:0.85rem; color:var(--muted); display:grid; gap:0.5rem;">
+          <div>🔹 <span style="color:var(--text)">Слои 1–4:</span> Морфология (окончания, части речи)</div>
+          <div>🔹 <span style="color:var(--text)">Слои 5–16:</span> Синтаксис (порядок слов, грамматика)</div>
+          <div>🔹 <span style="color:var(--text)">Слои 17–48:</span> Семантика (смысл фраз)</div>
+          <div>🔹 <span style="color:var(--text)">Слои 49–80:</span> Знания (факты, закономерности)</div>
+          <div>🔹 <span style="color:var(--text)">Слои 81–96:</span> Рассуждение (логика, выводы)</div>
         </div>
       </div>
-    </div>
-    <div class="chat-mock">
-      <div class="chat-mock-head"><div class="chat-mock-dot" style="background:#888780"></div>Base — ответ на «Что такое нейросеть?»</div>
-      <div class="chat-mock-body">
-        <div class="cmsg u">Что такое нейросеть?</div>
-        <div class="cmsg ai"><div class="alabel">Продолжает текст как статья:</div>Что такое нейросеть? Нейросеть — это вычислительная модель. Что такое глубокое обучение? Глубокое обучение — это...</div>
+
+      <div class="step-content" id="step-5">
+        <h3>Генерация ответа</h3>
+        <p>Модель выбирает следующий токен по вероятностям — и добавляет его в контекст. Затем снова. И снова. Ответ рождается по одному слову.</p>
+        <div class="step-meta">
+          <span><strong>Скорость</strong> ~30 токенов/сек</span>
+          <span><strong>Температура</strong> 0–2 (креативность)</span>
+          <span><strong>Алгоритм</strong> top-p / top-k</span>
+        </div>
       </div>
-    </div>
-    <div class="chat-mock">
-      <div class="chat-mock-head"><div class="chat-mock-dot" style="background:var(--accent)"></div>Instruct — тот же запрос</div>
-      <div class="chat-mock-body">
-        <div class="cmsg u">Что такое нейросеть?</div>
-        <div class="cmsg ai"><div class="alabel">Отвечает как ассистент:</div>Нейросеть — программа, которая учится на примерах, как мозг. Состоит из слоёв «нейронов». Чем больше данных — тем точнее.</div>
+    </section>
+
+    <section id="models">
+      <h2>Классификация: Типы языковых моделей</h2>
+      <p class="section-sub">Одна архитектура трансформера — но разные способы обучения и совершенно разное поведение.</p>
+      <div class="model-grid">
+        <div class="model-card" onclick="toggleModel(this)">
+          <div class="model-icon">📖</div>
+          <div class="model-title">Base / Pretrained</div>
+          <div class="model-desc">Обучена предсказывать следующий токен. Продолжает текст, но не понимает инструкций.</div>
+          <div class="model-example">Пример: GPT-3, Llama-3 base</div>
+          <div class="model-detail">+ Знает мир<br>– Не понимает «переведи» или «объясни»<br>~ Нужны сложные few-shot промпты</div>
+        </div>
+        <div class="model-card active" onclick="toggleModel(this)">
+          <div class="model-icon">💬</div>
+          <div class="model-title">Instruct / Chat ★</div>
+          <div class="model-desc">Дообучена на диалогах. Понимает инструкции и роль. Стандарт для ассистентов.</div>
+          <div class="model-example">Пример: Claude 3.5, GPT-4o</div>
+          <div class="model-detail">+ Следует командам на естественном языке<br>+ Встроена безопасность<br>– Иногда «угодничает»</div>
+        </div>
+        <div class="model-card" onclick="toggleModel(this)">
+          <div class="model-icon">🧠</div>
+          <div class="model-title">Reasoning</div>
+          <div class="model-desc">Перед ответом «думает вслух». Медленнее, но точнее в логике и математике.</div>
+          <div class="model-example">Пример: o3, Claude 3.7 Sonnet</div>
+          <div class="model-detail">+ Цепочка рассуждений до вывода<br>+ Высокая точность в сложных задачах<br>– Выше стоимость и задержка</div>
+        </div>
+        <div class="model-card" onclick="toggleModel(this)">
+          <div class="model-icon">👁️</div>
+          <div class="model-title">Multimodal</div>
+          <div class="model-desc">Понимает текст, изображения, аудио. Видит чертежи, схемы, таблицы.</div>
+          <div class="model-example">Пример: GPT-4o, Gemini 1.5</div>
+          <div class="model-detail">+ Мультимодальный контекст<br>– Сложнее контролировать точность в специализированных доменах</div>
+        </div>
+        <div class="model-card" onclick="toggleModel(this)">
+          <div class="model-icon">📐</div>
+          <div class="model-title">Embedding</div>
+          <div class="model-desc">Не генерирует текст. Превращает его в вектор для поиска и сравнения.</div>
+          <div class="model-example">Пример: text-embedding-3, E5</div>
+          <div class="model-detail">+ Основа для RAG и семантического поиска<br>– Не отвечает на вопросы напрямую</div>
+        </div>
+        <div class="model-card" onclick="toggleModel(this)">
+          <div class="model-icon">🏗️</div>
+          <div class="model-title">Domain-specific</div>
+          <div class="model-desc">Дообучены на узкой области. Точнее в нише, слабее в общем.</div>
+          <div class="model-example">Пример: CodeLlama, Med-PaLM</div>
+          <div class="model-detail">+ Высокая точность в конкретной задаче<br>– Узкая область применения</div>
+        </div>
       </div>
-    </div>
+
+      <div style="margin-top:2rem;">
+        <h3>Как обучают: 3 фазы + Reasoning</h3>
+        <div class="timeline">
+          <div class="phase">
+            <h4>Фаза 1: Претрейнинг (Pre-training)</h4>
+            <p>Модель читает триллионы токенов: Википедия, книги, код, сайты. Учит предсказывать следующий токен. Месяцы на тысячах GPU. Результат: базовая модель, которая «знает мир».</p>
+          </div>
+          <div class="phase">
+            <h4>Фаза 2: Supervised Fine-Tuning (SFT)</h4>
+            <p>Люди пишут тысячи пар «вопрос → идеальный ответ». Модель дообучается на них. Начинает понимать формат диалога. Результат: модель умеет следовать командам.</p>
+          </div>
+          <div class="phase">
+            <h4>Фаза 3: RLHF (Обучение с обратной связью)</h4>
+            <p>Люди ранжируют ответы. Обучается «модель-судья». Основная модель оптимизируется под её оценки. Результат: полезная, безопасная, приятная модель.</p>
+          </div>
+          <div class="phase">
+            <h4>Бонус: Chain-of-Thought / Reasoning</h4>
+            <p>Для моделей типа o3 или Claude 3.7: дополнительное обучение «думать вслух». Генерирует скрытую цепочку рассуждений, затем формулирует итог. Значительно улучшает математику, логику, код.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:2rem;">
+        <h3>Какую модель выбрать для задач</h3>
+        <div class="table-wrap" style="margin-top:1rem;">
+          <table>
+            <thead><tr><th>Задача</th><th>Тип модели</th><th>Почему</th></tr></thead>
+            <tbody>
+              <tr><td>Проектирование и BIM</td><td>Instruct + Multimodal</td><td>Читать чертежи, нормативы, помогать с КП. Claude или GPT-4o с vision.</td></tr>
+              <tr><td>Сложные расчёты и логика</td><td>Reasoning</td><td>Проверка сметы, анализ противоречий. o3, Claude 3.7 Sonnet.</td></tr>
+              <tr><td>Поиск по ГОСТам / СП</td><td>Embedding + RAG</td><td>Семантический поиск по нормативам.</td></tr>
+              <tr><td>Локально / без облака</td><td>Локальный Instruct</td><td>Qwen3, Llama-3 через Ollama. Конфиденциальность, работа без сети.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="replace">
+      <h2>Кого заменит ИИ в проектном отделе</h2>
+      <p class="section-sub">Без маркетинга. Без человеколюбия. С учётом всех рисков. Горизонт: 3–5 лет. Процент замены — доля автоматизируемых функций.</p>
+      
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Роль</th>
+              <th>Замена %</th>
+              <th>Инструменты</th>
+              <th>Что автоматизируется</th>
+              <th>Что остаётся</th>
+              <th>Риск</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="section-row"><td colspan="6">ИСЧЕЗАЮТ КАК КЛАСС</td></tr>
+            <tr><td class="role">Техник-оформитель / BIM-техник</td><td class="pct">90–95%</td><td class="tools">Revit, AutoCAD, NanoCAD</td><td>Нарезка видов, выноски, размеры, оформление листов по ГОСТ 21.101, экспорт штампов</td><td>Нестандартные ситуации, финальная проверка</td><td class="risk-cell"><span class="badge high">КРИТИЧЕСКИЙ</span></td></tr>
+            <tr><td class="role">Делопроизводитель / архивариус</td><td class="pct">95–100%</td><td class="tools">Word, Excel, СЭД, почта</td><td>Индексация, версионирование, рассылка, контроль сроков, поиск</td><td>Политика доступа, хранение оригиналов, аудит</td><td class="risk-cell"><span class="badge med">СРЕДНИЙ</span></td></tr>
+            <tr><td class="role">Администратор проекта</td><td class="pct">80–90%</td><td class="tools">Excel, таск-трекеры, 1С</td><td>Протоколы, контроль сроков, реестры, напоминания</td><td>Эскалация конфликтов, решения вне регламента</td><td class="risk-cell"><span class="badge med">СРЕДНИЙ</span></td></tr>
+            <tr><td class="role">Нормоконтролёр (формальный)</td><td class="pct">85–90%</td><td class="tools">Word, СП/ГОСТ базы</td><td>Штампы, графы, шрифты, ссылки на нормы, базовые коллизии</td><td>Трактовка серых зон, финальная подпись</td><td class="risk-cell"><span class="badge med">СРЕДНИЙ</span></td></tr>
+
+            <tr class="section-row"><td colspan="6">СОКРАЩЕНИЕ СОСТАВА В 3–5 РАЗ</td></tr>
+            <tr><td class="role">Проектировщик-моделер</td><td class="pct">60–70%</td><td class="tools">Revit, AutoCAD, Word (ПЗ)</td><td>Типовые планировки, расстановка оборудования, ПЗ по шаблону</td><td>Нестандартные решения, интерпретация ТЗ</td><td class="risk-cell"><span class="badge high">КРИТИЧЕСКИЙ</span></td></tr>
+            <tr><td class="role">BIM-координатор (базовый)</td><td class="pct">55–65%</td><td class="tools">Navisworks, BIM 360</td><td>Clash detection, LOD-аудит, отчёты, заполнение параметров</td><td>Приоритизация коллизий, переговоры</td><td class="risk-cell"><span class="badge med">СРЕДНИЙ</span></td></tr>
+            <tr><td class="role">Сметчик (объёмы из модели)</td><td class="pct">50–65%</td><td class="tools">Excel, Гранд-Смета</td><td>Маппинг элементов в расценки, ведомости объёмов</td><td>Спорные объёмы, скрытые работы</td><td class="risk-cell"><span class="badge med">СРЕДНИЙ</span></td></tr>
+            <tr><td class="role">Помощник ГИПа</td><td class="pct">50–65%</td><td class="tools">Word, Excel, почта</td><td>Сбор спецификаций, реестр замечаний, контроль комплектности</td><td>Неформальная коммуникация, контекст вне документов</td><td class="risk-cell"><span class="badge high">ВЫСОКИЙ</span></td></tr>
+            <tr><td class="role">ПТО (документооборот)</td><td class="pct">40–55%</td><td class="tools">Word, Excel, 1С</td><td>Исполнительные схемы, журналы работ, КС-2</td><td>Фиксация фактических отклонений на объекте</td><td class="risk-cell"><span class="badge high">ВЫСОКИЙ</span></td></tr>
+            <tr><td class="role">Расчётчик (ОВиК, гидравлика)</td><td class="pct">45–60%</td><td class="tools">MagiCAD, Excel, СП</td><td>Подбор сечений, теплопотери, гидравлика стандартных систем</td><td>Инженерное суждение, ответственность</td><td class="risk-cell"><span class="badge high">КРИТИЧЕСКИЙ</span></td></tr>
+
+            <tr class="section-row"><td colspan="6">МЕНЯЕТСЯ РОЛЬ, НЕ ИСЧЕЗАЕТ</td></tr>
+            <tr><td class="role">ГИП / ГАП</td><td class="pct">10–20%</td><td class="tools">Весь стек + экспертиза</td><td>Трекинг рисков, отчёты, контроль сроков</td><td>Субъект права. Ответственность. СРО. Управление хаосом</td><td class="risk-cell"><span class="badge low">НИЗКИЙ</span></td></tr>
+            <tr><td class="role">Руководитель проекта</td><td class="pct">15–25%</td><td class="tools">MS Project, переговоры</td><td>Планирование, трекинг задач, риск-реестры</td><td>Переговоры, управление конфликтами, доверие заказчика</td><td class="risk-cell"><span class="badge low">НИЗКИЙ</span></td></tr>
+            <tr><td class="role">Ведущий инженер</td><td class="pct">15–25%</td><td class="tools">Инженерный стек</td><td>Генерация вариантов, проверка по СП, типовые узлы</td><td>Суждение в неопределённости. «Посмотрел — рухнет»</td><td class="risk-cell"><span class="badge high">КРИТИЧЕСКИЙ</span></td></tr>
+            <tr><td class="role">Специалист по согласованиям</td><td class="pct">&lt; 15%</td><td class="tools">Личные связи, телефон</td><td>Подготовка пакетов, контроль сроков</td><td>Неформальная среда согласований, личные отношения</td><td class="risk-cell"><span class="badge med">СРЕДНИЙ</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="risks">
+      <h2>Системные риски — о которых не говорят вслух</h2>
+      <ol class="risks-list">
+        <li><span class="list-title">Разрыв поколений</span>Убирая рутину у джунов, отрасль убирает школу. ГИП раньше вырастал из оформителя через 10 лет шишек. Оператор промптов, миновавший рутину, не понимает, почему узел не работает. Через 10 лет старые мастера уйдут — и валидировать ИИ будет некому.</li>
+        <li><span class="list-title">Спецификация ≠ закупка</span>Выгрузка из модели покрывает 40–60% реального объёма закупки. Остальное: позиции вне модели (крепёж, расходники, монтажные допуски), замена оборудования под рынок, скрытые работы. ИИ этого не знает.</li>
+        <li><span class="list-title">ПТО живёт не в модели</span>Большая часть рабочей и исполнительной документации — это Word, Excel и AutoCAD вне BIM. Автоматизация работает только при дисциплинированном ведении модели на стройке. На большинстве объектов этого нет.</li>
+        <li><span class="list-title">Регуляторный тормоз</span>СРО требует штатных аттестованных специалистов. Госэкспертиза принимает подпись физлица. Лаг между технологией и регулятором — исторически 5–8 лет.</li>
+        <li><span class="list-title">Концентрация уязвимости</span>Если весь отдел работает через одну платформу — один сбой, санкционный бан или апдейт API останавливает всё.</li>
+      </ol>
+
+      <h3>Три шага руководителю — прямо сейчас</h3>
+      <ol class="steps-list">
+        <li><span class="list-title">Шаг 1. Выбрать одну позицию из списка «90%+» и запустить пилот</span>Лучший кандидат — нормоконтроль или оформление листов. Зафиксировать базовые метрики до старта: время на задачу, количество замечаний. Через месяц сравнить.</li>
+        <li><span class="list-title">Шаг 2. Провести аудит: что описано, что в головах</span>ИИ автоматизирует только формализованное. Контекст помощников ГИПов и ПТО нигде не записан. Задача — перевести это в структурированный вид до автоматизации.</li>
+        <li><span class="list-title">Шаг 3. Не сокращать до доказательства стабильности</span>Первая нетиповая ситуация при отсутствии людей — и исправлять некому. ИИ работает параллельно с человеком → человек валидирует → через 3 месяца стабильной работы — решение о структуре.</li>
+      </ol>
+    </section>
+
+    <section id="legal">
+      <h2>Юридический и ИБ-контекст</h2>
+      <div class="legal-box">
+        <h4>152-ФЗ (персональные данные)</h4>
+        <p>Загружать в облачные LLM документы с ПДн — нарушение. Проектная документация часто содержит ФИО подписантов. Решение: локальные модели или корпоративные контракты.</p>
+      </div>
+      <div class="legal-box">
+        <h4>КИИ (187-ФЗ)</h4>
+        <p>Объекты КИИ запрещают передачу данных на зарубежные серверы. Для энергетики, транспорта, оборонки — только локальный стек (Ollama, изолированная сеть).</p>
+      </div>
+      <div class="legal-box">
+        <h4>Кто подписывает результат ИИ (ст. 74.1 ГрК РФ)</h4>
+        <p>ИИ не субъект права. Подпись — физическое лицо с аттестацией. Специалист, подписавший ИИ-раздел, несёт полную ответственность. Проверка — юридическая необходимость.</p>
+      </div>
+
+      <div class="conclusion">
+        <h2 style="margin-bottom:0.5rem; border:none; padding:0;">Итог без украшений</h2>
+        <p>Из типичного проектного отдела на 10 человек в горизонте 5 лет 3–4 позиции исчезают. Остальные меняют содержание работы радикально. Те, кто не адаптируется — не теряют работу мгновенно. Они становятся дорогими и медленными на фоне тех, кто адаптировался.</p>
+        <p style="margin-top:0.75rem;"><span class="highlight">Главная угроза — не «ИИ уволит», а «компания, использующая ИИ, вытеснит твою компанию» — и уволит всех сразу.</span></p>
+      </div>
+    </section>
   </div>
 
-  <!-- Панель 2 -->
-  <div class="mpanel" id="mp2">
-    <div style="background:var(--paper-2);border:1px solid var(--paper-3);border-radius:var(--r);padding:12px 16px;font-size:13px;color:var(--ink-3);margin-bottom:24px">
-      Все топовые модели проходят <strong style="color:var(--ink)">три фазы обучения</strong>. Каждая добавляет слой поведения поверх предыдущего.
-    </div>
-    <div class="tl">
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-dot2" style="background:#888780"></div><div class="tl-line2"></div></div>
-        <div class="tl-body">
-          <div class="tl-phase" style="background:#f0ede8;color:#5f5e5a">Фаза 1</div>
-          <div class="tl-title2">Претрейнинг (Pre-training)</div>
-          <div class="tl-desc2">Модель читает триллионы токенов: Википедия, книги, код, сайты. Учится одному — предсказывать следующий токен. Месяцы на тысячах GPU. Результат: базовая модель, которая «знает мир».</div>
-        </div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-dot2" style="background:var(--accent)"></div><div class="tl-line2"></div></div>
-        <div class="tl-body">
-          <div class="tl-phase" style="background:var(--accent-pale);color:#3c3489">Фаза 2</div>
-          <div class="tl-title2">Supervised Fine-Tuning (SFT)</div>
-          <div class="tl-desc2">Люди пишут тысячи пар «вопрос → идеальный ответ». Модель дообучается на них. Начинает понимать формат диалога и инструкций. Результат: модель умеет следовать командам.</div>
-        </div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-dot2" style="background:var(--teal)"></div><div class="tl-line2"></div></div>
-        <div class="tl-body">
-          <div class="tl-phase" style="background:var(--teal-pale);color:#085041">Фаза 3</div>
-          <div class="tl-title2">RLHF — обучение с обратной связью людей</div>
-          <div class="tl-desc2">Люди ранжируют ответы модели. Обучается «модель-судья» (reward model). Основная модель оптимизируется под её оценки. Результат: полезная, безопасная, приятная в общении модель.</div>
-        </div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-dot2" style="background:var(--amber)"></div><div class="tl-line2"></div></div>
-        <div class="tl-body">
-          <div class="tl-phase" style="background:var(--amber-pale);color:#92400e">Бонус</div>
-          <div class="tl-title2">Chain-of-Thought / Reasoning</div>
-          <div class="tl-desc2">Для моделей типа o3 или Claude 3.7: дополнительное обучение «думать вслух» перед ответом. Генерирует скрытую цепочку рассуждений, затем формулирует итог. Значительно улучшает математику, логику, код.</div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <footer>
+    <p>Апрель 2026 / МПСНКС • Интерактивный гид по ИИ и трансформации проектных отделов</p>
+  </footer>
 
-  <!-- Панель 3 -->
-  <div class="mpanel" id="mp3">
-    <div style="background:var(--accent-pale);border:1px solid #c9beff;border-radius:var(--r);padding:12px 16px;font-size:13px;color:#3c3489;margin-bottom:20px">
-      Правило: <strong>нужен ассистент → Instruct. Сложная логика → Reasoning. Поиск по документам → Embedding + RAG.</strong>
-    </div>
-    <div class="use-rows">
-      <div style="display:grid;grid-template-columns:1fr 1fr 2fr;gap:12px;padding:8px 16px;font-size:11px;font-weight:600;color:var(--ink-4);letter-spacing:.06em;text-transform:uppercase">
-        <div>Задача</div><div>Тип модели</div><div>Почему</div>
-      </div>
-      <div class="use-row">
-        <div class="use-case">Проектирование и BIM</div>
-        <div class="use-model" style="color:var(--accent)">Instruct + Multimodal</div>
-        <div class="use-why">Читать чертежи, нормативы, помогать с КП. Claude или GPT-4o с vision.</div>
-      </div>
-      <div class="use-row">
-        <div class="use-case">Сложные расчёты и логика</div>
-        <div class="use-model" style="color:var(--amber)">Reasoning</div>
-        <div class="use-why">Проверка сметы, анализ противоречий в документации. o3, Claude 3.7 Sonnet.</div>
-      </div>
-      <div class="use-row">
-        <div class="use-case">Поиск по ГОСТам / СП</div>
-        <div class="use-model" style="color:var(--coral)">Embedding + RAG</div>
-        <div class="use-why">Семантический поиск по нормативам. Как твой NotebookLM стек.</div>
-      </div>
-      <div class="use-row">
-        <div class="use-case">Генерация рендеров</div>
-        <div class="use-model" style="color:var(--teal)">Диффузионные</div>
-        <div class="use-why">Stable Diffusion, FLUX — отдельный класс. Не языковые модели.</div>
-      </div>
-      <div class="use-row">
-        <div class="use-case">Локально / без облака</div>
-        <div class="use-model" style="color:var(--blue)">Локальный Instruct</div>
-        <div class="use-why">Qwen3, Llama-3 через Ollama. Конфиденциальность, работа без сети.</div>
-      </div>
-      <div class="use-row">
-        <div class="use-case">Автодополнение кода</div>
-        <div class="use-model" style="color:var(--ink-2)">Code-специализированные</div>
-        <div class="use-why">CodeLlama, Codestral, Qwen-Coder. Лучше в конкретных языках.</div>
-      </div>
-    </div>
-  </div>
-</section>
+  <script>
+    // Step navigation
+    const stepBtns = document.querySelectorAll('.step-btn');
+    const stepContents = document.querySelectorAll('.step-content');
+    stepBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const step = btn.dataset.step;
+        stepBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        stepContents.forEach(c => c.classList.remove('active'));
+        document.getElementById(`step-${step}`).classList.add('active');
+      });
+    });
 
-<footer style="border-top:1px solid var(--paper-3);padding:32px;margin-top:16px">
-  <div style="max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-    <div style="font-size:12px;color:var(--ink-4)">Интерактивный гид по языковым моделям</div>
-    <div style="font-size:11px;background:var(--accent-pale);color:var(--accent);padding:4px 12px;border-radius:20px;border:1px solid #d4caff">Сделано с Claude</div>
-  </div>
-</footer>
+    // Model cards toggle
+    function toggleModel(card) {
+      const wasActive = card.classList.contains('active');
+      document.querySelectorAll('.model-card').forEach(c => c.classList.remove('active'));
+      if (!wasActive) card.classList.add('active');
+    }
 
-<script>
-// Pipeline
-function showStep(n) {
-  document.querySelectorAll('.pipe-card').forEach((c,i) => c.classList.toggle('active', i===n));
-  document.querySelectorAll('.step-detail').forEach((d,i) => {
-    d.classList.remove('visible');
-    if(i===n){ d.classList.add('visible'); }
-  });
-  if(n===4) initGen();
-}
+    // Smooth scroll for nav + active state
+    document.querySelectorAll('nav a').forEach(anchor => {
+      anchor.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(anchor.getAttribute('href'));
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+        anchor.classList.add('active');
+      });
+    });
 
-// Attention
-function selectAtt(idx, el) {
-  const weights = el.dataset.weights.split(',').map(Number);
-  document.querySelectorAll('.att-word').forEach((w,i) => {
-    w.classList.toggle('selected', i===idx);
-    w.querySelector('.att-bar').style.width = weights[i] + '%';
-    w.querySelector('.att-pct').textContent = weights[i] + '%';
-  });
-}
-
-// Layers
-function toggleLayer(el, text) {
-  document.getElementById('layerTooltip').textContent = text;
-  document.querySelectorAll('.layer-row').forEach(r => r.style.background='');
-  el.style.background = 'var(--paper-3)';
-}
-
-// Generation
-const GEN_SEQ = [
-  {probs:[{w:'программа',p:38},{w:'система',p:29},{w:'алгоритм',p:18},{w:'модель',p:11},{w:'сеть',p:4}], chosen:'программа'},
-  {probs:[{w:'которая',p:52},{w:',',p:24},{w:'способная',p:14},{w:'обученная',p:7},{w:'—',p:3}], chosen:'которая'},
-  {probs:[{w:'учится',p:44},{w:'анализирует',p:31},{w:'распознаёт',p:14},{w:'предсказывает',p:8},{w:'понимает',p:3}], chosen:'учится'},
-  {probs:[{w:'на',p:61},{w:'по',p:21},{w:'из',p:10},{w:'с',p:6},{w:'от',p:2}], chosen:'на'},
-  {probs:[{w:'данных',p:55},{w:'примерах',p:27},{w:'текстах',p:11},{w:'паттернах',p:5},{w:'образцах',p:2}], chosen:'данных'},
-];
-const PROB_COLORS = ['#5c3bfe','#8b6fff','#b4a3ff','#d9d1ff','#ede9ff'];
-let genStep = 0;
-let genText = 'ИИ — это ';
-let genInited = false;
-
-function initGen() {
-  if(genInited) return;
-  genInited = true;
-  renderProbs(GEN_SEQ[0].probs);
-}
-function renderProbs(probs) {
-  const el = document.getElementById('genProbs');
-  el.innerHTML = '';
-  probs.forEach((p,i) => {
-    const row = document.createElement('div');
-    row.className = 'gen-row';
-    row.innerHTML = `<div class="gen-word">${p.w}</div><div class="gen-bar-wrap"><div class="gen-bar" style="width:${p.p}%;background:${PROB_COLORS[i]}"></div></div><div class="gen-pct">${p.p}%</div>`;
-    el.appendChild(row);
-  });
-}
-function genNext() {
-  if(genStep >= GEN_SEQ.length) {
-    genStep = 0; genText = 'ИИ — это ';
-    document.getElementById('genOutput').innerHTML = genText + '<span class="gen-cursor"></span>';
-    renderProbs(GEN_SEQ[0].probs);
-    document.querySelector('.gen-next-btn').textContent = 'Следующее слово →';
-    return;
-  }
-  genText += GEN_SEQ[genStep].chosen + ' ';
-  genStep++;
-  document.getElementById('genOutput').innerHTML = genText + '<span class="gen-cursor"></span>';
-  if(genStep < GEN_SEQ.length) {
-    renderProbs(GEN_SEQ[genStep].probs);
-    document.querySelector('.gen-next-btn').textContent = 'Следующее слово →';
-  } else {
-    document.getElementById('genProbs').innerHTML = '<div style="font-size:12px;color:var(--ink-4)">Ответ сформирован. Нажмите ещё раз, чтобы сбросить.</div>';
-    document.querySelector('.gen-next-btn').textContent = 'Сначала ↺';
-  }
-}
-
-// Model tabs
-function switchMTab(n) {
-  document.querySelectorAll('.mtab').forEach((t,i) => t.classList.toggle('active', i===n));
-  document.querySelectorAll('.mpanel').forEach((p,i) => p.classList.toggle('active', i===n));
-}
-
-// Scroll reveal
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.1 });
-document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-</script>
+    // Update nav active on scroll
+    const sections = document.querySelectorAll('section[id]');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 100;
+        if (pageYOffset >= sectionTop) current = section.getAttribute('id');
+      });
+      document.querySelectorAll('nav a').forEach(a => {
+        a.classList.remove('active');
+        if (a.getAttribute('href') === `#${current}`) a.classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>
